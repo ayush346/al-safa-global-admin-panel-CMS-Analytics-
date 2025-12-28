@@ -4,11 +4,13 @@ import { FiMail, FiMapPin, FiPhone, FiGlobe, FiClock, FiUsers } from 'react-icon
 import './Contact.css';
 import { useEditMode } from '../context/EditModeContext';
 import { ConfirmDialog, useConfirmState } from '../components/ConfirmDialog';
+import { useContent } from '../context/ContentContext';
 
 const Contact = () => {
+  const { contact = {}, forms = {} } = useContent();
   const { isEditMode, isDisabled, disableContent, enableContent } = useEditMode();
   const { confirmState, askConfirm, handleConfirm, handleCancel } = useConfirmState();
-  const initialBenefits = [
+  const initialBenefits = Array.isArray(contact.benefits) ? contact.benefits : [
     { title: "Global Sourcing Network", text: "Direct access to reputed brands and suppliers worldwide for comprehensive procurement solutions." },
     { title: "End-to-End Solutions", text: "Complete procurement and logistics management from sourcing to delivery coordination." },
     { title: "Competitive Pricing", text: "Cost-effective sourcing without compromising on quality or authenticity of products." },
@@ -119,11 +121,10 @@ Submitted on: ${new Date().toLocaleString()}
             transition={{ duration: 0.8 }}
           >
             <h1 className="gradient-text">
-              Contact <span className="gold-text">Al Safa Global</span>
+              {contact?.heroTitle || <>Contact <span className="gold-text">Al Safa Global</span></>}
             </h1>
             <p className="hero-subtitle">
-              We would love to hear from you. For all inquiries, business proposals, 
-              or partnership opportunities, please reach out to us.
+              {contact?.heroSubtitle || "We would love to hear from you. For all inquiries, business proposals, or partnership opportunities, please reach out to us."}
             </p>
           </motion.div>
         </div>
@@ -142,9 +143,7 @@ Submitted on: ${new Date().toLocaleString()}
             >
               <h2 className="contact-heading">Get In Touch</h2>
               <p>
-                Al Safa Global General Trading FZ LLC is your trusted partner in procurement 
-                and supply chain solutions. We're here to help you with all your business needs 
-                across multiple industries and sectors.
+                Al Safa Global General Trading FZ LLC is your trusted partner in procurement and supply chain solutions. We're here to help you with all your business needs across multiple industries and sectors.
               </p>
               
               <div className="contact-details">
@@ -153,8 +152,8 @@ Submitted on: ${new Date().toLocaleString()}
                   <div>
                     <h4>Email</h4>
                     <p>
-                      <a href="mailto:info@alsafaglobal.com" className="contact-link">
-                        info@alsafaglobal.com
+                      <a href={`mailto:${contact?.email || 'info@alsafaglobal.com'}`} className="contact-link">
+                        {contact?.email || 'info@alsafaglobal.com'}
                       </a>
                     </p>
                     <p>For business inquiries and partnerships</p>
@@ -166,8 +165,8 @@ Submitted on: ${new Date().toLocaleString()}
                   <div>
                     <h4>Phone</h4>
                     <p>
-                      <a href="tel:0097143741969" className="contact-link">
-                        00971 4 3741 969
+                      <a href={`tel:${(contact?.phone || '00971 4 3741 969').replace(/\\s/g, '')}`} className="contact-link">
+                        {contact?.phone || '00971 4 3741 969'}
                       </a>
                     </p>
                     <p>Available during business hours</p>
@@ -179,13 +178,8 @@ Submitted on: ${new Date().toLocaleString()}
                   <div>
                     <h4>Head Office Address</h4>
                     <p>
-                      <strong>AL SAFA GLOBAL GENERAL TRADING FZ LLC</strong><br />
-                      <strong>FDBC3472</strong><br />
-                      Compass Building, Al Shohada Road<br />
-                      Al Hamra Industrial Zone-FZ<br />
-                      P.O. Box 10055<br />
-                      Ras Al Khaimah, United Arab Emirates<br />
-                      <a href="tel:0097143741969" style={{ color: 'inherit', textDecoration: 'underline' }}>00971 4 3741 969</a>
+                      {(contact?.addressLines || []).map((line, i) => (<React.Fragment key={i}>{line}<br /></React.Fragment>))}
+                      <a href={`tel:${(contact?.phone || '00971 4 3741 969').replace(/\\s/g, '')}`} style={{ color: 'inherit', textDecoration: 'underline' }}>{contact?.phone || '00971 4 3741 969'}</a>
                     </p>
                   </div>
                 </div>
@@ -194,9 +188,7 @@ Submitted on: ${new Date().toLocaleString()}
                   <FiClock className="contact-icon" />
                   <div>
                     <h4>Business Hours</h4>
-                    <p>Sunday - Thursday: 8:00 AM - 6:00 PM</p>
-                    <p>Friday: 8:00 AM - 1:00 PM</p>
-                    <p>Saturday: Closed</p>
+                    {(contact?.businessHours || []).map((h, i) => (<p key={i}>{h}</p>))}
                   </div>
                 </div>
 
@@ -204,8 +196,7 @@ Submitted on: ${new Date().toLocaleString()}
                   <FiGlobe className="contact-icon" />
                   <div>
                     <h4>Service Areas</h4>
-                    <p>UAE and International Markets</p>
-                    <p>Construction, Industrial, Marine, Aerospace, Defence, IT, and Office Supplies sectors</p>
+                    {(contact?.serviceAreas || []).map((s, i) => (<p key={i}>{s}</p>))}
                   </div>
                 </div>
 
@@ -213,7 +204,7 @@ Submitted on: ${new Date().toLocaleString()}
                   <FiUsers className="contact-icon" />
                   <div>
                     <h4>Partnership Opportunities</h4>
-                    <p>We welcome collaboration with suppliers, manufacturers, and business partners worldwide</p>
+                    <p>{contact?.partnershipText || 'We welcome collaboration with suppliers, manufacturers, and business partners worldwide'}</p>
                     <p>Contact us to discuss potential partnerships</p>
                   </div>
                 </div>
@@ -334,13 +325,7 @@ Submitted on: ${new Date().toLocaleString()}
                       required
                     >
                       <option value="">Select Segment of Interest *</option>
-                      <option value="Office, Construction & Infrastructure">Office, Construction & Infrastructure</option>
-                      <option value="Oil & Gas">Oil & Gas</option>
-                      
-                      <option value="Industrial & Manufacturing">Industrial & Manufacturing</option>
-                      <option value="Aviation & Marine">Aviation, Marine & Shipping</option>
-                      <option value="Defence Sector">Defence Sector</option>
-                      <option value="General Inquiry">General Inquiry</option>
+                      {(forms?.divisionsOptions || []).map((o) => (<option key={o} value={o}>{o}</option>))}
                     </select>
                   </div>
                   <div className="form-group">
@@ -351,11 +336,7 @@ Submitted on: ${new Date().toLocaleString()}
                       required
                     >
                       <option value="">Type of Inquiry *</option>
-                      <option value="Procurement Services">Procurement Services</option>
-                      <option value="Supply Chain Solutions">Supply Chain Solutions</option>
-                      <option value="Partnership Opportunity">Partnership Opportunity</option>
-                      <option value="Request for Quotation">Request for Quotation</option>
-                      <option value="General Inquiry">General Inquiry</option>
+                      {(forms?.inquiryTypes || []).map((o) => (<option key={o} value={o}>{o}</option>))}
                     </select>
                   </div>
                   <div className="form-group">

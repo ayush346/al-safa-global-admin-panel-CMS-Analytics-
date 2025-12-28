@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: al-safa-global
+    env: node
+    plan: free
+    buildCommand: npm install && npm run install-client && npm run build
+    startCommand: npm start
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Set these in Render dashboard after creating the service:
+      # - key: MONGODB_URI_PROD
+      #   sync: false
+      # - key: EMAIL_HOST
+      #   sync: false
+      # - key: EMAIL_PORT
+      #   sync: false
+      # - key: EMAIL_USER
+      #   sync: false
+      # - key: EMAIL_PASS
+      #   sync: false
+      # - key: EMAIL_FROM
+      #   sync: false
+      # - key: CLIENT_URL_PROD
+      #   value: https://your-service.onrender.com
+      #   sync: false
+

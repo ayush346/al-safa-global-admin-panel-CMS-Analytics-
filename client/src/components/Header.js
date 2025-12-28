@@ -5,8 +5,10 @@ import { FiMenu, FiX } from 'react-icons/fi';
 import './Header.css';
 import { useEditMode } from '../context/EditModeContext';
 import { toast } from 'react-hot-toast';
+import { useContent } from '../context/ContentContext';
 
 const Header = () => {
+  const { content } = useContent();
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
@@ -27,7 +29,7 @@ const Header = () => {
     setIsOpen(false);
   }, [location]);
 
-  const navItems = [
+  const navItems = Array.isArray(content?.nav) ? content.nav : [
     { name: 'Home', path: '/' },
     { name: 'About Us', path: '/about' },
     { name: 'Segments', path: '/divisions' },
@@ -56,19 +58,19 @@ const Header = () => {
               <div className="logo-container">
                 <div className="logo-icon">
                   <img 
-                    src={process.env.PUBLIC_URL + "/images/logo.png"} 
-                    alt="Al Safa Global Logo" 
+                    src={content?.site?.logo || (process.env.PUBLIC_URL + "/images/logo.png")}
+                    alt={(content?.site?.name || "Al Safa Global") + " Logo"} 
                     className="logo-image"
                     onLoad={() => console.log('Logo loaded successfully')}
                     onError={(e) => {
                       console.error('Error loading logo:', e);
-                      console.error('Attempted URL:', process.env.PUBLIC_URL + "/images/logo.png");
+                      console.error('Attempted URL:', content?.site?.logo || (process.env.PUBLIC_URL + "/images/logo.png"));
                     }}
                   />
                 </div>
                 <div className="logo-text-container">
-                  <span className="company-name">Al Safa Global</span>
-                  <span className="company-tagline">General Trading FZ LLC</span>
+                  <span className="company-name">{content?.site?.name || 'Al Safa Global'}</span>
+                  <span className="company-tagline">{content?.site?.tagline || 'General Trading FZ LLC'}</span>
                 </div>
               </div>
             </Link>
@@ -108,11 +110,15 @@ const Header = () => {
                 <button
                   className="btn btn-secondary"
                   onClick={() => {
-                    toast.success('Saved (prototype): changes will persist while the page is open');
+                    // Guide admins to JSON editor for persistent changes
+                    toast('Use Content Editor to commit changes to GitHub', { icon: '💾' });
                   }}
                 >
                   Save
                 </button>
+                <Link to="/admin/content" className="btn btn-secondary">
+                  Content
+                </Link>
                 <button
                   className="btn btn-secondary"
                   disabled

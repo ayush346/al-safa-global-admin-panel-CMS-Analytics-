@@ -3,8 +3,10 @@ import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import './Divisions.css';
 import { useEditMode } from '../context/EditModeContext';
+import { useContent } from '../context/ContentContext';
 
 const Divisions = () => {
+  const { divisions: divisionsFromContent = [] } = useContent();
   const location = useLocation();
   const { isEditMode, isDisabled, disableContent, enableContent } = useEditMode();
   const [confirmState, setConfirmState] = useState({
@@ -72,77 +74,7 @@ const Divisions = () => {
     scrollToSection();
   }, [location]);
 
-  const initialDivisions = [
-    {
-      id: "office-construction",
-      title: "Office, Construction & Infrastructure",
-      description: "Comprehensive sourcing for building materials, tools, safety gear, MEP systems, IT hardware/software, and site essentials.",
-      items: [
-        "Office Stationery Supplies, General items and IT products including Hardware & Software",
-        "Scaffolding systems, formwork materials",
-        "Fasteners, anchors, power tools",
-        "HVAC equipment, electrical panels, lighting systems",
-        "Site safety gear, signage, traffic control devices",
-        "Plumbing fixtures, cement additives, adhesives",
-        "Tools, fixtures, and systems for structural and civil projects"
-      ]
-    },
-    {
-      id: "oil-gas",
-      title: "Oil & Gas",
-      description: "Supply chain solutions for drilling, production, maintenance, safety, and instrumentation needs (upstream & downstream).",
-      items: [
-        "Drilling equipment, pipes, valves, flanges",
-        "Pressure gauges, flow meters, compressors",
-        "Chemical injection systems, safety relief valves",
-        "Pumps, control panels, welding consumables",
-        "Fire suppression systems and rig safety gear",
-        "Equipment and components for upstream and downstream operations"
-      ]
-    },
-    {
-      id: "industrial-manufacturing",
-      title: "Industrial & Manufacturing",
-      description: "Providing MRO supplies, automation components, PPE, bearings, motors, spare parts, and factory-grade consumables.",
-      items: [
-        "Maintenance, Repair & Operations (MRO) supplies",
-        "Bearings, lubricants, motors, gearboxes",
-        "PPE (gloves, helmets, suits, eyewear)",
-        "Conveyor belts, belts & pulleys, machine parts",
-        "Industrial automation sensors and controls",
-        "MRO supplies, safety products, and factory-grade components",
-        "Tyres and Automobile Spare parts"
-      ]
-    },
-    
-    {
-      id: "aviation-marine",
-      title: "Aviation, Marine & Shipping",
-      description: "Sourcing engine parts, navigation equipment, deck machinery, safety gear, paints, coatings, and vessel maintenance items.",
-      items: [
-        "Ship engine parts, navigation equipment",
-        "Mooring ropes, anodes, marine paints & coatings",
-        "Pumps, valves, pipe fittings, hatch covers",
-        "Firefighting equipment, life rafts, inflatable boats",
-        "Galley equipment, lighting, deck machinery",
-        "Marine spare parts, tools, and ship supplies",
-        "Aviation spare parts, filters and grease"
-      ]
-    },
-    {
-      id: "defence-sector",
-      title: "Defence Sector",
-      description: "Discreet and reliable sourcing of tactical gear, technical equipment, uniforms, field supplies, and maintenance parts for military/government entities.",
-      items: [
-        "Tactical gear, uniforms, helmets, boots",
-        "Surveillance systems, communication radios",
-        "Portable shelters, generators, field equipment",
-        "Tools and test kits for maintenance",
-        "Supply of spares for land, naval, and air units",
-        "Tactical, technical, and general supplies for government and military entities"
-      ]
-    }
-  ];
+  const initialDivisions = Array.isArray(divisionsFromContent) ? divisionsFromContent : [];
   const [divisions, setDivisions] = useState(initialDivisions);
 
   const handleAddDivision = () => {

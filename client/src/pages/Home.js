@@ -24,8 +24,10 @@ import TestimonialSection from '../components/TestimonialSection';
 import CtaSection from '../components/CtaSection';
 import './Home.css';
 import { ConfirmDialog, useConfirmState } from '../components/ConfirmDialog';
+import { useContent } from '../context/ContentContext';
 
 const Home = () => {
+  const { content } = useContent();
   const { isEditMode, isDisabled, disableContent, enableContent } = useEditMode();
   const { confirmState, askConfirm, handleConfirm, handleCancel } = useConfirmState();
   const [ref, inView] = useInView({
@@ -124,7 +126,19 @@ const Home = () => {
     };
   }, [lastScrollY, hasTransitioned]);
 
-  const initialFeatures = [
+  const iconMap = {
+    'globe': <FiGlobe />,
+    'truck': <FiTruck />,
+    'trending-up': <FiTrendingUp />,
+    'clock': <FiClock />,
+    'users': <FiUsers />,
+    'shield': <FiShield />
+  };
+  const initialFeatures = (Array.isArray(content?.home?.features) ? content.home.features.map(f => ({
+    icon: iconMap[f.icon] || <FiCheckCircle />,
+    title: f.title,
+    description: f.description
+  })) : [
     {
       icon: <FiGlobe />,
       title: "Global Sourcing Network",
@@ -155,7 +169,7 @@ const Home = () => {
       title: "Quality Assurance",
       description: "Rigorous quality control and genuine OEM parts guarantee for all products and services."
     }
-  ];
+  ]);
   const [features, setFeatures] = useState(initialFeatures);
 
   const handleAddFeature = () => {
@@ -175,48 +189,7 @@ const Home = () => {
     });
   };
 
-  const initialDivisions = [
-    {
-      id: 'office-construction',
-      title: "Office, Construction & Infrastructure",
-      description: "Comprehensive sourcing for building materials, tools, safety gear, MEP systems, IT hardware/software, and site essentials.",
-      icon: "🏢",
-      color: "var(--primary-blue)",
-      link: "/divisions#office-construction"
-    },
-    {
-      id: 'oil-gas',
-      title: "Oil & Gas",
-      description: "Supply chain solutions for drilling, production, maintenance, safety, and instrumentation needs (upstream & downstream).",
-      icon: "⚡",
-      color: "var(--accent-orange)",
-      link: "/divisions#oil-gas"
-    },
-    {
-      id: 'industrial-manufacturing',
-      title: "Industrial & Manufacturing",
-      description: "Providing MRO supplies, automation components, PPE, bearings, motors, spare parts, and factory-grade consumables.",
-      icon: "🏭",
-      color: "var(--primary-blue-dark)",
-      link: "/divisions#industrial-manufacturing"
-    },
-    {
-      id: 'aviation-marine',
-      title: "Aviation, Marine & Shipping",
-      description: "Sourcing engine parts, navigation equipment, deck machinery, safety gear, paints, coatings, and vessel maintenance items.",
-      icon: "✈️",
-      color: "var(--accent-blue)",
-      link: "/divisions#aviation-marine"
-    },
-    {
-      id: 'defence-sector',
-      title: "Defence Sector",
-      description: "Discreet and reliable sourcing of tactical gear, technical equipment, uniforms, field supplies, and maintenance parts.",
-      icon: "🛡️",
-      color: "var(--text-primary)",
-      link: "/divisions#defence-sector"
-    }
-  ];
+  const initialDivisions = (Array.isArray(content?.home?.divisions) ? content.home.divisions : []);
   const [divisions, setDivisions] = useState(initialDivisions);
   const dragIndexRef = useRef(null);
 
@@ -278,25 +251,8 @@ const Home = () => {
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.8 }}
             >
-              <h2>About <span className="gold-text">Al Safa Global</span></h2>
-              <p>
-                Al Safa Global General Trading FZ LLC is a UAE-based company specializing in comprehensive 
-                procurement and supply chain solutions. Headquartered in Ras Al Khaimah, we proudly serve 
-                businesses and projects within the UAE and internationally — across the Construction, 
-                Industrial, Marine, Aerospace, Defence, IT, and Office Supplies sectors.
-              </p>
-              <p>
-                We partner with globally recognized brands and supply high-quality products that meet 
-                international standards. Whether supporting complex industrial projects, critical defense 
-                requirements, specialized marine and aerospace needs, or everyday office and IT demands, 
-                we ensure reliable and efficient sourcing for our clients worldwide.
-              </p>
-              <p>
-                Our strength lies in delivering cost-effective, timely, and dependable procurement 
-                solutions, backed by a deep understanding of market dynamics and logistical challenges. 
-                We position ourselves as a trusted partner — committed to helping clients achieve 
-                operational efficiency, project success, and sustainable growth.
-              </p>
+              <h2>{content?.home?.aboutPreview?.title || <>About <span className="gold-text">Al Safa Global</span></>}</h2>
+              {(content?.home?.aboutPreview?.paragraphs || []).slice(0, 3).map((p, i) => (<p key={i}>{p}</p>))}
               <div className="about-features">
                 <div className="feature-item">
                   <FiCheckCircle className="feature-icon" />
@@ -322,7 +278,7 @@ const Home = () => {
               {/* Company overview image above floating cards */}
               <div className="company-image-wrapper">
                 <img 
-                  src="/images/company-overview.jpg" 
+                  src={content?.home?.aboutPreview?.companyImage || "/images/company-overview.jpg"} 
                   alt="Al Safa Global Company Overview" 
                   className="company-overview-image"
                 />
@@ -378,9 +334,9 @@ const Home = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2>Our Business Segments</h2>
+            <h2>{content?.home?.sections?.divisions?.title || 'Our Business Segments'}</h2>
             <p className="section-subtitle">
-              Al Safa Global specializes in a wide array of supply and service segments
+              {content?.home?.sections?.divisions?.subtitle || 'Al Safa Global specializes in a wide array of supply and service segments'}
             </p>
           </motion.div>
           
@@ -451,9 +407,9 @@ const Home = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2>Why Choose <span className="gold-text">Al Safa Global</span>?</h2>
+            <h2>{content?.home?.sections?.features?.title || <>Why Choose <span className="gold-text">Al Safa Global</span>?</>}</h2>
             <p className="section-subtitle">
-              We combine industry expertise with innovative solutions to deliver exceptional value to our clients
+              {content?.home?.sections?.features?.subtitle || 'We combine industry expertise with innovative solutions to deliver exceptional value to our clients'}
             </p>
           </motion.div>
 

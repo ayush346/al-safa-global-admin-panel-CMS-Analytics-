@@ -17,8 +17,10 @@ import {
 import './About.css';
 import { useEditMode } from '../context/EditModeContext';
 import { ConfirmDialog, useConfirmState } from '../components/ConfirmDialog';
+import { useContent } from '../context/ContentContext';
 
 const About = () => {
+  const { about = {} } = useContent();
   const [ref, inView] = useInView({
     threshold: 0.1,
     triggerOnce: true
@@ -42,28 +44,12 @@ const About = () => {
     }
   }, [brandsInView, brandsAnimated]);
 
-  const initialValues = [
-    {
-      icon: <FiShield />,
-      title: "Integrity",
-      description: "We conduct business with honesty, transparency, and ethical practices in all our dealings."
-    },
-    {
-      icon: <FiGlobe />,
-      title: "Global Excellence",
-      description: "We maintain the highest standards of quality and service across all our operations."
-    },
-    {
-      icon: <FiUsers />,
-      title: "Partnership",
-      description: "We build long-term relationships based on trust, collaboration, and mutual success."
-    },
-    {
-      icon: <FiTrendingUp />,
-      title: "Innovation",
-      description: "We continuously improve our processes and solutions to meet evolving market needs."
-    }
-  ];
+  const initialValues = (Array.isArray(about.values) ? about.values.map(v => ({ title: v.title, description: v.description })) : [
+    { title: "Integrity", description: "We conduct business with honesty, transparency, and ethical practices in all our dealings." },
+    { title: "Global Excellence", description: "We maintain the highest standards of quality and service across all our operations." },
+    { title: "Partnership", description: "We build long-term relationships based on trust, collaboration, and mutual success." },
+    { title: "Innovation", description: "We continuously improve our processes and solutions to meet evolving market needs." }
+  ]);
   const [values, setValues] = useState(initialValues);
 
   const handleAddValue = () => {
@@ -83,15 +69,17 @@ const About = () => {
     });
   };
 
-  const initialAchievements = [
-    { number: "500+", label: "Satisfied Clients", icon: <FiUsers /> },
-    { number: "15+", label: "Years Experience", icon: <FiClock /> },
-    { number: "50+", label: "Global Partners", icon: <FiGlobe /> },
-    { number: "100%", label: "Quality Assurance", icon: <FiAward /> }
-  ];
+  const initialAchievements = (Array.isArray(about.achievements)
+    ? about.achievements.map(a => ({ ...a, icon: <FiAward /> }))
+    : [
+      { number: "500+", label: "Satisfied Clients", icon: <FiUsers /> },
+      { number: "15+", label: "Years Experience", icon: <FiClock /> },
+      { number: "50+", label: "Global Partners", icon: <FiGlobe /> },
+      { number: "100%", label: "Quality Assurance", icon: <FiAward /> }
+    ]);
   const [achievements, setAchievements] = useState(initialAchievements);
 
-  const initialServices = [
+  const initialServices = Array.isArray(about.services) ? about.services : [
     "End-to-End Procurement Solutions",
     "Global Sourcing & Supply",
     "Integrated Logistics Management",
@@ -105,7 +93,7 @@ const About = () => {
   ];
   const [services, setServices] = useState(initialServices);
 
-  const initialSectorSolutions = [
+  const initialSectorSolutions = Array.isArray(about.sectorSolutions) ? about.sectorSolutions : [
     "Construction & Infrastructure Supply",
     "Oil & Gas Equipment & Consumables",
     "Industrial & Manufacturing Support",
@@ -123,31 +111,7 @@ const About = () => {
   ];
   const [valueAddedServices, setValueAddedServices] = useState(initialValueAdded);
 
-  const initialBrands = [
-    { name: "HP", image: process.env.PUBLIC_URL + "/images/brands/hp-logo.png" },
-    { name: "IBM", image: process.env.PUBLIC_URL + "/images/brands/ibm-logo.png" },
-    { name: "SCHNEIDER", image: process.env.PUBLIC_URL + "/images/brands/schneider-logo.png" },
-    { name: "ABB", image: process.env.PUBLIC_URL + "/images/brands/abb-logo.png" },
-    { name: "ALLEN BRADLEY", image: process.env.PUBLIC_URL + "/images/brands/allen-bradley-logo.png" },
-    { name: "3M", image: process.env.PUBLIC_URL + "/images/brands/3m-logo.png" },
-    { name: "CAT", image: process.env.PUBLIC_URL + "/images/brands/cat-logo.png" },
-    { name: "MAKITA", image: process.env.PUBLIC_URL + "/images/brands/makita-logo.png" },
-    { name: "CARRIER", image: process.env.PUBLIC_URL + "/images/brands/carrier-logo.png" },
-    { name: "LG", image: process.env.PUBLIC_URL + "/images/brands/lg-logo.png" },
-    { name: "ROSEMOUNT", image: process.env.PUBLIC_URL + "/images/brands/rosemount-logo.png" },
-    { name: "EMERSON COPELAND", image: process.env.PUBLIC_URL + "/images/brands/emerson-copeland-logo.png" },
-    { name: "YORK", image: process.env.PUBLIC_URL + "/images/brands/york-logo.png" },
-    { name: "TRANE", image: process.env.PUBLIC_URL + "/images/brands/trane-logo.png" },
-    { name: "DAIKIN", image: process.env.PUBLIC_URL + "/images/brands/daikin-logo.png" },
-    { name: "MITSUBISHI ELECTRIC", image: process.env.PUBLIC_URL + "/images/brands/mitsubishi-electric-logo.png" },
-    { name: "BOSCH", image: process.env.PUBLIC_URL + "/images/brands/bosch-logo.png" },
-    { name: "JOHNSON CONTROLS", image: process.env.PUBLIC_URL + "/images/brands/johnson-controls-logo.png" },
-    { name: "JOTUN", image: process.env.PUBLIC_URL + "/images/brands/jotun-logo.png" },
-    { name: "NATIONAL PAINTS", image: process.env.PUBLIC_URL + "/images/brands/national-paints-logo.png" },
-    { name: "CATERPILLAR", image: process.env.PUBLIC_URL + "/images/brands/caterpillar-logo.png" },
-    { name: "FG-WILSON", image: process.env.PUBLIC_URL + "/images/brands/fg-wilson-logo.png" },
-    { name: "PARKER FILTERS & INSTRUMENTS", image: process.env.PUBLIC_URL + "/images/brands/parker-filters-logo.png" }
-  ];
+  const initialBrands = Array.isArray(about.brands) ? about.brands : [];
   const [brands, setBrands] = useState(initialBrands);
 
   // Why Choose - editable list
@@ -214,13 +178,10 @@ const About = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="gradient-text">About <span className="gold-text">Al Safa Global</span></h1>
+            <h1 className="gradient-text">{about?.heroTitle || <>About <span className="gold-text">Al Safa Global</span></>}</h1>
 
             <p>
-              Al Safa Global General Trading FZ LLC is a UAE-based company specializing in comprehensive 
-              procurement and supply chain solutions. Headquartered in Ras Al Khaimah, we proudly serve 
-              businesses and projects within the UAE and internationally — across the Construction, 
-              Industrial, Marine, Aerospace, Defence, IT, and Office Supplies sectors.
+              {about?.introParagraph || 'Al Safa Global General Trading FZ LLC is a UAE-based company specializing in comprehensive procurement and supply chain solutions.'}
             </p>
           </motion.div>
         </div>
@@ -242,9 +203,7 @@ const About = () => {
               </div>
               <h3>Our Vision</h3>
               <p>
-                To be a globally trusted procurement partner, known for delivering quality products, 
-                innovative solutions, and exceptional service that drive the success of projects and 
-                businesses across industries.
+                {about?.vision || 'To be a globally trusted procurement partner...'}
               </p>
             </motion.div>
 
@@ -260,11 +219,7 @@ const About = () => {
               </div>
               <h3>Our Mission</h3>
               <p>
-                To provide reliable, cost-effective sourcing and supply solutions for businesses in 
-                the UAE and across the globe. To represent and deliver world-renowned brands and 
-                products that meet the highest standards of quality and performance. To build long-term 
-                partnerships by exceeding client expectations with personalized service, integrity, 
-                and commitment to excellence.
+                {about?.mission || 'To provide reliable, cost-effective sourcing and supply solutions...'}
               </p>
             </motion.div>
           </div>

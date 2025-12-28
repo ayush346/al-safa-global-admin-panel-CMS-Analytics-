@@ -11,6 +11,7 @@ import Contact from './pages/Contact';
 import Quote from './pages/Quote';
 import Admin from './pages/Admin';
 import Analytics from './pages/Analytics';
+import ContentEditor from './pages/ContentEditor';
 import './App.css';
 import { useEffect, useRef } from 'react';
 import { useEditMode } from './context/EditModeContext';
@@ -146,20 +147,20 @@ function App() {
         <meta name="description" content="Al Safa Global General Trading FZ LLC - Your Trusted Partner in Procurement & Supply Chain Solutions. We provide comprehensive procurement, supply chain management, and trading services across the UAE and Middle East." />
         <meta name="keywords" content="procurement, supply chain, trading, UAE, Dubai, Al Safa Global, business solutions, logistics" />
         <meta name="author" content="Al Safa Global General Trading FZ LLC" />
-        <link rel="canonical" href="https://al-safa-global.vercel.app/" />
+        <link rel="canonical" href={(typeof window !== 'undefined' ? window.location.origin : '') + '/'} />
         
         {/* Open Graph */}
         <meta property="og:title" content="Al Safa Global - Procurement & Supply Chain Solutions" />
         <meta property="og:description" content="Your Trusted Partner in Procurement & Supply Chain Solutions. We provide comprehensive procurement, supply chain management, and trading services." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://al-safa-global.vercel.app/" />
-        <meta property="og:image" content="https://al-safa-global.vercel.app/images/logo.png" />
+        <meta property="og:url" content={(typeof window !== 'undefined' ? window.location.origin : '') + '/'} />
+        <meta property="og:image" content={(typeof window !== 'undefined' ? window.location.origin : '') + '/images/logo.png'} />
         
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Al Safa Global - Procurement & Supply Chain Solutions" />
         <meta name="twitter:description" content="Your Trusted Partner in Procurement & Supply Chain Solutions. We provide comprehensive procurement, supply chain management, and trading services." />
-        <meta name="twitter:image" content="https://al-safa-global.vercel.app/images/logo.png" />
+        <meta name="twitter:image" content={(typeof window !== 'undefined' ? window.location.origin : '') + '/images/logo.png'} />
       </Helmet>
       
       <ScrollToTop />
@@ -179,6 +180,7 @@ function App() {
             <Route path="/quote" element={<Quote />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/analytics" element={<Analytics />} />
+            <Route path="/admin/content" element={<ContentEditor />} />
           </Routes>
         </main>
         <div

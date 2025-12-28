@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import './Quote.css';
+import { useContent } from '../context/ContentContext';
 
 const Quote = () => {
+  const { forms = {} } = useContent();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -180,13 +182,7 @@ Submitted on: ${new Date().toLocaleString()}
                 required
               >
                 <option value="">Select Segment of Interest *</option>
-                <option value="Office, Construction & Infrastructure">Office, Construction & Infrastructure</option>
-                <option value="Oil & Gas">Oil & Gas</option>
-                
-                <option value="Industrial & Manufacturing">Industrial & Manufacturing</option>
-                <option value="Aviation & Marine">Aviation, Marine & Shipping</option>
-                <option value="Defence Sector">Defence Sector</option>
-                <option value="General Inquiry">General Inquiry</option>
+                {(forms?.divisionsOptions || []).map((o) => (<option key={o} value={o}>{o}</option>))}
               </select>
             </div>
             
@@ -197,11 +193,7 @@ Submitted on: ${new Date().toLocaleString()}
                 onChange={handleInputChange}
                 required
               >
-                <option value="Request for Quotation">Request for Quotation</option>
-                <option value="Bulk Order Quote">Bulk Order Quote</option>
-                <option value="Custom Solution Quote">Custom Solution Quote</option>
-                <option value="Partnership Quote">Partnership Quote</option>
-                <option value="Service Quote">Service Quote</option>
+                {(forms?.quoteTypes || []).map((o) => (<option key={o} value={o}>{o}</option>))}
               </select>
             </div>
             

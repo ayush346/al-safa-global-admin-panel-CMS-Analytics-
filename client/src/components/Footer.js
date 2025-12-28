@@ -7,9 +7,29 @@ import {
   FiPhone 
 } from 'react-icons/fi';
 import './Footer.css';
+import { useContent } from '../context/ContentContext';
 
 const Footer = () => {
+  const { footer = {} } = useContent();
   const currentYear = new Date().getFullYear();
+  const emails = Array.isArray(footer.emails) ? footer.emails : ['info@alsafaglobal.com'];
+  const phones = Array.isArray(footer.phones) ? footer.phones : ['00971 4 3741 969', '00971 50 5671441'];
+  const locationText = footer.locationText || 'Ras Al Khaimah, UAE';
+  const quickLinks = Array.isArray(footer.quickLinks) ? footer.quickLinks : [
+    { label: 'Home', path: '/' },
+    { label: 'About Us', path: '/about' },
+    { label: 'Segments', path: '/divisions' },
+    { label: 'Contact', path: '/contact' }
+  ];
+  const services = Array.isArray(footer.services) ? footer.services : [
+    'Office, Construction & Infrastructure',
+    'Oil & Gas',
+    'Industrial & Manufacturing',
+    'Aviation & Marine',
+    'Defence Sector'
+  ];
+  const footerImage = footer.footerImage || '/images/footer-image.jpg';
+  const legal = footer.legal || 'Al Safa Global General Trading FZ LLC. All rights reserved.';
 
   return (
     <footer className="footer">
@@ -29,24 +49,28 @@ const Footer = () => {
             <div className="footer-contact">
               <div className="contact-item">
                 <FiMail className="contact-icon" />
-                <a href="mailto:info@alsafaglobal.com" className="contact-link">
-                  info@alsafaglobal.com
-                </a>
+                <div className="contact-phones">
+                  {emails.map((e) => (
+                    <div key={e}>
+                      <a href={`mailto:${e}`} className="contact-link">{e}</a>
+                    </div>
+                  ))}
+                </div>
               </div>
               <div className="contact-item">
                 <FiPhone className="contact-icon" />
                 <div className="contact-phones">
-                  <div>
-                    <span>Office: </span><a href="tel:0097143741969" className="contact-link">00971 4 3741 969</a>
-                  </div>
-                  <div>
-                    <span>Mobile:</span><a href="tel:00971505671441" className="contact-link">00971 50 5671441</a>
-                  </div>
+                  {phones.map((p, idx) => (
+                    <div key={p}>
+                      <span>{idx === 0 ? 'Office:' : 'Mobile:'} </span>
+                      <a href={`tel:${p.replace(/\\s/g, '')}`} className="contact-link">{p}</a>
+                    </div>
+                  ))}
                 </div>
               </div>
               <div className="contact-item">
                 <FiMapPin className="contact-icon" />
-                <span>Ras Al Khaimah, UAE</span>
+                <span>{locationText}</span>
               </div>
             </div>
           </motion.div>
@@ -61,10 +85,9 @@ const Footer = () => {
           >
             <h4>Quick Links</h4>
             <ul className="footer-links">
-              <li><Link to="/">Home</Link></li>
-              <li><Link to="/about">About Us</Link></li>
-              <li><Link to="/divisions">Segments</Link></li>
-              <li><Link to="/contact">Contact</Link></li>
+              {quickLinks.map((l) => (
+                <li key={l.path}><Link to={l.path}>{l.label}</Link></li>
+              ))}
             </ul>
           </motion.div>
 
@@ -78,11 +101,7 @@ const Footer = () => {
           >
             <h4>Our Services</h4>
             <ul className="footer-links">
-              <li>Office, Construction & Infrastructure</li>
-              <li>Oil & Gas</li>
-              <li>Industrial & Manufacturing</li>
-              <li>Aviation & Marine</li>
-              <li>Defence Sector</li>
+              {services.map((s) => (<li key={s}>{s}</li>))}
             </ul>
           </motion.div>
 
@@ -96,7 +115,7 @@ const Footer = () => {
           >
             <div className="footer-image-wrapper">
               <img 
-                src="/images/footer-image.jpg" 
+                src={footerImage}
                 alt="Al Safa Global" 
                 className="footer-image"
               />
@@ -113,7 +132,7 @@ const Footer = () => {
           viewport={{ once: true }}
         >
           <div className="footer-bottom-content">
-            <p>&copy; {currentYear} Al Safa Global General Trading FZ LLC. All rights reserved.</p>
+            <p>&copy; {currentYear} {legal}</p>
           </div>
         </motion.div>
       </div>

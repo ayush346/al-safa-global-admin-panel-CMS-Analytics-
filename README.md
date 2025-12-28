@@ -14,7 +14,7 @@ A modern, responsive website for Al Safa Global General Trading FZ LLC, showcasi
 
 ## 🚀 Live Demo
 
-Visit the live website: [https://al-safa-global.vercel.app](https://al-safa-global.vercel.app)
+Deployed on Render (use your Render URL or custom domain).
 
 ## 🛠️ Tech Stack
 
@@ -34,8 +34,7 @@ Visit the live website: [https://al-safa-global.vercel.app](https://al-safa-glob
 - **Multer** - File upload handling
 
 ### Deployment
-- **Vercel** - Frontend hosting
-- **GitHub Actions** - CI/CD pipeline
+- **Render** - Node Web Service (serves React build + API)
 
 ## 📁 Project Structure
 
@@ -52,7 +51,7 @@ Visit the live website: [https://al-safa-global.vercel.app](https://al-safa-glob
 │   ├── routes/           # API routes
 │   └── index.js          # Server entry point
 ├── .github/              # GitHub Actions
-└── vercel.json           # Vercel configuration
+└── render.yaml           # Render configuration
 ```
 
 ## 🚀 Quick Start
@@ -103,21 +102,22 @@ Visit the live website: [https://al-safa-global.vercel.app](https://al-safa-glob
 
 ## 🌐 Deployment
 
-### Vercel Deployment
+### Render Deployment
 
-The project is configured for automatic deployment on Vercel:
+The project includes a `render.yaml` for one-click Blueprint deploy on Render:
 
-1. Connect your GitHub repository to Vercel
-2. Vercel will automatically detect the React app in the `client/` directory
-3. Deployments happen automatically on every push to main branch
+1. In Render, click New → Blueprint and connect this repo
+2. Add environment variables (see below)
+3. Deploy
 
 ### Environment Variables
 
-Set these environment variables in Vercel:
+Set these environment variables in Render:
 
 - `NODE_ENV=production`
-- `MONGODB_URI` (if using database)
-- `EMAIL_SERVICE` (for contact form)
+- `MONGODB_URI_PROD`
+- `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_USER`, `EMAIL_PASS`, `EMAIL_FROM`
+- `CLIENT_URL_PROD` (your Render URL or custom domain)
 
 ## 📱 Responsive Design
 
@@ -156,7 +156,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - React team for the amazing framework
-- Vercel for seamless deployment
+- Render for hosting
 - All the open-source contributors whose libraries made this possible
 
 ---

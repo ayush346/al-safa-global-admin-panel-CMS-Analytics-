@@ -1,6 +1,6 @@
 # Al Safa Global Website - Deployment Guide
 
-## 🚀 Quick Deploy to Vercel (Recommended)
+## 🚀 Quick Deploy to Render (Recommended)
 
 ### Step 1: Prepare Your Repository
 1. Push your code to GitHub:
@@ -13,16 +13,16 @@ git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
 git push -u origin main
 ```
 
-### Step 2: Deploy to Vercel
-1. Go to [vercel.com](https://vercel.com) and sign up/login
-2. Click "New Project"
-3. Import your GitHub repository
-4. Vercel will automatically detect your configuration
+### Step 2: Deploy to Render
+1. Go to [render.com](https://render.com) and sign up/login
+2. Click "New" → "Blueprint"
+3. Connect your GitHub repository
+4. Render will detect `render.yaml` and configure a Web Service
 5. Add environment variables (see Environment Variables section below)
-6. Click "Deploy"
+6. Click "Apply" to deploy
 
 ### Step 3: Configure Environment Variables
-In your Vercel dashboard, add these environment variables:
+In your Render dashboard, add these environment variables:
 
 **Required Variables:**
 - `MONGODB_URI_PROD` - Your MongoDB Atlas connection string
@@ -68,7 +68,7 @@ In your Vercel dashboard, add these environment variables:
 │   ├── models/
 │   ├── routes/
 │   └── utils/
-├── vercel.json            # Vercel configuration
+├── render.yaml            # Render configuration
 └── package.json           # Root package.json
 ```
 
@@ -83,7 +83,7 @@ In your Vercel dashboard, add these environment variables:
 
 ## 🌐 Domain Configuration
 After deployment, you can:
-1. Add custom domain in Vercel dashboard
+1. Add custom domain in Render dashboard
 2. Configure DNS records
 3. Enable HTTPS (automatic with Vercel)
 
@@ -102,13 +102,13 @@ After deployment, you can:
 - [ ] Performance optimization
 
 ## 🛠️ Troubleshooting
-- Check Vercel function logs for server errors
+- Check Render logs for build/runtime errors
 - Verify environment variables are set correctly
-- Ensure MongoDB Atlas IP whitelist includes Vercel
+- Ensure MongoDB Atlas network access allows Render
 - Test email configuration locally first
 
 ## 📞 Support
 For deployment issues, check:
-- Vercel documentation
+- Render documentation
 - MongoDB Atlas setup guide
-- Gmail SMTP configuration 
+- Gmail SMTP configuration

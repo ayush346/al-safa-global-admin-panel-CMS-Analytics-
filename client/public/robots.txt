@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://al-safa-global.vercel.app/sitemap.xml
+Sitemap: /sitemap.xml
 
 # Disallow admin and API routes
 Disallow: /api/
