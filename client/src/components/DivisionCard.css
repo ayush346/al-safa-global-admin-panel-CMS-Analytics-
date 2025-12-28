@@ -1,0 +1,260 @@
+.division-card {
+  background: var(--white);
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(30, 58, 138, 0.05);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.division-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+.division-icon {
+  font-size: 2.5rem;
+  margin-bottom: var(--space-md);
+  flex-shrink: 0;
+  color: var(--primary-blue);
+}
+
+.division-card h3 {
+  color: var(--text-primary);
+  margin-bottom: var(--space-md);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  line-height: 1.3;
+  flex-shrink: 0;
+}
+
+.division-card p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--space-lg);
+  font-weight: 400;
+  flex-grow: 1;
+  text-align: justify;
+  word-spacing: var(--word-spacing);
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+/* Mobile word spacing consistency for division cards */
+@media (max-width: 767px) {
+  .division-card p {
+    text-align: justify !important;
+    word-spacing: 0.18em !important;
+    letter-spacing: 0.015em !important;
+    text-justify: inter-word !important;
+    -webkit-text-justify: inter-word !important;
+    -moz-text-justify: inter-word !important;
+    hyphens: auto !important;
+    -webkit-hyphens: auto !important;
+    -ms-hyphens: auto !important;
+    text-rendering: optimizeLegibility !important;
+    font-variant-ligatures: common-ligatures !important;
+    line-height: 1.65 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .division-card p {
+    text-align: justify !important;
+    word-spacing: 0.25em !important;
+    letter-spacing: 0.025em !important;
+    text-justify: distribute !important;
+    -webkit-text-justify: distribute !important;
+    -moz-text-justify: distribute !important;
+    hyphens: auto !important;
+    -webkit-hyphens: auto !important;
+    -ms-hyphens: auto !important;
+    hyphenate-limit-chars: 4 2 2;
+    text-rendering: optimizeLegibility !important;
+    font-variant-ligatures: common-ligatures !important;
+    line-height: 1.7 !important;
+    font-size: 0.95rem !important;
+  }
+}
+
+.division-link {
+  display: inline-block;
+  color: var(--white);
+  background: var(--gradient-primary);
+  text-decoration: none;
+  font-weight: 600;
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-md);
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-md);
+  border: 2px solid transparent;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.division-link:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  background: var(--primary-gold);
+  color: var(--text-dark);
+}
+
+/* Responsive Design - Mobile First */
+@media (max-width: 767px) {
+  .division-card {
+    padding: var(--space-md);
+  }
+  
+  .division-icon {
+    font-size: 2rem;
+    margin-bottom: var(--space-sm);
+  }
+  
+  .division-card h3 {
+    font-size: var(--text-base);
+    margin-bottom: var(--space-sm);
+  }
+  
+  .division-card p {
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-md);
+  }
+  
+  .division-link {
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--text-sm);
+  }
+}
+
+/* Responsive Design - Mobile (768px and below) */
+@media (max-width: 767px) {
+  .division-icon {
+    font-size: var(--text-2xl);
+  }
+}
+
+/* Responsive Design - Small Mobile */
+@media (max-width: 480px) {
+  .division-card {
+    padding: var(--space-sm);
+  }
+  
+  .division-icon {
+    font-size: var(--text-2xl); /* Reduced from 1.75rem to match max mobile text size */
+  }
+  
+  .division-card h3 {
+    font-size: var(--text-sm);
+  }
+  
+  .division-card p {
+    font-size: var(--text-xs);
+  }
+  
+  .division-link {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--text-xs);
+    min-height: 40px;
+  }
+}
+
+/* Responsive Design - Tablet */
+@media (min-width: 768px) and (max-width: 991px) {
+  .division-card {
+    padding: var(--space-lg);
+  }
+  
+  .division-icon {
+    font-size: 2.25rem;
+  }
+  
+  .division-card h3 {
+    font-size: var(--text-lg);
+  }
+  
+  .division-card p {
+    font-size: var(--text-base);
+  }
+}
+
+/* Responsive Design - Desktop */
+@media (min-width: 992px) {
+  .division-card {
+    padding: 2rem;
+  }
+  
+  .division-icon {
+    font-size: 3rem;
+  }
+  
+  .division-card h3 {
+    font-size: 1.2rem;
+  }
+  
+  .division-card p {
+    font-size: var(--text-base);
+  }
+  
+  .division-link {
+    padding: 0.75rem 1.5rem;
+    font-size: var(--text-base);
+  }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .division-card:hover {
+    transform: none;
+  }
+  
+  .division-card:active {
+    transform: translateY(-2px);
+  }
+  
+  .division-link:hover {
+    transform: none;
+  }
+  
+  .division-link:active {
+    transform: translateY(-1px);
+  }
+}
+
+/* Focus States */
+.division-card:focus-within {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.3);
+}
+
+.division-link:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.3);
+}
+
+/* Print Styles */
+@media print {
+  .division-card {
+    box-shadow: none;
+    border: 1px solid #ccc;
+    break-inside: avoid;
+  }
+  
+  .division-card:hover {
+    transform: none;
+  }
+  
+  .division-link:hover {
+    transform: none;
+  }
+} 

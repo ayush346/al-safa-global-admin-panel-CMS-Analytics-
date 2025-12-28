@@ -1,0 +1,92 @@
+/* Simple form container leveraging existing design tokens */
+.admin-container {
+  max-width: 480px;
+  margin: 120px auto 60px;
+  padding: var(--space-xl);
+  background: var(--white);
+  border: 1px solid var(--light-blue);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.admin-title {
+  margin: 0 0 var(--space-md);
+  color: var(--text-primary);
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  text-align: center;
+}
+
+.admin-subtitle {
+  margin: 0 0 var(--space-lg);
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-lg);
+}
+
+.form-label {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.form-input {
+  padding: var(--space-md);
+  border: 1px solid var(--light-blue);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: box-shadow var(--transition-normal), border-color var(--transition-normal);
+}
+
+.form-input:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.15);
+}
+
+.admin-actions {
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+  justify-content: center;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-md) var(--space-xl);
+  border-radius: var(--radius-md);
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--primary-blue);
+  color: var(--white);
+}
+
+.btn-secondary {
+  background: var(--light-blue);
+  color: var(--primary-blue);
+}
+
+.helper-text {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-align: center;
+}
+
+
+
+
+
+
+
+

@@ -1,0 +1,423 @@
+.divisions-page {
+  min-height: 100vh;
+}
+
+.section-header h2 {
+  color: var(--accent-yellow);
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  font-weight: 800;
+}
+
+.divisions-hero {
+  background: var(--white);
+  color: var(--text-primary);
+  padding: 6rem 0 0.2rem; /* Minimal bottom padding */
+  text-align: center;
+}
+
+.divisions-hero-content h1 {
+  color: var(--text-primary);
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-weight: 800;
+}
+
+.divisions-hero-content h1 .gold-text {
+  color: var(--primary-gold) !important;
+}
+
+.divisions-hero-content p:last-child {
+  margin-bottom: 0; /* No gap - removed completely */
+}
+
+.hero-subtitle {
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  font-weight: 600;
+  opacity: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  text-align: justify;
+  word-spacing: var(--word-spacing);
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.hero-description {
+  font-size: 1.1rem;
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  font-weight: 600;
+  opacity: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  text-align: justify;
+  word-spacing: var(--word-spacing);
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.divisions-content {
+  padding: 4rem 0;
+  background: var(--white);
+}
+
+.division-section {
+  margin-bottom: 4rem;
+  padding: 3rem;
+  background: var(--white);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.division-section:last-child {
+  margin-bottom: 0;
+}
+
+.division-header {
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.division-header h2 {
+  color: var(--accent-yellow);
+  margin-bottom: 1rem;
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.division-description {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  text-align: justify;
+  word-spacing: var(--word-spacing);
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.division-items-container {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.division-items-container h3 {
+  color: var(--accent-yellow);
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.division-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.division-items li {
+  color: var(--text-secondary);
+  padding: 1rem;
+  background: var(--white);
+  border-radius: 8px;
+  border-left: 4px solid var(--primary-blue);
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  position: relative;
+  padding-left: 2rem;
+}
+
+.division-items li::before {
+  content: "•";
+  color: var(--primary-blue);
+  font-weight: bold;
+  position: absolute;
+  left: 0.75rem;
+  top: 1rem;
+}
+
+/* Additional Information Section */
+.divisions-info {
+  padding: 4rem 0;
+  background: var(--white);
+}
+
+.info-content h2 {
+  color: var(--accent-yellow);
+  margin-bottom: 3rem;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-align: center;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.info-item {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.info-item h3 {
+  color: var(--accent-yellow);
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.info-item p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  text-align: justify;
+  word-spacing: var(--word-spacing);
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .divisions-content {
+    padding-top: 1.5rem; /* Reduce space AFTER hero only */
+  }
+  .divisions-hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .division-section {
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .division-header h2 {
+    font-size: 1.8rem;
+  }
+
+  .division-items-container h3 {
+    font-size: 1.2rem; /* Smaller than division h2 (1.8rem) */
+  }
+
+  .division-items {
+    grid-template-columns: 1fr;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .info-content h2 {
+    font-size: 2rem;
+  }
+
+  .info-item h3 {
+    font-size: 1.2rem; /* Subheadings smaller than main heading */
+  }
+}
+
+/* Responsive Design - Mobile (768px and below) */
+@media (max-width: 767px) {
+  .section-header h2 {
+    font-size: var(--text-2xl);
+  }
+  
+  .divisions-hero-content h1 {
+    font-size: var(--text-2xl);
+  }
+
+  /* Mobile word spacing consistency for specific division descriptions */
+  #oil-gas .division-description,
+  #industrial-manufacturing .division-description,
+  #defence-sector .division-description,
+  #office-construction .division-description,
+  #construction-infrastructure .division-description,
+  #aviation-marine .division-description {
+    text-align: justify !important;
+    text-align-last: justify !important;
+    word-spacing: 0.2em !important;
+    letter-spacing: 0.02em !important;
+    hyphens: auto !important;
+    -webkit-hyphens: auto !important;
+    -ms-hyphens: auto !important;
+    hyphenate-limit-chars: 5 2 2;
+    text-justify: distribute !important;
+    -webkit-text-justify: distribute !important;
+    -moz-text-justify: distribute !important;
+    overflow-wrap: break-word !important;
+    word-break: keep-all !important;
+    line-height: 1.7 !important;
+    font-size: 1rem !important;
+  }
+}
+
+/* Responsive Design - Small Mobile (480px and below) */
+@media (max-width: 480px) {
+  .divisions-hero {
+    padding-top: 4rem; /* Match Contact hero top spacing on small mobile */
+  }
+  .divisions-content {
+    padding-top: 1rem; /* Reduce space AFTER hero only on small mobile */
+  }
+  
+  .divisions-hero-content h1 {
+    font-size: var(--text-2xl);
+  }
+  
+  /* Override all large font sizes to max mobile text size */
+  .section-header h2 {
+    font-size: var(--text-2xl); /* Reduced from 2.5rem */
+  }
+  
+  .division-header h2 {
+    font-size: var(--text-xl); /* Ensure division headings are smaller than main headings */
+  }
+  
+  .division-items-container h3 {
+    font-size: 1rem; /* Smaller than division h2 (var(--text-xl) = 1.25rem) */
+  }
+  
+  .info-content h2 {
+    font-size: var(--text-2xl); /* Why Choose Us? heading should be larger */
+  }
+
+  .info-item h3 {
+    font-size: 1.1rem; /* Subheadings smaller than main heading */
+  }
+
+  /* Mobile word spacing consistency for specific division descriptions */
+  #oil-gas .division-description,
+  #industrial-manufacturing .division-description,
+  #defence-sector .division-description,
+  #office-construction .division-description,
+  #construction-infrastructure .division-description,
+  #aviation-marine .division-description {
+    text-align: justify !important;
+    text-align-last: justify !important;
+    word-spacing: 0.25em !important;
+    letter-spacing: 0.025em !important;
+    hyphens: auto !important;
+    -webkit-hyphens: auto !important;
+    -ms-hyphens: auto !important;
+    hyphenate-limit-chars: 4 2 2;
+    text-justify: distribute !important;
+    -webkit-text-justify: distribute !important;
+    -moz-text-justify: distribute !important;
+    overflow-wrap: break-word !important;
+    word-break: keep-all !important;
+    line-height: 1.8 !important;
+    font-size: 0.95rem !important;
+    text-rendering: optimizeLegibility !important;
+  }
+
+  /* Additional specific targeting for maximum mobile consistency */
+  .division-section[id="oil-gas"] .division-description,
+  .division-section[id="industrial-manufacturing"] .division-description,
+  .division-section[id="defence-sector"] .division-description,
+  .division-section[id="office-construction"] .division-description,
+  .division-section[id="construction-infrastructure"] .division-description,
+  .division-section[id="aviation-marine"] .division-description {
+    text-align: justify !important;
+    word-spacing: 0.3em !important;
+    letter-spacing: 0.03em !important;
+    white-space: normal !important;
+    text-justify: distribute-all-lines !important;
+  }
+}
+
+/* Specific fix for aviation-marine description word spacing inconsistency */
+@media (max-width: 767px) {
+  #aviation-marine .division-description {
+    text-align: justify !important;
+    word-spacing: 0.05em !important;
+    letter-spacing: 0.005em !important;
+    text-justify: inter-word !important;
+    -webkit-text-justify: inter-word !important;
+    -moz-text-justify: inter-word !important;
+    hyphens: auto !important;
+    -webkit-hyphens: auto !important;
+    -ms-hyphens: auto !important;
+    hyphenate-limit-chars: 4 2 1 !important;
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    word-break: break-word !important;
+    line-height: 1.6 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  #aviation-marine .division-description {
+    text-align: justify !important;
+    word-spacing: 0.03em !important;
+    letter-spacing: 0.003em !important;
+    text-justify: inter-word !important;
+    -webkit-text-justify: inter-word !important;
+    -moz-text-justify: inter-word !important;
+    hyphens: auto !important;
+    -webkit-hyphens: auto !important;
+    -ms-hyphens: auto !important;
+    hyphenate-limit-chars: 3 2 1 !important;
+    white-space: normal !important;
+    overflow-wrap: break-word !important;
+    word-break: break-word !important;
+    font-size: 0.95rem !important;
+    line-height: 1.65 !important;
+  }
+}
+
+/* Universal mobile word spacing for consistent display */
+@media screen and (max-width: 768px) {
+  .division-section .division-description {
+    text-align: justify !important;
+    word-spacing: normal !important;
+  }
+  
+  /* Override specifically for the divisions with similar description patterns */
+  .division-section[id="oil-gas"] .division-description,
+  .division-section[id="industrial-manufacturing"] .division-description,
+  .division-section[id="defence-sector"] .division-description,
+  .division-section[id="office-construction"] .division-description,
+  .division-section[id="construction-infrastructure"] .division-description,
+  .division-section[id="aviation-marine"] .division-description {
+    word-spacing: 0.18em !important;
+    letter-spacing: 0.015em !important;
+    text-justify: inter-word !important;
+    -webkit-text-justify: inter-word !important;
+    -moz-text-justify: inter-word !important;
+    hyphens: auto !important;
+    -webkit-hyphens: auto !important;
+    -ms-hyphens: auto !important;
+    text-rendering: optimizeLegibility !important;
+    font-variant-ligatures: common-ligatures !important;
+  }
+} 

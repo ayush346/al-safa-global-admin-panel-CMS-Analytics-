@@ -1,0 +1,530 @@
+import React, { useEffect, useState, useRef } from 'react';
+import { motion } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
+import { Link } from 'react-router-dom';
+import { useEditMode } from '../context/EditModeContext';
+import { 
+  FiArrowRight, 
+  FiShield, 
+  FiGlobe, 
+  FiClock, 
+  FiUsers, 
+  FiAward,
+  FiTruck,
+  FiTrendingUp,
+  FiCheckCircle,
+  FiPackage,
+  FiLink
+} from 'react-icons/fi';
+import HeroSection from '../components/HeroSection';
+import FeatureCard from '../components/FeatureCard';
+import DivisionCard from '../components/DivisionCard';
+import StatsSection from '../components/StatsSection';
+import TestimonialSection from '../components/TestimonialSection';
+import CtaSection from '../components/CtaSection';
+import './Home.css';
+import { ConfirmDialog, useConfirmState } from '../components/ConfirmDialog';
+
+const Home = () => {
+  const { isEditMode, isDisabled, disableContent, enableContent } = useEditMode();
+  const { confirmState, askConfirm, handleConfirm, handleCancel } = useConfirmState();
+  const [ref, inView] = useInView({
+    threshold: 0.1,
+    triggerOnce: true
+  });
+  
+  const [cardsScrolled, setCardsScrolled] = useState({
+    card1: false,
+    card2: false,
+    card3: false,
+    card4: false,
+    card5: false
+  });
+
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [hasTransitioned, setHasTransitioned] = useState(false);
+
+  // Check if user is revisiting the home page
+  useEffect(() => {
+    const hasVisitedOtherPages = sessionStorage.getItem('hasVisitedOtherPages');
+    if (hasVisitedOtherPages === 'true') {
+      // Reset cards if user is revisiting after visiting other pages
+      setCardsScrolled({
+        card1: false,
+        card2: false,
+        card3: false,
+        card4: false,
+        card5: false
+      });
+      setHasTransitioned(false);
+      sessionStorage.removeItem('hasVisitedOtherPages');
+    }
+  }, []);
+
+  // Track when user leaves home page
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      if (hasTransitioned) {
+        sessionStorage.setItem('hasVisitedOtherPages', 'true');
+      }
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden' && hasTransitioned) {
+        sessionStorage.setItem('hasVisitedOtherPages', 'true');
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [hasTransitioned]);
+
+  // Handle scroll effect for floating cards in mobile
+  useEffect(() => {
+    const handleScroll = () => {
+      const cardsContainer = document.querySelector('.image-container');
+      if (cardsContainer) {
+        const rect = cardsContainer.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        const currentScrollY = window.scrollY;
+        const isScrollingDown = currentScrollY > lastScrollY;
+        
+        // Check if cards are in viewport (mobile only)
+        if (window.innerWidth <= 767) {
+          if (rect.top < windowHeight * 0.8 && rect.bottom > 0) {
+            // Only trigger transitions when scrolling down and haven't transitioned yet
+            if (isScrollingDown && !hasTransitioned) {
+              // Trigger cards one by one with staggered timing
+              setTimeout(() => setCardsScrolled(prev => ({ ...prev, card1: true })), 0);
+              setTimeout(() => setCardsScrolled(prev => ({ ...prev, card2: true })), 200);
+              setTimeout(() => setCardsScrolled(prev => ({ ...prev, card3: true })), 400);
+              setTimeout(() => setCardsScrolled(prev => ({ ...prev, card4: true })), 600);
+              setTimeout(() => setCardsScrolled(prev => ({ ...prev, card5: true })), 800);
+              setHasTransitioned(true); // Mark as transitioned permanently
+            }
+          }
+        }
+        setLastScrollY(currentScrollY);
+      }
+    };
+
+    // Only add scroll listener on mobile
+    if (window.innerWidth <= 767) {
+      window.addEventListener('scroll', handleScroll);
+      handleScroll(); // Check initial state
+    }
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [lastScrollY, hasTransitioned]);
+
+  const initialFeatures = [
+    {
+      icon: <FiGlobe />,
+      title: "Global Sourcing Network",
+      description: "Direct access to reputed brands and suppliers worldwide for comprehensive procurement solutions."
+    },
+    {
+      icon: <FiTruck />,
+      title: "End-to-End Solutions",
+      description: "Complete procurement and logistics management from sourcing to delivery coordination."
+    },
+    {
+      icon: <FiTrendingUp />,
+      title: "Competitive Pricing",
+      description: "Cost-effective sourcing without compromising on quality or authenticity of products."
+    },
+    {
+      icon: <FiClock />,
+      title: "Timely Delivery",
+      description: "Committed to meeting project deadlines and operational schedules with responsive turnaround."
+    },
+    {
+      icon: <FiUsers />,
+      title: "Industry Expertise",
+      description: "Experienced team with deep industry-specific knowledge across multiple sectors."
+    },
+    {
+      icon: <FiShield />,
+      title: "Quality Assurance",
+      description: "Rigorous quality control and genuine OEM parts guarantee for all products and services."
+    }
+  ];
+  const [features, setFeatures] = useState(initialFeatures);
+
+  const handleAddFeature = () => {
+    setFeatures(prev => ([
+      ...prev,
+      {
+        icon: "➕",
+        title: "New Benefit",
+        description: "Click here to edit the benefit description."
+      }
+    ]));
+  };
+
+  const handleRemoveFeature = (indexToRemove) => {
+    askConfirm('Are you sure you want to delete this item?', () => {
+      setFeatures(prev => prev.filter((_, i) => i !== indexToRemove));
+    });
+  };
+
+  const initialDivisions = [
+    {
+      id: 'office-construction',
+      title: "Office, Construction & Infrastructure",
+      description: "Comprehensive sourcing for building materials, tools, safety gear, MEP systems, IT hardware/software, and site essentials.",
+      icon: "🏢",
+      color: "var(--primary-blue)",
+      link: "/divisions#office-construction"
+    },
+    {
+      id: 'oil-gas',
+      title: "Oil & Gas",
+      description: "Supply chain solutions for drilling, production, maintenance, safety, and instrumentation needs (upstream & downstream).",
+      icon: "⚡",
+      color: "var(--accent-orange)",
+      link: "/divisions#oil-gas"
+    },
+    {
+      id: 'industrial-manufacturing',
+      title: "Industrial & Manufacturing",
+      description: "Providing MRO supplies, automation components, PPE, bearings, motors, spare parts, and factory-grade consumables.",
+      icon: "🏭",
+      color: "var(--primary-blue-dark)",
+      link: "/divisions#industrial-manufacturing"
+    },
+    {
+      id: 'aviation-marine',
+      title: "Aviation, Marine & Shipping",
+      description: "Sourcing engine parts, navigation equipment, deck machinery, safety gear, paints, coatings, and vessel maintenance items.",
+      icon: "✈️",
+      color: "var(--accent-blue)",
+      link: "/divisions#aviation-marine"
+    },
+    {
+      id: 'defence-sector',
+      title: "Defence Sector",
+      description: "Discreet and reliable sourcing of tactical gear, technical equipment, uniforms, field supplies, and maintenance parts.",
+      icon: "🛡️",
+      color: "var(--text-primary)",
+      link: "/divisions#defence-sector"
+    }
+  ];
+  const [divisions, setDivisions] = useState(initialDivisions);
+  const dragIndexRef = useRef(null);
+
+  const handleAddDivision = () => {
+    setDivisions(prev => ([
+      ...prev,
+      {
+        id: `new-${Date.now()}`,
+        title: "New Segment",
+        description: "Click here to edit the segment description.",
+        icon: "➕",
+        color: "var(--primary-blue)",
+        link: "/divisions"
+      }
+    ]));
+  };
+
+  const handleRemoveDivision = (id) => {
+    askConfirm('Are you sure you want to delete this segment?', () => {
+      setDivisions(prev => prev.filter(d => d.id !== id));
+    });
+  };
+
+  const handleDragStart = (index) => {
+    dragIndexRef.current = index;
+  };
+
+  const handleDrop = (dropIndex) => {
+    const from = dragIndexRef.current;
+    if (from === null || from === dropIndex) return;
+    setDivisions(prev => {
+      const next = [...prev];
+      const [moved] = next.splice(from, 1);
+      next.splice(dropIndex, 0, moved);
+      return next;
+    });
+    dragIndexRef.current = null;
+  };
+
+  const stats = [
+    { number: "500+", label: "Satisfied Clients", icon: <FiUsers /> },
+    { number: "15+", label: "Years Experience", icon: <FiAward /> },
+    { number: "50+", label: "Global Partners", icon: <FiGlobe /> },
+    { number: "24/7", label: "Support Available", icon: <FiClock /> }
+  ];
+
+  return (
+    <div className="home-page">
+      {/* 1. Hero Section - Welcoming */}
+      <HeroSection />
+
+      {/* 2. About Al Safa Global */}
+      <section className="about-preview-section" ref={ref}>
+        <div className="container">
+          <div className="about-preview-content">
+            <motion.div 
+              className="about-text"
+              initial={{ opacity: 0, x: -50 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.8 }}
+            >
+              <h2>About <span className="gold-text">Al Safa Global</span></h2>
+              <p>
+                Al Safa Global General Trading FZ LLC is a UAE-based company specializing in comprehensive 
+                procurement and supply chain solutions. Headquartered in Ras Al Khaimah, we proudly serve 
+                businesses and projects within the UAE and internationally — across the Construction, 
+                Industrial, Marine, Aerospace, Defence, IT, and Office Supplies sectors.
+              </p>
+              <p>
+                We partner with globally recognized brands and supply high-quality products that meet 
+                international standards. Whether supporting complex industrial projects, critical defense 
+                requirements, specialized marine and aerospace needs, or everyday office and IT demands, 
+                we ensure reliable and efficient sourcing for our clients worldwide.
+              </p>
+              <p>
+                Our strength lies in delivering cost-effective, timely, and dependable procurement 
+                solutions, backed by a deep understanding of market dynamics and logistical challenges. 
+                We position ourselves as a trusted partner — committed to helping clients achieve 
+                operational efficiency, project success, and sustainable growth.
+              </p>
+              <div className="about-features">
+                <div className="feature-item">
+                  <FiCheckCircle className="feature-icon" />
+                  <span>End-to-End Procurement Solutions</span>
+                </div>
+                <div className="feature-item">
+                  <FiCheckCircle className="feature-icon" />
+                  <span>Global Sourcing & Supply</span>
+                </div>
+                <div className="feature-item">
+                  <FiCheckCircle className="feature-icon" />
+                  <span>Integrated Logistics Management</span>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div 
+              className="about-image"
+              initial={{ opacity: 0, x: 50 }}
+              animate={inView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              {/* Company overview image above floating cards */}
+              <div className="company-image-wrapper">
+                <img 
+                  src="/images/company-overview.jpg" 
+                  alt="Al Safa Global Company Overview" 
+                  className="company-overview-image"
+                />
+              </div>
+              
+              <div className="image-container">
+                <div className={`floating-card card-1 ${cardsScrolled.card1 ? 'scrolled' : ''}`}>
+                  <FiTrendingUp />
+                  <span>Growth</span>
+                </div>
+                <div className={`floating-card card-2 ${cardsScrolled.card2 ? 'scrolled' : ''}`}>
+                  <FiGlobe />
+                  <span>Global</span>
+                </div>
+                <div className={`floating-card card-3 ${cardsScrolled.card3 ? 'scrolled' : ''}`}>
+                  <FiAward />
+                  <span>Quality</span>
+                </div>
+                <div className={`floating-card card-4 ${cardsScrolled.card4 ? 'scrolled' : ''}`}>
+                  <FiPackage />
+                  <span>Procurement</span>
+                </div>
+                <div className={`floating-card card-5 ${cardsScrolled.card5 ? 'scrolled' : ''}`}>
+                  <FiLink />
+                  <span>Supply Chain</span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Learn More About Us Button - positioned after floating cards */}
+            <motion.div 
+              className="about-cta-button"
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              <Link to="/about" className="btn btn-primary">
+                Learn More About Us
+                <FiArrowRight />
+              </Link>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Our Business Segments */}
+      <section className="divisions-section">
+        <div className="container">
+          <motion.div 
+            className="section-header text-center"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <h2>Our Business Segments</h2>
+            <p className="section-subtitle">
+              Al Safa Global specializes in a wide array of supply and service segments
+            </p>
+          </motion.div>
+          
+          {isEditMode && (
+            <div style={{ display: 'flex', justifyContent: 'flex-end', margin: '1rem 0' }} contentEditable={false}>
+              <button type="button" className="btn btn-secondary" onClick={handleAddDivision}>
+                Add
+              </button>
+            </div>
+          )}
+
+          <div className="divisions-grid">
+            {divisions.map((division, index) => {
+              const key = `home:division:${division.id}`;
+              const disabled = isDisabled(key);
+              if (disabled && !isEditMode) return null;
+              return (
+              <motion.div
+                key={division.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -5 }}
+                draggable={isEditMode}
+                onDragStart={() => handleDragStart(index)}
+                onDragOver={(e) => { if (isEditMode) e.preventDefault(); }}
+                onDrop={() => handleDrop(index)}
+              >
+                <div style={{ position: 'relative', paddingTop: isEditMode ? 56 : 0, opacity: disabled ? 0.5 : 1 }}>
+                  {isEditMode && (
+                    <div
+                      style={{ position: 'absolute', top: 8, right: 8, zIndex: 5 }}
+                      contentEditable={false}
+                    >
+                      <button
+                        type="button"
+                        className="btn btn-secondary"
+                        onClick={() => handleRemoveDivision(division.id)}
+                      >
+                        Delete
+                      </button>
+                        <button
+                          type="button"
+                          className="btn btn-secondary"
+                          style={{ marginLeft: 8 }}
+                          onClick={() => (disabled ? enableContent(key) : disableContent(key))}
+                        >
+                          {disabled ? 'Activate' : 'Disable'}
+                        </button>
+                    </div>
+                  )}
+                  <DivisionCard {...division} />
+                </div>
+              </motion.div>
+            )})}
+          </div>
+        </div>
+      </section>
+
+      {/* 4. Why Choose Al Safa Global */}
+      <section className="features-section">
+        <div className="container">
+          <motion.div 
+            className="section-header text-center"
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+          >
+            <h2>Why Choose <span className="gold-text">Al Safa Global</span>?</h2>
+            <p className="section-subtitle">
+              We combine industry expertise with innovative solutions to deliver exceptional value to our clients
+            </p>
+          </motion.div>
+
+          {isEditMode && (
+            <div style={{ display: 'flex', justifyContent: 'flex-end', margin: '1rem 0' }} contentEditable={false}>
+              <button type="button" className="btn btn-secondary" onClick={handleAddFeature}>
+                Add
+              </button>
+            </div>
+          )}
+
+          <div className="features-grid">
+            {features.map((feature, index) => {
+              const key = `home:feature:${index}`;
+              const disabled = isDisabled(key);
+              if (disabled && !isEditMode) return null;
+              return (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <div style={{ position: 'relative', paddingTop: isEditMode ? 56 : 0, opacity: disabled ? 0.5 : 1 }}>
+                  {isEditMode && (
+                    <div
+                      style={{ position: 'absolute', top: 8, right: 8, zIndex: 5 }}
+                      contentEditable={false}
+                    >
+                      <button
+                        type="button"
+                        className="btn btn-secondary"
+                        onClick={() => handleRemoveFeature(index)}
+                      >
+                        Delete
+                      </button>
+                        <button
+                          type="button"
+                          className="btn btn-secondary"
+                          style={{ marginLeft: 8 }}
+                          onClick={() => (disabled ? enableContent(key) : disableContent(key))}
+                        >
+                          {disabled ? 'Activate' : 'Disable'}
+                        </button>
+                    </div>
+                  )}
+                  <FeatureCard {...feature} />
+                </div>
+              </motion.div>
+            )})}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Ready to Get Started - CTA Section */}
+      <CtaSection />
+
+      {/* 6. Trusted Brand Partners - Stats Section */}
+      <StatsSection stats={stats} />
+
+      {/* 7. Get in Touch - Testimonials Section */}
+      <TestimonialSection />
+      <ConfirmDialog
+        open={confirmState.open}
+        message={confirmState.message}
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+      />
+    </div>
+  );
+};
+
+export default Home; 

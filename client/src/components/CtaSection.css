@@ -1,0 +1,161 @@
+.cta-section {
+  background: var(--white);
+  color: var(--text-primary);
+  padding: var(--space-3xl) 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 80%, rgba(245, 158, 11, 0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+  z-index: 1;
+}
+
+.cta-content {
+  position: relative;
+  z-index: 2;
+}
+
+.cta-content h2 {
+  color: var(--text-primary);
+  font-size: var(--text-3xl);
+  margin-bottom: var(--space-md);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-weight: 800;
+}
+
+.cta-content p {
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-xl);
+  color: var(--text-secondary);
+  font-weight: 400;
+  opacity: 0.95;
+  text-align: center;
+  word-spacing: var(--word-spacing);
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
+.cta-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--primary-blue);
+  color: var(--primary-blue);
+}
+
+.btn-outline:hover {
+  background: var(--primary-blue);
+  color: var(--white);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Responsive Design - Tablet (768px and up) */
+@media (min-width: 768px) {
+  .cta-content h2 {
+    font-size: var(--text-4xl);
+  }
+  
+  .cta-content p {
+    font-size: 1.2rem;
+  }
+  
+  .cta-buttons {
+    flex-direction: row;
+    gap: var(--space-lg);
+  }
+}
+
+/* Responsive Design - Desktop (992px and up) */
+@media (min-width: 992px) {
+  .cta-content h2 {
+    font-size: 2.5rem;
+  }
+}
+
+/* Responsive Design - Mobile (768px and below) */
+@media (max-width: 767px) {
+  .cta-content h2 {
+    font-size: var(--text-2xl);
+  }
+}
+
+/* Responsive Design - Small Mobile (480px and below) */
+@media (max-width: 480px) {
+  .cta-section {
+    padding: var(--space-2xl) 0;
+  }
+  
+  .cta-content h2 {
+    font-size: var(--text-2xl);
+  }
+  
+  .cta-content p {
+    font-size: var(--text-base);
+  }
+  
+  .cta-buttons {
+    gap: var(--space-sm);
+  }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .btn-outline:hover {
+    background: transparent;
+    color: var(--white);
+    transform: none;
+  }
+  
+  .btn-outline:active {
+    background: var(--white);
+    color: var(--primary-blue);
+    transform: translateY(-1px);
+  }
+}
+
+/* Focus States */
+.cta-buttons .btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3);
+}
+
+/* Print Styles */
+@media print {
+  .cta-section {
+    background: white;
+    color: black;
+    padding: var(--space-lg) 0;
+  }
+  
+  .cta-content h2 {
+    color: black;
+  }
+  
+  .cta-content p {
+    color: black;
+  }
+  
+  .btn-outline {
+    border-color: black;
+    color: black;
+  }
+} 
