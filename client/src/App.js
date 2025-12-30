@@ -21,6 +21,7 @@ function App() {
   const location = useLocation();
   const mainRef = useRef(null);
   const footerRef = useRef(null);
+  const API_BASE = process.env.REACT_APP_API_BASE || '';
 
   // Prevent navigation when editing and enable image replacement
   useEffect(() => {
@@ -109,8 +110,9 @@ function App() {
       },
     };
     try {
-      navigator.sendBeacon?.('/api/analytics/track', new Blob([JSON.stringify(payload)], { type: 'application/json' }))
-        || fetch('/api/analytics/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      const url = `${API_BASE}/api/analytics/track`;
+      navigator.sendBeacon?.(url, new Blob([JSON.stringify(payload)], { type: 'application/json' }))
+        || fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
     } catch {}
   }, [location]);
 
@@ -132,8 +134,9 @@ function App() {
           text,
           meta: { clientId, sessionId },
         };
-        navigator.sendBeacon?.('/api/analytics/track', new Blob([JSON.stringify(payload)], { type: 'application/json' }))
-          || fetch('/api/analytics/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        const url = `${API_BASE}/api/analytics/track`;
+        navigator.sendBeacon?.(url, new Blob([JSON.stringify(payload)], { type: 'application/json' }))
+          || fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
       } catch {}
     };
     document.addEventListener('click', onClick, true);

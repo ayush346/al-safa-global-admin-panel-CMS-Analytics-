@@ -13,13 +13,14 @@ function Analytics() {
 	const [data, setData] = useState(null);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
+	const API_BASE = process.env.REACT_APP_API_BASE || '';
 
 	useEffect(() => {
 		const fetchData = async () => {
 			setLoading(true);
 			setError(null);
 			try {
-				const res = await fetch(`/api/analytics/summary?granularity=${granularity}`);
+				const res = await fetch(`${API_BASE}/api/analytics/summary?granularity=${granularity}`);
 				if (!res.ok) throw new Error('Failed to load analytics');
 				const json = await res.json();
 				setData(json);
@@ -182,7 +183,7 @@ function Analytics() {
 							const to = new Date();
 							const qs = `from=${from.toISOString()}&to=${to.toISOString()}&granularity=${granularity}&compare=1`;
 							setLoading(true);
-							fetch(`/api/analytics/summary?${qs}`).then(r => r.json()).then(setData).finally(() => setLoading(false));
+							fetch(`${API_BASE}/api/analytics/summary?${qs}`).then(r => r.json()).then(setData).finally(() => setLoading(false));
 						}}
 					/>
 				</label>
