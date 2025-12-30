@@ -22,6 +22,7 @@ function App() {
   const mainRef = useRef(null);
   const footerRef = useRef(null);
   const API_BASE = process.env.REACT_APP_API_BASE || '';
+  const isAnalytics = location.pathname === '/analytics' || location.pathname.startsWith('/analytics');
 
   // Prevent navigation when editing and enable image replacement
   useEffect(() => {
@@ -31,6 +32,8 @@ function App() {
     const handleClick = (e) => {
       // Image replace on click (only in edit mode)
       if (!isEditMode) return;
+      // Do not allow editing on analytics page
+      if (isAnalytics) return;
       const anchor = e.target.closest('a');
       if (anchor) return;
       const img = e.target.closest('img');
@@ -57,7 +60,7 @@ function App() {
     return () => {
       targets.forEach(el => el.removeEventListener('click', handleClick, true));
     };
-  }, [isEditMode]);
+  }, [isEditMode, isAnalytics]);
 
   // Note: Avoid restoring raw innerHTML to prevent React reconciliation issues.
 
@@ -172,7 +175,7 @@ function App() {
         <main
           ref={mainRef}
           className={isEditMode ? 'editing' : ''}
-          contentEditable={isEditMode}
+          contentEditable={isEditMode && !isAnalytics}
           suppressContentEditableWarning
         >
           <Routes>
@@ -188,8 +191,8 @@ function App() {
         </main>
         <div
           ref={footerRef}
-          className={isEditMode ? 'editing' : ''}
-          contentEditable={isEditMode}
+          className={isEditMode && !isAnalytics ? 'editing' : ''}
+          contentEditable={isEditMode && !isAnalytics}
           suppressContentEditableWarning
         >
           <Footer />
