@@ -44,7 +44,8 @@ const Header = () => {
         }
         setNested(overrides, key, value);
       });
-      const payload = {
+      // 1) Save structured overrides globally (does not affect layout)
+      const payloadGlobal = {
         // Store structured overrides under a global page to avoid UI replacement
         pagePath: '_global',
         label,
@@ -54,15 +55,33 @@ const Header = () => {
           overrides,
         },
       };
-      const res = await fetch(`${API_BASE}/api/cms/save`, {
+      const res1 = await fetch(`${API_BASE}/api/cms/save`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'x-admin-token': localStorage.getItem('asg:adminToken') || '',
         },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(payloadGlobal),
       });
-      if (!res.ok) throw new Error('Save failed');
+      if (!res1.ok) throw new Error('Save failed');
+      // 2) Save full-page snapshot for the current route so add/remove sections go live after Publish
+      const payloadPage = {
+        pagePath: window.location.pathname || '/',
+        label,
+        data: {
+          htmlMain: mainEl ? mainEl.innerHTML : '',
+          htmlFooter: footerEl ? footerEl.innerHTML : '',
+        },
+      };
+      const res2 = await fetch(`${API_BASE}/api/cms/save`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-token': localStorage.getItem('asg:adminToken') || '',
+        },
+        body: JSON.stringify(payloadPage),
+      });
+      if (!res2.ok) throw new Error('Save failed');
       toast.success('Saved to history');
     } catch (e) {
       toast.error(e.message || 'Save failed');
@@ -112,8 +131,9 @@ const Header = () => {
 
   async function publishLatest() {
     try {
-      // Publish latest global structured save
-      const res = await fetch(`${API_BASE}/api/cms/versions?pagePath=${encodeURIComponent('_global')}`, {
+      // Publish latest snapshot for current route so viewers see the same layout
+      const path = window.location.pathname || '/';
+      const res = await fetch(`${API_BASE}/api/cms/versions?pagePath=${encodeURIComponent(path)}`, {
         headers: { 'x-admin-token': localStorage.getItem('asg:adminToken') || '' },
       });
       if (!res.ok) throw new Error('Failed to load history');
