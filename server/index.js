@@ -56,6 +56,7 @@ app.use('/api/contact', require('./routes/contact'));
 app.use('/api/inquiry', require('./routes/inquiry'));
 app.use('/api/analytics', require('./routes/analytics'));
 app.use('/api/admin', require('./routes/admin'));
+app.use('/api/cms', require('./routes/cms'));
 
 // Health check endpoint (no DB work here)
 app.get('/api/health', (req, res) => {

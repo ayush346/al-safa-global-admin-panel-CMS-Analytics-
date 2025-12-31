@@ -175,6 +175,7 @@ function App() {
         <main
           ref={mainRef}
           className={isEditMode ? 'editing' : ''}
+          data-app-main
           contentEditable={isEditMode && !isAnalytics}
           suppressContentEditableWarning
         >
@@ -192,6 +193,7 @@ function App() {
         {!isAnalytics && (
           <div
             ref={footerRef}
+            data-app-footer
             className={isEditMode ? 'editing' : ''}
             contentEditable={isEditMode}
             suppressContentEditableWarning

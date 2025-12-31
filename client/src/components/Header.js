@@ -13,6 +13,78 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
   const { isEditMode, setEditMode } = useEditMode();
+  const API_BASE = process.env.REACT_APP_API_BASE || '';
+
+  async function saveDraft() {
+    try {
+      const label = window.prompt('Enter a name for this save (e.g., "Homepage tweak v1")');
+      if (!label) return;
+      const mainEl = document.querySelector('[data-app-main]');
+      const footerEl = document.querySelector('[data-app-footer]');
+      const payload = {
+        pagePath: window.location.pathname,
+        label,
+        data: {
+          htmlMain: mainEl ? mainEl.innerHTML : '',
+          htmlFooter: footerEl ? footerEl.innerHTML : '',
+        },
+      };
+      const res = await fetch(`${API_BASE}/api/cms/save`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-token': localStorage.getItem('asg:adminToken') || '',
+        },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error('Save failed');
+      toast.success('Saved to history');
+    } catch (e) {
+      toast.error(e.message || 'Save failed');
+    }
+  }
+
+  async function openHistory() {
+    try {
+      const path = window.location.pathname;
+      const res = await fetch(`${API_BASE}/api/cms/versions?pagePath=${encodeURIComponent(path)}`, {
+        headers: { 'x-admin-token': localStorage.getItem('asg:adminToken') || '' },
+      });
+      if (!res.ok) throw new Error('Failed to load history');
+      const json = await res.json();
+      const versions = json.versions || [];
+      if (versions.length === 0) {
+        toast('No history yet. Save a version first.');
+        return;
+      }
+      const list = versions
+        .map((v, i) => `${i + 1}. ${v.label} — ${new Date(v.createdAt).toLocaleString()}`)
+        .join('\n');
+      const answer = window.prompt(`Select a version number to restore:\n\n${list}\n\nEnter a number or Cancel`);
+      const index = answer ? parseInt(answer, 10) - 1 : -1;
+      if (index < 0 || index >= versions.length) return;
+      const chosen = versions[index];
+      const r = await fetch(`${API_BASE}/api/cms/restore`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-token': localStorage.getItem('asg:adminToken') || '',
+        },
+        body: JSON.stringify({ versionId: chosen._id }),
+      });
+      if (!r.ok) throw new Error('Restore failed');
+      const restored = await r.json();
+      const data = restored.version?.data || chosen.data;
+      // Inject restored HTML into the editable areas for immediate preview
+      const mainEl = document.querySelector('[data-app-main]');
+      const footerEl = document.querySelector('[data-app-footer]');
+      if (mainEl && typeof data.htmlMain === 'string') mainEl.innerHTML = data.htmlMain;
+      if (footerEl && typeof data.htmlFooter === 'string') footerEl.innerHTML = data.htmlFooter;
+      toast.success('Restored. Remember to Save again if you make further changes.');
+    } catch (e) {
+      toast.error(e.message || 'History failed');
+    }
+  }
 
   // Handle scroll effect
   useEffect(() => {
@@ -107,15 +179,8 @@ const Header = () => {
           >
             {isEditMode ? (
               <div style={{ display: 'flex', gap: '8px' }}>
-                <button
-                  className="btn btn-secondary"
-                  onClick={() => {
-                    // Guide admins to JSON editor for persistent changes
-                    toast('Use Content Editor to commit changes to GitHub', { icon: '💾' });
-                  }}
-                >
-                  Save
-                </button>
+                <button className="btn btn-secondary" onClick={saveDraft}>Save</button>
+                <button className="btn btn-secondary" onClick={openHistory}>History</button>
                 <Link to="/admin/content" className="btn btn-secondary">
                   Content
                 </Link>
