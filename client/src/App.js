@@ -13,7 +13,7 @@ import Admin from './pages/Admin';
 import Analytics from './pages/Analytics';
 import ContentEditor from './pages/ContentEditor';
 import './App.css';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useEditMode } from './context/EditModeContext';
 
 function App() {
@@ -25,9 +25,6 @@ function App() {
   const pathname = location.pathname || '/';
   const isAnalytics = pathname === '/analytics' || pathname.startsWith('/analytics');
   const isCmsPage = pathname === '/' || pathname === '/about' || pathname === '/divisions' || pathname === '/contact';
-  const ENABLE_SNAPSHOTS = (process.env.REACT_APP_ENABLE_CMS_SNAPSHOTS || '').toLowerCase() === 'true';
-  const [publishedMainHtml, setPublishedMainHtml] = useState('');
-  const [publishedFooterHtml, setPublishedFooterHtml] = useState('');
 
   // Prevent navigation when editing and enable image replacement
   useEffect(() => {
@@ -69,33 +66,7 @@ function App() {
 
   // Note: Avoid restoring raw innerHTML to prevent React reconciliation issues.
 
-  // Load published page snapshot safely into React state (no direct DOM overwrite)
-  useEffect(() => {
-    if (isEditMode) return;
-    if (isAnalytics) return;
-    if (!isCmsPage) return;
-    if (!ENABLE_SNAPSHOTS) {
-      setPublishedMainHtml('');
-      setPublishedFooterHtml('');
-      return;
-    }
-    const controller = new AbortController();
-    const load = async () => {
-      try {
-        const qs = `pagePath=${encodeURIComponent(pathname)}&variant=published`;
-        const res = await fetch(`${API_BASE}/api/cms/content?${qs}`, { signal: controller.signal });
-        if (!res.ok) return;
-        const json = await res.json();
-        const data = json?.data || {};
-        const hasMain = typeof data.htmlMain === 'string' && data.htmlMain.trim().length > 0;
-        const hasFooter = typeof data.htmlFooter === 'string' && data.htmlFooter.trim().length > 0;
-        setPublishedMainHtml(hasMain ? data.htmlMain : '');
-        setPublishedFooterHtml(hasFooter ? data.htmlFooter : '');
-      } catch {}
-    };
-    load();
-    return () => controller.abort();
-  }, [pathname, isEditMode, isAnalytics, isCmsPage, ENABLE_SNAPSHOTS]);
+  // Snapshots fully disabled in code to avoid any blank-page risks.
 
   // Analytics: track page views on route change
   useEffect(() => {
@@ -212,20 +183,16 @@ function App() {
           contentEditable={isEditMode && !isAnalytics}
           suppressContentEditableWarning
         >
-          {!isEditMode && isCmsPage && ENABLE_SNAPSHOTS && publishedMainHtml ? (
-            <div dangerouslySetInnerHTML={{ __html: publishedMainHtml }} />
-          ) : (
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/divisions" element={<Divisions />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/quote" element={<Quote />} />
-              <Route path="/admin" element={<Admin />} />
-              <Route path="/analytics" element={<Analytics />} />
-              <Route path="/admin/content" element={<ContentEditor />} />
-            </Routes>
-          )}
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/divisions" element={<Divisions />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/quote" element={<Quote />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/admin/content" element={<ContentEditor />} />
+          </Routes>
         </main>
         {!isAnalytics && (
           <div
@@ -235,11 +202,7 @@ function App() {
             contentEditable={isEditMode}
             suppressContentEditableWarning
           >
-            {!isEditMode && isCmsPage && ENABLE_SNAPSHOTS && publishedFooterHtml ? (
-              <div dangerouslySetInnerHTML={{ __html: publishedFooterHtml }} />
-            ) : (
-              <Footer />
-            )}
+            <Footer />
           </div>
         )}
       </div>
