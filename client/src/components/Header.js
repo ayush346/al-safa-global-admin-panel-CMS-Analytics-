@@ -237,16 +237,6 @@ const Header = () => {
                 <button className="btn btn-secondary" onClick={saveDraft}>Save</button>
                 <button className="btn btn-secondary" onClick={openHistory}>History</button>
                 <button className="btn btn-secondary" onClick={publishLatest}>Publish</button>
-                <Link to="/admin/content" className="btn btn-secondary">
-                  Content
-                </Link>
-                <button
-                  className="btn btn-secondary"
-                  disabled
-                  title="Disabled in prototype"
-                >
-                  Host
-                </button>
                 <Link to="/analytics" className="btn btn-secondary">
                   Analytics
                 </Link>
