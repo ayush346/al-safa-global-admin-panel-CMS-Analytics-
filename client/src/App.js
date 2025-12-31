@@ -69,6 +69,9 @@ function App() {
     if (isEditMode) return;
     if (!mainRef.current) return;
     if (isAnalytics) return;
+    // Only inject CMS HTML if the page explicitly opts-in with data-cms-replace
+    const canInject = mainRef.current.hasAttribute('data-cms-replace');
+    if (!canInject) return;
     const controller = new AbortController();
     const load = async () => {
       try {
