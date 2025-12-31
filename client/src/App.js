@@ -13,7 +13,7 @@ import Admin from './pages/Admin';
 import Analytics from './pages/Analytics';
 import ContentEditor from './pages/ContentEditor';
 import './App.css';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useEditMode } from './context/EditModeContext';
 
 function App() {
@@ -25,6 +25,8 @@ function App() {
   const pathname = location.pathname || '/';
   const isAnalytics = pathname === '/analytics' || pathname.startsWith('/analytics');
   const isCmsPage = pathname === '/' || pathname === '/about' || pathname === '/divisions' || pathname === '/contact';
+  const [publishedMainHtml, setPublishedMainHtml] = useState('');
+  const [publishedFooterHtml, setPublishedFooterHtml] = useState('');
 
   // Prevent navigation when editing and enable image replacement
   useEffect(() => {
@@ -66,10 +68,9 @@ function App() {
 
   // Note: Avoid restoring raw innerHTML to prevent React reconciliation issues.
 
-  // Load published page snapshot for current route when NOT in edit mode (only if snapshot exists)
+  // Load published page snapshot safely into React state (no direct DOM overwrite)
   useEffect(() => {
     if (isEditMode) return;
-    if (!mainRef.current) return;
     if (isAnalytics) return;
     if (!isCmsPage) return;
     const controller = new AbortController();
@@ -82,12 +83,8 @@ function App() {
         const data = json?.data || {};
         const hasMain = typeof data.htmlMain === 'string' && data.htmlMain.trim().length > 0;
         const hasFooter = typeof data.htmlFooter === 'string' && data.htmlFooter.trim().length > 0;
-        if (hasMain && mainRef.current) {
-          mainRef.current.innerHTML = data.htmlMain;
-        }
-        if (hasFooter && footerRef.current) {
-          footerRef.current.innerHTML = data.htmlFooter;
-        }
+        setPublishedMainHtml(hasMain ? data.htmlMain : '');
+        setPublishedFooterHtml(hasFooter ? data.htmlFooter : '');
       } catch {}
     };
     load();
@@ -209,16 +206,20 @@ function App() {
           contentEditable={isEditMode && !isAnalytics}
           suppressContentEditableWarning
         >
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/divisions" element={<Divisions />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/quote" element={<Quote />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/admin/content" element={<ContentEditor />} />
-          </Routes>
+          {!isEditMode && isCmsPage && publishedMainHtml ? (
+            <div dangerouslySetInnerHTML={{ __html: publishedMainHtml }} />
+          ) : (
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/divisions" element={<Divisions />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/quote" element={<Quote />} />
+              <Route path="/admin" element={<Admin />} />
+              <Route path="/analytics" element={<Analytics />} />
+              <Route path="/admin/content" element={<ContentEditor />} />
+            </Routes>
+          )}
         </main>
         {!isAnalytics && (
           <div
@@ -228,7 +229,11 @@ function App() {
             contentEditable={isEditMode}
             suppressContentEditableWarning
           >
-            <Footer />
+            {!isEditMode && isCmsPage && publishedFooterHtml ? (
+              <div dangerouslySetInnerHTML={{ __html: publishedFooterHtml }} />
+            ) : (
+              <Footer />
+            )}
           </div>
         )}
       </div>
