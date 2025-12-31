@@ -66,34 +66,7 @@ function App() {
 
   // Note: Avoid restoring raw innerHTML to prevent React reconciliation issues.
 
-  // Load published content for current route when NOT in edit mode
-  useEffect(() => {
-    if (isEditMode) return;
-    if (!mainRef.current) return;
-    if (isAnalytics) return;
-    if (!isCmsPage) return;
-    const controller = new AbortController();
-    const load = async () => {
-      try {
-        const qs = `pagePath=${encodeURIComponent(pathname)}&variant=published`;
-        const res = await fetch(`${API_BASE}/api/cms/content?${qs}`, { signal: controller.signal });
-        if (!res.ok) return;
-        const json = await res.json();
-        const data = json?.data || {};
-        const hasMain = typeof data.htmlMain === 'string' && data.htmlMain.trim().length > 0;
-        const hasFooter = typeof data.htmlFooter === 'string' && data.htmlFooter.trim().length > 0;
-        // Only inject when we actually have published content; otherwise keep React-rendered UI
-        if (hasMain && mainRef.current) {
-          mainRef.current.innerHTML = data.htmlMain;
-        }
-        if (hasFooter && footerRef.current) {
-          footerRef.current.innerHTML = data.htmlFooter;
-        }
-      } catch {}
-    };
-    load();
-    return () => controller.abort();
-  }, [pathname, isEditMode, isAnalytics, isCmsPage]);
+  // Removed raw HTML injection to keep React UI stable across routes.
 
   // Analytics: track page views on route change
   useEffect(() => {

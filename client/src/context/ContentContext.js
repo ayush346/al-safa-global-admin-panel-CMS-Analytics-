@@ -26,10 +26,20 @@ export function ContentProvider({ children }) {
 		const output = Array.isArray(target) ? [...target] : { ...target };
 		Object.keys(source).forEach(key => {
 			const srcVal = source[key];
+			// Skip null/undefined/empty-string overrides so we don't wipe defaults
+			const isEmptyScalar = srcVal === null || srcVal === undefined || (typeof srcVal === 'string' && srcVal.trim() === '');
+			if (isEmptyScalar) {
+				return;
+			}
 			if (srcVal && typeof srcVal === 'object' && !Array.isArray(srcVal)) {
-				output[key] = mergeDeep(output[key] || {}, srcVal);
+				output[key] = mergeDeep(output[key] || (Array.isArray(srcVal) ? [] : {}), srcVal);
 			} else {
-				output[key] = srcVal;
+				// When merging into arrays with numeric keys, keep other entries
+				if (Array.isArray(output) && !isNaN(Number(key))) {
+					output[Number(key)] = srcVal;
+				} else {
+					output[key] = srcVal;
+				}
 			}
 		});
 		return output;
