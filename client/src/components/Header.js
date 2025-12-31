@@ -86,6 +86,37 @@ const Header = () => {
     }
   }
 
+  async function publishLatest() {
+    try {
+      const path = window.location.pathname;
+      const res = await fetch(`${API_BASE}/api/cms/versions?pagePath=${encodeURIComponent(path)}`, {
+        headers: { 'x-admin-token': localStorage.getItem('asg:adminToken') || '' },
+      });
+      if (!res.ok) throw new Error('Failed to load history');
+      const json = await res.json();
+      const versions = json.versions || [];
+      if (versions.length === 0) {
+        toast('No versions to publish. Save first.');
+        return;
+      }
+      const latest = versions[0];
+      const ok = window.confirm(`Publish "${latest.label}" to live?`);
+      if (!ok) return;
+      const r = await fetch(`${API_BASE}/api/cms/publish`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-admin-token': localStorage.getItem('asg:adminToken') || '',
+        },
+        body: JSON.stringify({ versionId: latest._id }),
+      });
+      if (!r.ok) throw new Error('Publish failed');
+      toast.success('Published. Viewers will see the new version.');
+    } catch (e) {
+      toast.error(e.message || 'Publish failed');
+    }
+  }
+
   // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
@@ -181,6 +212,7 @@ const Header = () => {
               <div style={{ display: 'flex', gap: '8px' }}>
                 <button className="btn btn-secondary" onClick={saveDraft}>Save</button>
                 <button className="btn btn-secondary" onClick={openHistory}>History</button>
+                <button className="btn btn-secondary" onClick={publishLatest}>Publish</button>
                 <Link to="/admin/content" className="btn btn-secondary">
                   Content
                 </Link>

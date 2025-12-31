@@ -12,6 +12,11 @@ function Admin() {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Prototype: any password works
+    if (password) {
+      try {
+        localStorage.setItem('asg:adminToken', password);
+      } catch {}
+    }
     setEditMode(true);
     navigate('/');
   };

@@ -64,6 +64,31 @@ function App() {
 
   // Note: Avoid restoring raw innerHTML to prevent React reconciliation issues.
 
+  // Load published content for current route when NOT in edit mode
+  useEffect(() => {
+    if (isEditMode) return;
+    if (!mainRef.current) return;
+    if (isAnalytics) return;
+    const controller = new AbortController();
+    const load = async () => {
+      try {
+        const qs = `pagePath=${encodeURIComponent(window.location.pathname)}&variant=published`;
+        const res = await fetch(`${API_BASE}/api/cms/content?${qs}`, { signal: controller.signal });
+        if (!res.ok) return;
+        const json = await res.json();
+        const data = json?.data || {};
+        if (typeof data.htmlMain === 'string' && mainRef.current) {
+          mainRef.current.innerHTML = data.htmlMain;
+        }
+        if (typeof data.htmlFooter === 'string' && footerRef.current) {
+          footerRef.current.innerHTML = data.htmlFooter;
+        }
+      } catch {}
+    };
+    load();
+    return () => controller.abort();
+  }, [location, isEditMode, isAnalytics]);
+
   // Analytics: track page views on route change
   useEffect(() => {
     const ensureIds = () => {
