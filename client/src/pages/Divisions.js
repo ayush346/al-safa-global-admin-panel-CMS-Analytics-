@@ -140,7 +140,7 @@ const Divisions = () => {
       </section>
 
       {/* Divisions Content */}
-      <section className="divisions-content">
+      <section className="divisions-content" data-cms-list="divisions">
         <div className="container">
           {isEditMode && (
             <div style={{ display: 'flex', justifyContent: 'flex-end', margin: '1rem 0' }} contentEditable={false}>
@@ -166,6 +166,7 @@ const Divisions = () => {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
               style={isEditMode ? { position: 'relative', paddingTop: 56, opacity: sectionDisabled ? 0.5 : 1 } : undefined}
+              data-cms-item
             >
               {isEditMode && (
                 <div
@@ -195,6 +196,10 @@ const Divisions = () => {
                 </div>
               )}
               <div className="division-header">
+                {/* Hidden fields for CMS serialization */}
+                <span data-cms-field="id" style={{ display: 'none' }}>{division.id}</span>
+                <span data-cms-field="title" style={{ display: 'none' }}>{division.title}</span>
+                <span data-cms-field="description" style={{ display: 'none' }}>{division.description}</span>
                 <h2>{division.title}</h2>
                 <p className="division-description">{division.description}</p>
               </div>

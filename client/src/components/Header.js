@@ -44,6 +44,23 @@ const Header = () => {
         }
         setNested(overrides, key, value);
       });
+      // Serialize lists
+      document.querySelectorAll('[data-cms-list]').forEach((listEl) => {
+        const path = listEl.getAttribute('data-cms-list');
+        if (!path) return;
+        const items = [];
+        listEl.querySelectorAll(':scope [data-cms-item]').forEach((itemEl) => {
+          const obj = {};
+          itemEl.querySelectorAll('[data-cms-field]').forEach((fieldEl) => {
+            const field = fieldEl.getAttribute('data-cms-field');
+            if (!field) return;
+            obj[field] = (fieldEl.textContent || '').trim();
+          });
+          // Filter out completely empty objects
+          if (Object.keys(obj).length > 0) items.push(obj);
+        });
+        setNested(overrides, path, items);
+      });
       // 1) Save structured overrides globally (does not affect layout)
       const payloadGlobal = {
         // Store structured overrides under a global page to avoid UI replacement

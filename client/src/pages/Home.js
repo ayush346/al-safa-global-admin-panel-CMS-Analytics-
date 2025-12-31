@@ -134,42 +134,44 @@ const Home = () => {
     'users': <FiUsers />,
     'shield': <FiShield />
   };
-  const initialFeatures = (Array.isArray(content?.home?.features) ? content.home.features.map(f => ({
-    icon: iconMap[f.icon] || <FiCheckCircle />,
-    title: f.title,
-    description: f.description
-  })) : [
+  const initialFeaturesRaw = Array.isArray(content?.home?.features) ? content.home.features : [
     {
-      icon: <FiGlobe />,
+      icon: 'globe',
       title: "Global Sourcing Network",
       description: "Direct access to reputed brands and suppliers worldwide for comprehensive procurement solutions."
     },
     {
-      icon: <FiTruck />,
+      icon: 'truck',
       title: "End-to-End Solutions",
       description: "Complete procurement and logistics management from sourcing to delivery coordination."
     },
     {
-      icon: <FiTrendingUp />,
+      icon: 'trending-up',
       title: "Competitive Pricing",
       description: "Cost-effective sourcing without compromising on quality or authenticity of products."
     },
     {
-      icon: <FiClock />,
+      icon: 'clock',
       title: "Timely Delivery",
       description: "Committed to meeting project deadlines and operational schedules with responsive turnaround."
     },
     {
-      icon: <FiUsers />,
+      icon: 'users',
       title: "Industry Expertise",
       description: "Experienced team with deep industry-specific knowledge across multiple sectors."
     },
     {
-      icon: <FiShield />,
+      icon: 'shield',
       title: "Quality Assurance",
       description: "Rigorous quality control and genuine OEM parts guarantee for all products and services."
     }
-  ]);
+  ];
+  const mapFeatureIcon = (iconKey) => iconMap[iconKey] || <FiCheckCircle />;
+  const initialFeatures = initialFeaturesRaw.map(f => ({
+    icon: mapFeatureIcon(f.icon),
+    title: f.title,
+    description: f.description
+  }));
   const [features, setFeatures] = useState(initialFeatures);
 
   const handleAddFeature = () => {
@@ -231,9 +233,13 @@ const Home = () => {
       link: '/divisions#defence'
     }
   ];
-  const initialDivisions = (Array.isArray(content?.home?.divisions) && content.home.divisions.length > 0
-    ? content.home.divisions
-    : fallbackDivisions);
+  const initialDivisions = (
+    (Array.isArray(content?.divisions) && content.divisions.length > 0)
+      ? content.divisions
+      : (Array.isArray(content?.home?.divisions) && content.home.divisions.length > 0
+          ? content.home.divisions
+          : fallbackDivisions)
+  );
   const [divisions, setDivisions] = useState(initialDivisions);
   const dragIndexRef = useRef(null);
 
@@ -400,7 +406,7 @@ const Home = () => {
             </div>
           )}
 
-          <div className="divisions-grid">
+          <div className="divisions-grid" data-cms-list="home.divisions">
             {divisions.map((division, index) => {
               const key = `home:division:${division.id}`;
               const disabled = isDisabled(key);
@@ -417,6 +423,7 @@ const Home = () => {
                 onDragStart={() => handleDragStart(index)}
                 onDragOver={(e) => { if (isEditMode) e.preventDefault(); }}
                 onDrop={() => handleDrop(index)}
+                data-cms-item
               >
                 <div style={{ position: 'relative', paddingTop: isEditMode ? 56 : 0, opacity: disabled ? 0.5 : 1 }}>
                   {isEditMode && (
@@ -441,6 +448,13 @@ const Home = () => {
                         </button>
                     </div>
                   )}
+                  {/* Hidden fields for CMS serialization */}
+                  <span data-cms-field="id" style={{ display: 'none' }}>{division.id}</span>
+                  <span data-cms-field="title" style={{ display: 'none' }}>{division.title}</span>
+                  <span data-cms-field="description" style={{ display: 'none' }}>{division.description}</span>
+                  <span data-cms-field="link" style={{ display: 'none' }}>{division.link || '/divisions'}</span>
+                  <span data-cms-field="icon" style={{ display: 'none' }}>{division.icon || ''}</span>
+                  <span data-cms-field="color" style={{ display: 'none' }}>{division.color || ''}</span>
                   <DivisionCard {...division} />
                 </div>
               </motion.div>
@@ -473,7 +487,7 @@ const Home = () => {
             </div>
           )}
 
-          <div className="features-grid">
+          <div className="features-grid" data-cms-list="home.features">
             {features.map((feature, index) => {
               const key = `home:feature:${index}`;
               const disabled = isDisabled(key);
@@ -485,6 +499,7 @@ const Home = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
+                data-cms-item
               >
                 <div style={{ position: 'relative', paddingTop: isEditMode ? 56 : 0, opacity: disabled ? 0.5 : 1 }}>
                   {isEditMode && (
@@ -509,6 +524,12 @@ const Home = () => {
                         </button>
                     </div>
                   )}
+                  {/* Hidden fields for CMS serialization */}
+                  <span data-cms-field="icon" style={{ display: 'none' }}>
+                    {(content?.home?.features?.[index]?.icon) || ''}
+                  </span>
+                  <span data-cms-field="title" style={{ display: 'none' }}>{feature.title}</span>
+                  <span data-cms-field="description" style={{ display: 'none' }}>{feature.description}</span>
                   <FeatureCard {...feature} />
                 </div>
               </motion.div>

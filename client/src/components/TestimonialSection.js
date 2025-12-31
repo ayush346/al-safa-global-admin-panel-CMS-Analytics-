@@ -1,9 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import './TestimonialSection.css';
+import { useContent } from '../context/ContentContext';
 
 const TestimonialSection = () => {
-  const testimonials = [
+  const { home = {} } = useContent();
+  const testimonials = Array.isArray(home.testimonials) && home.testimonials.length > 0 ? home.testimonials : [
     {
       name: "Ahmed Al Mansouri",
       position: "Project Manager",
@@ -40,7 +42,7 @@ const TestimonialSection = () => {
           </p>
         </motion.div>
 
-        <div className="testimonials-grid">
+        <div className="testimonials-grid" data-cms-list="home.testimonials">
           {testimonials.map((testimonial, index) => (
             <motion.div
               key={testimonial.name}
@@ -49,7 +51,12 @@ const TestimonialSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
+              data-cms-item
             >
+              <span data-cms-field="name" style={{ display: 'none' }}>{testimonial.name}</span>
+              <span data-cms-field="position" style={{ display: 'none' }}>{testimonial.position}</span>
+              <span data-cms-field="company" style={{ display: 'none' }}>{testimonial.company}</span>
+              <span data-cms-field="text" style={{ display: 'none' }}>{testimonial.text}</span>
               <p className="testimonial-text" lang="en">"{testimonial.text}"</p>
               <div className="testimonial-author">
                 <h4>{testimonial.name}</h4>

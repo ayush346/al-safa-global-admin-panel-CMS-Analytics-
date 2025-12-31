@@ -84,9 +84,13 @@ const Footer = () => {
             viewport={{ once: true }}
           >
             <h4>Quick Links</h4>
-            <ul className="footer-links">
+            <ul className="footer-links" data-cms-list="footer.quickLinks">
               {quickLinks.map((l) => (
-                <li key={l.path}><Link to={l.path}>{l.label}</Link></li>
+                <li key={l.path} data-cms-item>
+                  <span data-cms-field="label" style={{ display: 'none' }}>{l.label}</span>
+                  <span data-cms-field="path" style={{ display: 'none' }}>{l.path}</span>
+                  <Link to={l.path}>{l.label}</Link>
+                </li>
               ))}
             </ul>
           </motion.div>
@@ -100,8 +104,13 @@ const Footer = () => {
             viewport={{ once: true }}
           >
             <h4>Our Services</h4>
-            <ul className="footer-links">
-              {services.map((s) => (<li key={s}>{s}</li>))}
+            <ul className="footer-links" data-cms-list="footer.services">
+              {services.map((s, idx) => (
+                <li key={`${s}-${idx}`} data-cms-item>
+                  <span data-cms-field="text" style={{ display: 'none' }}>{s}</span>
+                  {s}
+                </li>
+              ))}
             </ul>
           </motion.div>
 

@@ -23,6 +23,10 @@ export function ContentProvider({ children }) {
 
 	const mergeDeep = (target, source) => {
 		if (!source) return target;
+		// If source is an array, replace entirely (lists are authoritative from CMS)
+		if (Array.isArray(source)) {
+			return [...source];
+		}
 		const output = Array.isArray(target) ? [...target] : { ...target };
 		Object.keys(source).forEach(key => {
 			const srcVal = source[key];
@@ -31,15 +35,12 @@ export function ContentProvider({ children }) {
 			if (isEmptyScalar) {
 				return;
 			}
-			if (srcVal && typeof srcVal === 'object' && !Array.isArray(srcVal)) {
-				output[key] = mergeDeep(output[key] || (Array.isArray(srcVal) ? [] : {}), srcVal);
+			if (Array.isArray(srcVal)) {
+				output[key] = [...srcVal];
+			} else if (srcVal && typeof srcVal === 'object') {
+				output[key] = mergeDeep(output[key] || {}, srcVal);
 			} else {
-				// When merging into arrays with numeric keys, keep other entries
-				if (Array.isArray(output) && !isNaN(Number(key))) {
-					output[Number(key)] = srcVal;
-				} else {
-					output[key] = srcVal;
-				}
+				output[key] = srcVal;
 			}
 		});
 		return output;

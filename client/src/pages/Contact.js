@@ -120,10 +120,10 @@ Submitted on: ${new Date().toLocaleString()}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="gradient-text" data-cms-key="contact.heroTitle">
+              <h1 className="gradient-text" data-cms-key="contact.heroTitle">
               {contact?.heroTitle || <>Contact <span className="gold-text">Al Safa Global</span></>}
             </h1>
-            <p className="hero-subtitle" data-cms-key="contact.heroSubtitle">
+              <p className="hero-subtitle" data-cms-key="contact.heroSubtitle">
               {contact?.heroSubtitle || "We would love to hear from you. For all inquiries, business proposals, or partnership opportunities, please reach out to us."}
             </p>
           </motion.div>
@@ -152,7 +152,7 @@ Submitted on: ${new Date().toLocaleString()}
                   <div>
                     <h4>Email</h4>
                     <p>
-                      <a href={`mailto:${contact?.email || 'info@alsafaglobal.com'}`} className="contact-link">
+                      <a href={`mailto:${contact?.email || 'info@alsafaglobal.com'}`} className="contact-link" data-cms-key="contact.email">
                         {contact?.email || 'info@alsafaglobal.com'}
                       </a>
                     </p>
@@ -165,7 +165,7 @@ Submitted on: ${new Date().toLocaleString()}
                   <div>
                     <h4>Phone</h4>
                     <p>
-                      <a href={`tel:${(contact?.phone || '00971 4 3741 969').replace(/\\s/g, '')}`} className="contact-link">
+                      <a href={`tel:${(contact?.phone || '00971 4 3741 969').replace(/\\s/g, '')}`} className="contact-link" data-cms-key="contact.phone">
                         {contact?.phone || '00971 4 3741 969'}
                       </a>
                     </p>
@@ -178,6 +178,7 @@ Submitted on: ${new Date().toLocaleString()}
                   <div>
                     <h4>Head Office Address</h4>
                     <p>
+                      <span data-cms-key="contact.addressLines" style={{ display: 'none' }} />
                       {(contact?.addressLines || []).map((line, i) => (<React.Fragment key={i}>{line}<br /></React.Fragment>))}
                       <a href={`tel:${(contact?.phone || '00971 4 3741 969').replace(/\\s/g, '')}`} style={{ color: 'inherit', textDecoration: 'underline' }}>{contact?.phone || '00971 4 3741 969'}</a>
                     </p>
@@ -188,7 +189,11 @@ Submitted on: ${new Date().toLocaleString()}
                   <FiClock className="contact-icon" />
                   <div>
                     <h4>Business Hours</h4>
-                    {(contact?.businessHours || []).map((h, i) => (<p key={i}>{h}</p>))}
+                    <div data-cms-list="contact.businessHours">
+                      {(contact?.businessHours || []).map((h, i) => (
+                        <p key={i} data-cms-item><span data-cms-field="text" style={{ display: 'none' }}>{h}</span>{h}</p>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
@@ -196,7 +201,9 @@ Submitted on: ${new Date().toLocaleString()}
                   <FiGlobe className="contact-icon" />
                   <div>
                     <h4>Service Areas</h4>
-                    {(contact?.serviceAreas || []).map((s, i) => (<p key={i}>{s}</p>))}
+                    <div data-cms-list="contact.serviceAreas">
+                      {(contact?.serviceAreas || []).map((s, i) => (<p key={i} data-cms-item><span data-cms-field="text" style={{ display: 'none' }}>{s}</span>{s}</p>))}
+                    </div>
                   </div>
                 </div>
 
@@ -381,7 +388,7 @@ Submitted on: ${new Date().toLocaleString()}
                 </button>
               </div>
             )}
-            <div className="benefits-grid">
+            <div className="benefits-grid" data-cms-list="contact.benefits">
               {benefits.map((b, idx) => {
                 const key = `contact:benefit:${idx}`;
                 const disabled = isDisabled(key);
@@ -391,6 +398,7 @@ Submitted on: ${new Date().toLocaleString()}
                   key={`${b.title}-${idx}`}
                   className="benefit-item"
                   style={{ position: 'relative', paddingTop: isEditMode ? 56 : 0, opacity: disabled ? 0.5 : 1 }}
+                  data-cms-item
                 >
                   {isEditMode && (
                     <div style={{ position: 'absolute', top: 8, right: 8, zIndex: 5 }} contentEditable={false}>
@@ -407,6 +415,8 @@ Submitted on: ${new Date().toLocaleString()}
                         </button>
                     </div>
                   )}
+                  <span data-cms-field="title" style={{ display: 'none' }}>{b.title}</span>
+                  <span data-cms-field="text" style={{ display: 'none' }}>{b.text}</span>
                   <h3>{b.title}</h3>
                   <p>{b.text}</p>
                 </div>

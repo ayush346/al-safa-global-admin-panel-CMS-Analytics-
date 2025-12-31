@@ -250,7 +250,7 @@ const About = () => {
             </div>
           )}
 
-          <div className="values-grid">
+          <div className="values-grid" data-cms-list="about.values">
             {values.map((value, index) => {
               const key = `about:value:${index}`;
               const disabled = isDisabled(key);
@@ -264,6 +264,7 @@ const About = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
                 whileHover={{ y: -5 }}
+                data-cms-item
               >
                 <div style={{ position: 'relative', paddingTop: isEditMode ? 56 : 0, opacity: disabled ? 0.5 : 1 }}>
                   {isEditMode && (
@@ -288,6 +289,8 @@ const About = () => {
                         </button>
                     </div>
                   )}
+                  <span data-cms-field="title" style={{ display: 'none' }}>{value.title}</span>
+                  <span data-cms-field="description" style={{ display: 'none' }}>{value.description}</span>
                   <div className="value-icon">
                     {value.icon}
                   </div>
@@ -322,7 +325,7 @@ const About = () => {
               </button>
             </div>
           )}
-          <div className="features-grid">
+          <div className="features-grid" data-cms-list="about.why">
             {whyItems.map((item, idx) => {
               const key = `about:why:${idx}`;
               const disabled = isDisabled(key);
@@ -334,6 +337,7 @@ const About = () => {
                 initial={{ opacity: 0, x: -30 }}
                 animate={inView ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 0.6, delay: idx * 0.1 }}
+                data-cms-item
               >
                 <div style={{ position: 'relative', paddingTop: isEditMode ? 56 : 0, opacity: disabled ? 0.5 : 1 }}>
                   {isEditMode && (
@@ -355,6 +359,8 @@ const About = () => {
                         </button>
                     </div>
                   )}
+                  <span data-cms-field="title" style={{ display: 'none' }}>{item.title}</span>
+                  <span data-cms-field="text" style={{ display: 'none' }}>{item.text}</span>
                   <FiCheckCircle className="feature-icon" />
                   <div className="feature-content">
                     <h4>{item.title}</h4>
@@ -390,7 +396,7 @@ const About = () => {
               </button>
             </div>
           )}
-          <div className="services-grid">
+          <div className="services-grid" data-cms-list="about.services">
             {services.map((service, index) => {
               const key = `about:service:${index}`;
               const disabled = isDisabled(key);
@@ -404,6 +410,7 @@ const About = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
                 style={{ position: 'relative', paddingTop: isEditMode ? 56 : 0, opacity: disabled ? 0.5 : 1 }}
+                data-cms-item
               >
                 {isEditMode && (
                   <div style={{ position: 'absolute', top: 8, right: 8, zIndex: 5 }} contentEditable={false}>
@@ -420,6 +427,7 @@ const About = () => {
                       </button>
                   </div>
                 )}
+                <span data-cms-field="text" style={{ display: 'none' }}>{service}</span>
                 <FiCheckCircle className="service-icon" />
                 <span>{service}</span>
               </motion.div>
@@ -451,7 +459,7 @@ const About = () => {
               </button>
             </div>
           )}
-          <div className="solutions-grid">
+          <div className="solutions-grid" data-cms-list="about.sectorSolutions">
             {sectorSolutions.map((solution, index) => {
               const key = `about:sector:${index}`;
               const disabled = isDisabled(key);
@@ -465,6 +473,7 @@ const About = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
                 style={{ position: 'relative', paddingTop: isEditMode ? 56 : 0, opacity: disabled ? 0.5 : 1 }}
+                data-cms-item
               >
                 {isEditMode && (
                   <div style={{ position: 'absolute', top: 8, right: 8, zIndex: 5 }} contentEditable={false}>
@@ -481,6 +490,7 @@ const About = () => {
                       </button>
                   </div>
                 )}
+                <span data-cms-field="text" style={{ display: 'none' }}>{solution}</span>
                 <FiCheckCircle className="solution-icon" />
                 <span>{solution}</span>
               </motion.div>
