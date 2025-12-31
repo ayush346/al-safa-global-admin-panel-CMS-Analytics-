@@ -189,7 +189,51 @@ const Home = () => {
     });
   };
 
-  const initialDivisions = (Array.isArray(content?.home?.divisions) ? content.home.divisions : []);
+  const fallbackDivisions = [
+    {
+      id: 'office-construction',
+      title: 'Office, Construction & Infrastructure',
+      description: 'End-to-end supply for office fit-outs, construction materials and infrastructure projects.',
+      icon: '🏗️',
+      color: 'var(--primary-blue)',
+      link: '/divisions#office-construction'
+    },
+    {
+      id: 'oil-gas',
+      title: 'Oil & Gas',
+      description: 'Equipment, spares and consumables for upstream and downstream operations.',
+      icon: '🛢️',
+      color: 'var(--primary-gold)',
+      link: '/divisions#oil-gas'
+    },
+    {
+      id: 'industrial-manufacturing',
+      title: 'Industrial & Manufacturing',
+      description: 'MRO, tooling, machinery spares and production consumables.',
+      icon: '🏭',
+      color: 'var(--primary-blue)',
+      link: '/divisions#industrial-manufacturing'
+    },
+    {
+      id: 'aviation-marine',
+      title: 'Aviation & Marine',
+      description: 'Specialized parts and supplies for aviation, marine and shipping.',
+      icon: '✈️',
+      color: 'var(--primary-gold)',
+      link: '/divisions#aviation-marine'
+    },
+    {
+      id: 'defence',
+      title: 'Defence Sector',
+      description: 'Trusted sourcing for mission‑critical and compliant defence supplies.',
+      icon: '🛡️',
+      color: 'var(--primary-blue)',
+      link: '/divisions#defence'
+    }
+  ];
+  const initialDivisions = (Array.isArray(content?.home?.divisions) && content.home.divisions.length > 0
+    ? content.home.divisions
+    : fallbackDivisions);
   const [divisions, setDivisions] = useState(initialDivisions);
   const dragIndexRef = useRef(null);
 
