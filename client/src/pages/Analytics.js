@@ -63,7 +63,7 @@ function Analytics() {
 	const clicksColor = '#f97316'; // orange-500
 
 	return (
-		<div style={{ minHeight: 'calc(100vh - 72px)', display: 'flex', flexDirection: 'column' }}>
+		<div style={{ minHeight: '100vh', paddingTop: 96, display: 'flex', flexDirection: 'column' }}>
 			<div style={{ width: '100%', maxWidth: 1100, margin: '0 auto', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
 				<h2 style={{ margin: 0, fontSize: 22, fontWeight: 700, textAlign: 'center' }}>Performance Dashboard</h2>
 				<div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', gap: 12 }}>
