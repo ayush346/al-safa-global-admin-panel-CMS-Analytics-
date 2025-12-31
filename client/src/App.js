@@ -80,10 +80,13 @@ function App() {
         if (!res.ok) return;
         const json = await res.json();
         const data = json?.data || {};
-        if (typeof data.htmlMain === 'string' && mainRef.current) {
+        const hasMain = typeof data.htmlMain === 'string' && data.htmlMain.trim().length > 0;
+        const hasFooter = typeof data.htmlFooter === 'string' && data.htmlFooter.trim().length > 0;
+        // Only inject when we actually have published content; otherwise keep React-rendered UI
+        if (hasMain && mainRef.current) {
           mainRef.current.innerHTML = data.htmlMain;
         }
-        if (typeof data.htmlFooter === 'string' && footerRef.current) {
+        if (hasFooter && footerRef.current) {
           footerRef.current.innerHTML = data.htmlFooter;
         }
       } catch {}
