@@ -189,14 +189,16 @@ function App() {
             <Route path="/admin/content" element={<ContentEditor />} />
           </Routes>
         </main>
-        <div
-          ref={footerRef}
-          className={isEditMode && !isAnalytics ? 'editing' : ''}
-          contentEditable={isEditMode && !isAnalytics}
-          suppressContentEditableWarning
-        >
-          <Footer />
-        </div>
+        {!isAnalytics && (
+          <div
+            ref={footerRef}
+            className={isEditMode ? 'editing' : ''}
+            contentEditable={isEditMode}
+            suppressContentEditableWarning
+          >
+            <Footer />
+          </div>
+        )}
       </div>
     </>
   );

@@ -100,100 +100,73 @@ function Analytics() {
 	};
 
 	return (
-		<div className="admin-container">
-			<h1 className="admin-title">Performance Dashboard</h1>
-			<p className="admin-subtitle">View for a specific date range</p>
-
-			<div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center', marginBottom: 12 }}>
-				<label style={{ fontSize: 14, color: '#374151' }}>
-					From:{' '}
-					<input
-						type="date"
-						onChange={(e) => {
-							const from = e.target.value ? new Date(e.target.value) : null;
-							if (!from) return;
-							const to = new Date();
-							const qs = `from=${from.toISOString()}&to=${to.toISOString()}&granularity=${granularity}&compare=1`;
-							setLoading(true);
-							fetch(`${API_BASE}/api/analytics/summary?${qs}`).then(r => r.json()).then(setData).finally(() => setLoading(false));
-						}}
-					/>
-				</label>
-				<div style={{ marginLeft: 'auto' }} />
-				<select
-					className="form-input"
-					style={{ maxWidth: 160 }}
-					value={granularity}
-					onChange={(e) => setGranularity(e.target.value)}
-				>
-					{ranges.map(r => <option key={r.key} value={r.key}>{r.label}</option>)}
-				</select>
-			</div>
-
-			<div style={{ display: 'flex', gap: 8, marginBottom: 16 }}>
-				{ranges.map(r => (
-					<button
-						key={r.key}
-						className="btn btn-secondary"
-						style={{ opacity: r.key === granularity ? 1 : 0.7 }}
-						onClick={() => setGranularity(r.key)}
+		<div style={{ minHeight: 'calc(100vh - 72px)', display: 'flex', flexDirection: 'vertical' }}>
+			<div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px' }}>
+				<h2 style={{ margin: 0, fontSize: 20, fontWeight: 600 }}>Performance Dashboard</h2>
+				<div style={{ marginLeft: 'auto', display: 'flex', gap: 12 }}>
+					<label style={{ fontSize: 14, color: '#374151', display: 'flex', alignItems: 'center', gap: 8 }}>
+						<span style={{ whiteSpace: 'nowrap' }}>From</span>
+						<input
+							type="date"
+							onChange={(e) => {
+								const from = e.target.value ? new Date(e.target.value) : null;
+								if (!from) return;
+								const to = new Date();
+								const qs = `from=${from.toISOString()}&to=${to.toISOString()}&granularity=${granularity}&compare=1`;
+								setLoading(true);
+								fetch(`${API_BASE}/api/analytics/summary?${qs}`).then(r => r.json()).then(setData).finally(() => setLoading(false));
+							}}
+							style={{ padding: '6px 8px' }}
+						/>
+					</label>
+					<select
+						className="form-input"
+						style={{ maxWidth: 160 }}
+						value={granularity}
+						onChange={(e) => setGranularity(e.target.value)}
 					>
-						{r.label}
-					</button>
-				))}
+						{ranges.map(r => <option key={r.key} value={r.key}>{r.label}</option>)}
+					</select>
+					<div style={{ display: 'flex', gap: 8 }}>
+						{ranges.map(r => (
+							<button
+								key={r.key}
+								className="btn btn-secondary"
+								style={{ opacity: r.key === granularity ? 1 : 0.6 }}
+								onClick={() => setGranularity(r.key)}
+							>
+								{r.label}
+							</button>
+						))}
+					</div>
+				</div>
 			</div>
 
-			{loading && <p>Loading…</p>}
-			{error && <p className="alert alert-error">{error}</p>}
+			{loading && <div style={{ padding: 16 }}>Loading…</div>}
+			{error && <div className="alert alert-error" style={{ margin: '0 20px 12px' }}>{error}</div>}
 
-			{data && (
-				<>
-					<div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0,1fr))', gap: 16, marginBottom: 16 }}>
-						<div className="stat-card" style={{ borderLeft: `4px solid ${pageviewsColor}` }}>
-							<h3 style={{ marginBottom: 6 }}>Pageviews</h3>
-							<p style={{ fontSize: 28, margin: 0, color: '#111827' }}>{data.totalPageviews ?? 0}</p>
-							<p style={{ margin: '6px 0 0 0', fontSize: 12, color: '#6b7280' }}>Since tracking started</p>
-						</div>
-						<div className="stat-card" style={{ borderLeft: `4px solid ${clicksColor}` }}>
-							<h3 style={{ marginBottom: 6 }}>Clicks</h3>
-							<p style={{ fontSize: 28, margin: 0, color: '#111827' }}>{data.totalClicks ?? 0}</p>
-							<p style={{ margin: '6px 0 0 0', fontSize: 12, color: '#6b7280' }}>Since tracking started</p>
-						</div>
-						<div className="stat-card" style={{ borderLeft: '4px solid #10b981' }}>
-							<h3 style={{ marginBottom: 6 }}>Sessions</h3>
-							<p style={{ fontSize: 28, margin: 0, color: '#111827' }}>{data.totalSessions ?? 0}</p>
-							<p style={{ margin: '6px 0 0 0', fontSize: 12, color: '#6b7280' }}>Unique sessions</p>
-						</div>
+			<div style={{ flex: 1, minHeight: 0, padding: '0 8px 8px' }}>
+				{graphData.length === 0 ? (
+					<div style={{ padding: 16, color: '#6b7280' }}>
+						No analytics yet. Browse the site and click elements to generate data.
 					</div>
-					<div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0,1fr))', gap: 16, marginBottom: 16 }}>
-						<div className="stat-card" style={{ borderLeft: '4px solid #8b5cf6' }}>
-							<h3 style={{ marginBottom: 6 }}>Bounce Rate</h3>
-							<p style={{ fontSize: 28, margin: 0, color: '#111827' }}>{((data.bounceRate || 0) * 100).toFixed(1)}%</p>
-							<p style={{ margin: '6px 0 0 0', fontSize: 12, color: '#6b7280' }}>Single-page sessions</p>
-						</div>
-						<div className="stat-card" style={{ borderLeft: '4px solid #ef4444' }}>
-							<h3 style={{ marginBottom: 6 }}>Pages / Session</h3>
-							<p style={{ fontSize: 28, margin: 0, color: '#111827' }}>{(data.avgPagesPerSession || 0).toFixed(2)}</p>
-							<p style={{ margin: '6px 0 0 0', fontSize: 12, color: '#6b7280' }}>Average per session</p>
-						</div>
-						<div className="stat-card" style={{ borderLeft: '4px solid #06b6d4' }}>
-							<h3 style={{ marginBottom: 6 }}>Avg. Session Duration</h3>
-							<p style={{ fontSize: 28, margin: 0, color: '#111827' }}>
-								{(() => {
-									const s = Math.round(data.avgSessionDurationSec || 0);
-									const m = Math.floor(s / 60), ss = s % 60;
-									return `${String(m).padStart(2, '0')}:${String(ss).padStart(2, '0')}`;
-								})()}
-							</p>
-							<p style={{ margin: '6px 0 0 0', fontSize: 12, color: '#6b7280' }}>mm:ss</p>
-						</div>
-					</div>
-
-					<LineChartCard />
-
-					{/* Tables removed per request; dashboard view only */}
-				</>
-			)}
+				) : (
+					<ResponsiveContainer width="100%" height="100%">
+						<LineChart data={graphData} margin={{ top: 10, right: 24, left: 8, bottom: 8 }}>
+							<CartesianGrid stroke="#e5e7eb" strokeDasharray="3 3" />
+							<XAxis dataKey="label" tick={{ fontSize: 12 }} />
+							<YAxis allowDecimals={false} tick={{ fontSize: 12 }} />
+							<Tooltip
+								formatter={(value, name) => [value, name === 'pageviews' ? 'Pageviews' : 'Clicks']}
+								contentStyle={{ borderRadius: 8 }}
+							/>
+							<Legend />
+							<Line type="monotone" dataKey="pageviews" stroke={pageviewsColor} strokeWidth={3} dot={false} activeDot={{ r: 5 }} />
+							<Line type="monotone" dataKey="clicks" stroke={clicksColor} strokeWidth={3} dot={false} activeDot={{ r: 5 }} />
+						</LineChart>
+					</ResponsiveContainer>
+				)}
+			</div>
 		</div>
 	);
 }
