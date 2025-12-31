@@ -45,8 +45,8 @@ const Header = () => {
         setNested(overrides, key, value);
       });
       const payload = {
-        // Save per-page so whole-page edits go live when published
-        pagePath: window.location.pathname || '/',
+        // Store structured overrides under a global page to avoid UI replacement
+        pagePath: '_global',
         label,
         data: {
           htmlMain: mainEl ? mainEl.innerHTML : '',
@@ -71,8 +71,7 @@ const Header = () => {
 
   async function openHistory() {
     try {
-      const path = window.location.pathname;
-      const res = await fetch(`${API_BASE}/api/cms/versions?pagePath=${encodeURIComponent(path)}`, {
+      const res = await fetch(`${API_BASE}/api/cms/versions?pagePath=${encodeURIComponent('_global')}`, {
         headers: { 'x-admin-token': localStorage.getItem('asg:adminToken') || '' },
       });
       if (!res.ok) throw new Error('Failed to load history');
@@ -113,9 +112,8 @@ const Header = () => {
 
   async function publishLatest() {
     try {
-      // Publish latest version for the current page
-      const path = window.location.pathname || '/';
-      const res = await fetch(`${API_BASE}/api/cms/versions?pagePath=${encodeURIComponent(path)}`, {
+      // Publish latest global structured save
+      const res = await fetch(`${API_BASE}/api/cms/versions?pagePath=${encodeURIComponent('_global')}`, {
         headers: { 'x-admin-token': localStorage.getItem('asg:adminToken') || '' },
       });
       if (!res.ok) throw new Error('Failed to load history');
