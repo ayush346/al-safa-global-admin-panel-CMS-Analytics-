@@ -61,49 +61,12 @@ function Analytics() {
 
 	const pageviewsColor = '#3b82f6'; // blue-500
 	const clicksColor = '#f97316'; // orange-500
-	const LineChartCard = () => {
-		if (!graphData.length) {
-			return (
-				<div style={{ padding: 16, color: '#6b7280' }}>
-					No analytics yet. Browse the site and click elements to generate data.
-				</div>
-			);
-		}
-		return (
-			<div
-				className="card"
-				style={{
-					padding: 16,
-					borderRadius: 8,
-					border: '1px solid #e5e7eb',
-					background: '#fff',
-				}}
-			>
-				<h2 style={{ margin: '0 0 12px 0', fontSize: 18 }}>Timeline</h2>
-				<div style={{ height: 320 }}>
-					<ResponsiveContainer width="100%" height="100%">
-						<LineChart data={graphData} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
-							<CartesianGrid stroke="#e5e7eb" strokeDasharray="3 3" />
-							<XAxis dataKey="label" tick={{ fontSize: 12 }} />
-							<YAxis allowDecimals={false} tick={{ fontSize: 12 }} />
-							<Tooltip
-								formatter={(value, name) => [value, name === 'pageviews' ? 'Pageviews' : 'Clicks']}
-							/>
-							<Legend />
-							<Line type="monotone" dataKey="pageviews" stroke={pageviewsColor} strokeWidth={2} dot={false} activeDot={{ r: 5 }} />
-							<Line type="monotone" dataKey="clicks" stroke={clicksColor} strokeWidth={2} dot={false} activeDot={{ r: 5 }} />
-						</LineChart>
-					</ResponsiveContainer>
-				</div>
-			</div>
-		);
-	};
 
 	return (
-		<div style={{ minHeight: 'calc(100vh - 72px)', display: 'flex', flexDirection: 'vertical' }}>
-			<div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 20px' }}>
-				<h2 style={{ margin: 0, fontSize: 20, fontWeight: 600 }}>Performance Dashboard</h2>
-				<div style={{ marginLeft: 'auto', display: 'flex', gap: 12 }}>
+		<div style={{ minHeight: 'calc(100vh - 72px)', display: 'flex', flexDirection: 'column' }}>
+			<div style={{ width: '100%', maxWidth: 1100, margin: '0 auto', padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+				<h2 style={{ margin: 0, fontSize: 22, fontWeight: 700, textAlign: 'center' }}>Performance Dashboard</h2>
+				<div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', gap: 12 }}>
 					<label style={{ fontSize: 14, color: '#374151', display: 'flex', alignItems: 'center', gap: 8 }}>
 						<span style={{ whiteSpace: 'nowrap' }}>From</span>
 						<input
@@ -120,14 +83,14 @@ function Analytics() {
 						/>
 					</label>
 					<select
-						className="form-input"
-						style={{ maxWidth: 160 }}
+						className="app-input"
+						style={{ width: 160 }}
 						value={granularity}
 						onChange={(e) => setGranularity(e.target.value)}
 					>
 						{ranges.map(r => <option key={r.key} value={r.key}>{r.label}</option>)}
 					</select>
-					<div style={{ display: 'flex', gap: 8 }}>
+					<div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
 						{ranges.map(r => (
 							<button
 								key={r.key}
@@ -142,29 +105,31 @@ function Analytics() {
 				</div>
 			</div>
 
-			{loading && <div style={{ padding: 16 }}>Loading…</div>}
-			{error && <div className="alert alert-error" style={{ margin: '0 20px 12px' }}>{error}</div>}
+			{loading && <div style={{ padding: 16, textAlign: 'center' }}>Loading…</div>}
+			{error && <div className="alert alert-error" style={{ margin: '0 auto 12px', maxWidth: 1100 }}>{error}</div>}
 
-			<div style={{ flex: 1, minHeight: 0, padding: '0 8px 8px' }}>
+			<div style={{ flex: 1, minHeight: 0, padding: '0 20px 20px' }}>
 				{graphData.length === 0 ? (
-					<div style={{ padding: 16, color: '#6b7280' }}>
+					<div style={{ padding: 16, color: '##4b5563', textAlign: 'center' }}>
 						No analytics yet. Browse the site and click elements to generate data.
 					</div>
 				) : (
-					<ResponsiveContainer width="100%" height="100%">
-						<LineChart data={graphData} margin={{ top: 10, right: 24, left: 8, bottom: 8 }}>
-							<CartesianGrid stroke="#e5e7eb" strokeDasharray="3 3" />
-							<XAxis dataKey="label" tick={{ fontSize: 12 }} />
-							<YAxis allowDecimals={false} tick={{ fontSize: 12 }} />
-							<Tooltip
-								formatter={(value, name) => [value, name === 'pageviews' ? 'Pageviews' : 'Clicks']}
-								contentStyle={{ borderRadius: 8 }}
-							/>
-							<Legend />
-							<Line type="monotone" dataKey="pageviews" stroke={pageviewsColor} strokeWidth={3} dot={false} activeDot={{ r: 5 }} />
-							<Line type="monotone" dataKey="clicks" stroke={clicksColor} strokeWidth={3} dot={false} activeDot={{ r: 5 }} />
-						</LineChart>
-					</ResponsiveContainer>
+					<div style={{ height: '65vh', maxWidth: 1100, margin: '0 auto' }}>
+						<ResponsiveContainer width="100%" height="100%">
+							<LineChart data={graphData} margin={{ top: 10, right: 24, left: 8, bottom: 8 }}>
+								<CartesianGrid stroke="#e5e7eb" strokeDasharray="3 3" />
+								<XAxis dataKey="label" tick={{ fontSize: 12 }} />
+								<YAxis allowDecimals={false} tick={{ fontSize: 12 }} />
+								<Tooltip
+									formatter={(value, name) => [value, name === 'pageviews' ? 'Pageviews' : 'Clicks']}
+									contentStyle={{ borderRadius: 8 }}
+								/>
+								<Legend />
+								<Line type="monotone" dataKey="pageviews" stroke={pageviewsColor} strokeWidth={3} dot={false} activeDot={{ r: 5 }} />
+								<Line type="monotone" dataKey="clicks" stroke={clicksColor} strokeWidth={3} dot={false} activeDot={{ r: 5 }} />
+							</LineChart>
+						</ResponsiveContainer>
+					</div>
 				)}
 			</div>
 		</div>
