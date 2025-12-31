@@ -25,6 +25,7 @@ function App() {
   const pathname = location.pathname || '/';
   const isAnalytics = pathname === '/analytics' || pathname.startsWith('/analytics');
   const isCmsPage = pathname === '/' || pathname === '/about' || pathname === '/divisions' || pathname === '/contact';
+  const ENABLE_SNAPSHOTS = (process.env.REACT_APP_ENABLE_CMS_SNAPSHOTS || '').toLowerCase() === 'true';
   const [publishedMainHtml, setPublishedMainHtml] = useState('');
   const [publishedFooterHtml, setPublishedFooterHtml] = useState('');
 
@@ -73,6 +74,11 @@ function App() {
     if (isEditMode) return;
     if (isAnalytics) return;
     if (!isCmsPage) return;
+    if (!ENABLE_SNAPSHOTS) {
+      setPublishedMainHtml('');
+      setPublishedFooterHtml('');
+      return;
+    }
     const controller = new AbortController();
     const load = async () => {
       try {
@@ -89,7 +95,7 @@ function App() {
     };
     load();
     return () => controller.abort();
-  }, [pathname, isEditMode, isAnalytics, isCmsPage]);
+  }, [pathname, isEditMode, isAnalytics, isCmsPage, ENABLE_SNAPSHOTS]);
 
   // Analytics: track page views on route change
   useEffect(() => {
@@ -206,7 +212,7 @@ function App() {
           contentEditable={isEditMode && !isAnalytics}
           suppressContentEditableWarning
         >
-          {!isEditMode && isCmsPage && publishedMainHtml ? (
+          {!isEditMode && isCmsPage && ENABLE_SNAPSHOTS && publishedMainHtml ? (
             <div dangerouslySetInnerHTML={{ __html: publishedMainHtml }} />
           ) : (
             <Routes>
@@ -229,7 +235,7 @@ function App() {
             contentEditable={isEditMode}
             suppressContentEditableWarning
           >
-            {!isEditMode && isCmsPage && publishedFooterHtml ? (
+            {!isEditMode && isCmsPage && ENABLE_SNAPSHOTS && publishedFooterHtml ? (
               <div dangerouslySetInnerHTML={{ __html: publishedFooterHtml }} />
             ) : (
               <Footer />
