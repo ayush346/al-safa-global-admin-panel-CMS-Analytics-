@@ -136,10 +136,6 @@ const HeroSection = () => {
                   data-cms-key="hero.mainImage"
                   data-cms-type="image"
                   src={hero.mainImage || (process.env.PUBLIC_URL + "/images/global-procurement.png")} 
-                <img 
-                  data-cms-key="hero.mainImage"
-                  data-cms-type="image"
-                  src={hero.mainImage || (process.env.PUBLIC_URL + "/images/global-procurement.png")} 
                   alt="Global Procurement Solutions" 
                   className="hero-image"
                   onLoad={() => console.log('Desktop global procurement image loaded successfully')}
