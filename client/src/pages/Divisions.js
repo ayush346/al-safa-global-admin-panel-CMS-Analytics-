@@ -126,11 +126,11 @@ const Divisions = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="gradient-text">
+            <h1 className="gradient-text" data-cms-key="divisions.heroTitle">
               <span className="gold-text">Al Safa Global</span> Segments
             </h1>
 
-            <p>
+            <p data-cms-key="divisions.heroIntro">
               We provide comprehensive procurement and supply chain solutions across multiple industries, 
               ensuring our clients receive the highest quality products and services tailored to their 
               specific sector requirements.

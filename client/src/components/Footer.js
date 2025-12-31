@@ -63,14 +63,14 @@ const Footer = () => {
                   {phones.map((p, idx) => (
                     <div key={p}>
                       <span>{idx === 0 ? 'Office:' : 'Mobile:'} </span>
-                      <a href={`tel:${p.replace(/\\s/g, '')}`} className="contact-link">{p}</a>
+                      <a href={`tel:${p.replace(/\s/g, '')}`} className="contact-link">{p}</a>
                     </div>
                   ))}
                 </div>
               </div>
               <div className="contact-item">
                 <FiMapPin className="contact-icon" />
-                <span>{locationText}</span>
+                <span data-cms-key="footer.locationText">{locationText}</span>
               </div>
             </div>
           </motion.div>
@@ -132,7 +132,7 @@ const Footer = () => {
           viewport={{ once: true }}
         >
           <div className="footer-bottom-content">
-            <p>&copy; {currentYear} {legal}</p>
+            <p>&copy; {currentYear} <span data-cms-key="footer.legal">{legal}</span></p>
           </div>
         </motion.div>
       </div>

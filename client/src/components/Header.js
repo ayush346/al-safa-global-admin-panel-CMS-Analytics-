@@ -21,12 +21,37 @@ const Header = () => {
       if (!label) return;
       const mainEl = document.querySelector('[data-app-main]');
       const footerEl = document.querySelector('[data-app-footer]');
+      // Collect structured overrides from data-cms-key elements (optional)
+      const overrides = {};
+      const setNested = (obj, path, value) => {
+        const parts = path.split('.');
+        let cur = obj;
+        for (let i = 0; i < parts.length - 1; i++) {
+          const p = parts[i];
+          cur[p] = cur[p] || {};
+          cur = cur[p];
+        }
+        cur[parts[parts.length - 1]] = value;
+      };
+      document.querySelectorAll('[data-cms-key]').forEach((el) => {
+        const key = el.getAttribute('data-cms-key');
+        const type = el.getAttribute('data-cms-type') || 'text';
+        let value;
+        if (type === 'image') {
+          value = el.getAttribute('src') || '';
+        } else {
+          value = (el.textContent || '').trim();
+        }
+        setNested(overrides, key, value);
+      });
       const payload = {
-        pagePath: window.location.pathname,
+        // Save per-page so whole-page edits go live when published
+        pagePath: window.location.pathname || '/',
         label,
         data: {
           htmlMain: mainEl ? mainEl.innerHTML : '',
           htmlFooter: footerEl ? footerEl.innerHTML : '',
+          overrides,
         },
       };
       const res = await fetch(`${API_BASE}/api/cms/save`, {
@@ -88,7 +113,8 @@ const Header = () => {
 
   async function publishLatest() {
     try {
-      const path = window.location.pathname;
+      // Publish latest version for the current page
+      const path = window.location.pathname || '/';
       const res = await fetch(`${API_BASE}/api/cms/versions?pagePath=${encodeURIComponent(path)}`, {
         headers: { 'x-admin-token': localStorage.getItem('asg:adminToken') || '' },
       });

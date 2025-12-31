@@ -22,7 +22,9 @@ function App() {
   const mainRef = useRef(null);
   const footerRef = useRef(null);
   const API_BASE = process.env.REACT_APP_API_BASE || '';
-  const isAnalytics = location.pathname === '/analytics' || location.pathname.startsWith('/analytics');
+  const pathname = location.pathname || '/';
+  const isAnalytics = pathname === '/analytics' || pathname.startsWith('/analytics');
+  const isCmsPage = pathname === '/' || pathname === '/about' || pathname === '/divisions' || pathname === '/contact';
 
   // Prevent navigation when editing and enable image replacement
   useEffect(() => {
@@ -69,13 +71,11 @@ function App() {
     if (isEditMode) return;
     if (!mainRef.current) return;
     if (isAnalytics) return;
-    // Only inject CMS HTML if the page explicitly opts-in with data-cms-replace
-    const canInject = mainRef.current.hasAttribute('data-cms-replace');
-    if (!canInject) return;
+    if (!isCmsPage) return;
     const controller = new AbortController();
     const load = async () => {
       try {
-        const qs = `pagePath=${encodeURIComponent(window.location.pathname)}&variant=published`;
+        const qs = `pagePath=${encodeURIComponent(pathname)}&variant=published`;
         const res = await fetch(`${API_BASE}/api/cms/content?${qs}`, { signal: controller.signal });
         if (!res.ok) return;
         const json = await res.json();
@@ -90,7 +90,7 @@ function App() {
     };
     load();
     return () => controller.abort();
-  }, [location, isEditMode, isAnalytics]);
+  }, [pathname, isEditMode, isAnalytics, isCmsPage]);
 
   // Analytics: track page views on route change
   useEffect(() => {

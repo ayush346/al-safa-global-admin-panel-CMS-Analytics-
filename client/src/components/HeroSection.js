@@ -38,14 +38,14 @@ const HeroSection = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <motion.h1 
+          <motion.h1 
               className="hero-title"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              {(hero.titlePrefix || 'Welcome to') + ' '}
-              <span className="gradient-text">{hero.brandHighlight || 'Al Safa Global'}</span>
+              <span data-cms-key="hero.titlePrefix">{hero.titlePrefix || 'Welcome to'}</span>{' '}
+              <span className="gradient-text" data-cms-key="hero.brandHighlight">{hero.brandHighlight || 'Al Safa Global'}</span>
             </motion.h1>
             
             <motion.p 
@@ -54,7 +54,7 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
             >
-              {hero.subtitle || 'Your Trusted Partner in Procurement and Supply Chain Solutions'}
+              <span data-cms-key="hero.subtitle">{hero.subtitle || 'Your Trusted Partner in Procurement and Supply Chain Solutions'}</span>
             </motion.p>
             
             <motion.p 
@@ -133,6 +133,12 @@ const HeroSection = () => {
             <div className="hero-image-container">
               <div className="hero-main-image">
                 <img 
+                  data-cms-key="hero.mainImage"
+                  data-cms-type="image"
+                  src={hero.mainImage || (process.env.PUBLIC_URL + "/images/global-procurement.png")} 
+                <img 
+                  data-cms-key="hero.mainImage"
+                  data-cms-type="image"
                   src={hero.mainImage || (process.env.PUBLIC_URL + "/images/global-procurement.png")} 
                   alt="Global Procurement Solutions" 
                   className="hero-image"

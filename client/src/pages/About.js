@@ -178,9 +178,9 @@ const About = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="gradient-text">{about?.heroTitle || <>About <span className="gold-text">Al Safa Global</span></>}</h1>
+            <h1 className="gradient-text" data-cms-key="about.heroTitle">{about?.heroTitle || <>About <span className="gold-text">Al Safa Global</span></>}</h1>
 
-            <p>
+            <p data-cms-key="about.introParagraph">
               {about?.introParagraph || 'Al Safa Global General Trading FZ LLC is a UAE-based company specializing in comprehensive procurement and supply chain solutions.'}
             </p>
           </motion.div>
@@ -202,7 +202,7 @@ const About = () => {
                 <FiEye />
               </div>
               <h3>Our Vision</h3>
-              <p>
+              <p data-cms-key="about.vision">
                 {about?.vision || 'To be a globally trusted procurement partner...'}
               </p>
             </motion.div>
@@ -218,7 +218,7 @@ const About = () => {
                 <FiTarget />
               </div>
               <h3>Our Mission</h3>
-              <p>
+              <p data-cms-key="about.mission">
                 {about?.mission || 'To provide reliable, cost-effective sourcing and supply solutions...'}
               </p>
             </motion.div>

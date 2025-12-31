@@ -251,8 +251,14 @@ const Home = () => {
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ duration: 0.8 }}
             >
-              <h2>{content?.home?.aboutPreview?.title || <>About <span className="gold-text">Al Safa Global</span></>}</h2>
-              {(content?.home?.aboutPreview?.paragraphs || []).slice(0, 3).map((p, i) => (<p key={i}>{p}</p>))}
+              <h2>
+                <span data-cms-key="home.aboutPreview.title">
+                  {content?.home?.aboutPreview?.title || <>About <span className="gold-text">Al Safa Global</span></>}
+                </span>
+              </h2>
+              {(content?.home?.aboutPreview?.paragraphs || []).slice(0, 3).map((p, i) => (
+                <p key={i} data-cms-key={`home.aboutPreview.paragraphs.${i}`}>{p}</p>
+              ))}
               <div className="about-features">
                 <div className="feature-item">
                   <FiCheckCircle className="feature-icon" />
@@ -278,6 +284,8 @@ const Home = () => {
               {/* Company overview image above floating cards */}
               <div className="company-image-wrapper">
                 <img 
+                  data-cms-key="home.aboutPreview.companyImage"
+                  data-cms-type="image"
                   src={content?.home?.aboutPreview?.companyImage || "/images/company-overview.jpg"} 
                   alt="Al Safa Global Company Overview" 
                   className="company-overview-image"
@@ -334,8 +342,8 @@ const Home = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2>{content?.home?.sections?.divisions?.title || 'Our Business Segments'}</h2>
-            <p className="section-subtitle">
+            <h2 data-cms-key="home.sections.divisions.title">{content?.home?.sections?.divisions?.title || 'Our Business Segments'}</h2>
+            <p className="section-subtitle" data-cms-key="home.sections.divisions.subtitle">
               {content?.home?.sections?.divisions?.subtitle || 'Al Safa Global specializes in a wide array of supply and service segments'}
             </p>
           </motion.div>
@@ -407,8 +415,8 @@ const Home = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2>{content?.home?.sections?.features?.title || <>Why Choose <span className="gold-text">Al Safa Global</span>?</>}</h2>
-            <p className="section-subtitle">
+            <h2 data-cms-key="home.sections.features.title">{content?.home?.sections?.features?.title || <>Why Choose <span className="gold-text">Al Safa Global</span>?</>}</h2>
+            <p className="section-subtitle" data-cms-key="home.sections.features.subtitle">
               {content?.home?.sections?.features?.subtitle || 'We combine industry expertise with innovative solutions to deliver exceptional value to our clients'}
             </p>
           </motion.div>

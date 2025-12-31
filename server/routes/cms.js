@@ -20,6 +20,27 @@ router.post('/save', optionalAdminAuth, async (req, res) => {
 		if (!pagePath || !label || !data) {
 			return res.status(400).json({ message: 'pagePath, label and data are required' });
 		}
+		// Deep merge helper
+		const deepMerge = (base, patch) => {
+			if (!patch) return base || {};
+			const out = { ...(base || {}) };
+			for (const k of Object.keys(patch)) {
+				const pv = patch[k];
+				if (pv && typeof pv === 'object' && !Array.isArray(pv)) {
+					out[k] = deepMerge(out[k], pv);
+				} else {
+					out[k] = pv;
+				}
+			}
+			return out;
+		};
+		// Merge structured overrides with last version for this pagePath
+		let mergedOverrides = data.overrides || undefined;
+		if (data.overrides) {
+			const last = await CmsVersion.findOne({ pagePath }).sort({ createdAt: -1 }).lean();
+			const prev = last?.data?.overrides || {};
+			mergedOverrides = deepMerge(prev, data.overrides);
+		}
 		const doc = await CmsVersion.create({
 			pagePath,
 			label,
@@ -27,6 +48,7 @@ router.post('/save', optionalAdminAuth, async (req, res) => {
 			data: {
 				htmlMain: data.htmlMain || '',
 				htmlFooter: data.htmlFooter || '',
+				overrides: mergedOverrides,
 			},
 			published: false,
 		});
@@ -101,7 +123,7 @@ router.get('/content', async (req, res) => {
 		} else {
 			doc = await CmsVersion.findOne({ pagePath, published: true }).sort({ publishedAt: -1 }).lean();
 		}
-		if (!doc) return res.json({ ok: true, data: { htmlMain: '', htmlFooter: '' } });
+		if (!doc) return res.json({ ok: true, data: { htmlMain: '', htmlFooter: '', overrides: {} } });
 		return res.json({ ok: true, data: doc.data, version: doc });
 	} catch (e) {
 		console.error('CMS content error', e);

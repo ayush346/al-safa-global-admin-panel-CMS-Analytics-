@@ -7,6 +7,7 @@ const CmsVersionSchema = new mongoose.Schema({
 	data: {
 		htmlMain: { type: String },
 		htmlFooter: { type: String },
+		overrides: { type: Object }, // structured content overrides merged onto base content.json
 		// Future: structured blocks can be added here
 	},
 	published: { type: Boolean, default: false, index: true },

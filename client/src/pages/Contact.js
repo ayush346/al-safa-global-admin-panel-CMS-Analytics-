@@ -120,10 +120,10 @@ Submitted on: ${new Date().toLocaleString()}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <h1 className="gradient-text">
+            <h1 className="gradient-text" data-cms-key="contact.heroTitle">
               {contact?.heroTitle || <>Contact <span className="gold-text">Al Safa Global</span></>}
             </h1>
-            <p className="hero-subtitle">
+            <p className="hero-subtitle" data-cms-key="contact.heroSubtitle">
               {contact?.heroSubtitle || "We would love to hear from you. For all inquiries, business proposals, or partnership opportunities, please reach out to us."}
             </p>
           </motion.div>
