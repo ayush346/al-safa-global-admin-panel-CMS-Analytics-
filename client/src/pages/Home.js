@@ -25,6 +25,7 @@ import CtaSection from '../components/CtaSection';
 import './Home.css';
 import { ConfirmDialog, useConfirmState } from '../components/ConfirmDialog';
 import { useContent } from '../context/ContentContext';
+import { toText } from '../utils/cms';
 
 const Home = () => {
   const { content } = useContent();
@@ -307,7 +308,7 @@ const Home = () => {
                 </span>
               </h2>
               {(content?.home?.aboutPreview?.paragraphs || []).slice(0, 3).map((p, i) => (
-                <p key={i} data-cms-key={`home.aboutPreview.paragraphs.${i}`}>{p}</p>
+                <p key={i} data-cms-key={`home.aboutPreview.paragraphs.${i}`}>{toText(p)}</p>
               ))}
               <div className="about-features">
                 <div className="feature-item">

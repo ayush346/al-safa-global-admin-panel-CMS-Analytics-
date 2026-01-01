@@ -16,6 +16,7 @@ import './About.css';
 import { useEditMode } from '../context/EditModeContext';
 import { ConfirmDialog, useConfirmState } from '../components/ConfirmDialog';
 import { useContent } from '../context/ContentContext';
+import { toText } from '../utils/cms';
 
 const About = () => {
   const { about = {} } = useContent();
@@ -425,9 +426,9 @@ const About = () => {
                       </button>
                   </div>
                 )}
-                <span data-cms-field="text" style={{ display: 'none' }}>{service}</span>
+                <span data-cms-field="text" style={{ display: 'none' }}>{toText(service)}</span>
                 <FiCheckCircle className="service-icon" />
-                <span>{service}</span>
+                <span>{toText(service)}</span>
               </motion.div>
             )})}
           </div>
@@ -488,9 +489,9 @@ const About = () => {
                       </button>
                   </div>
                 )}
-                <span data-cms-field="text" style={{ display: 'none' }}>{solution}</span>
+                <span data-cms-field="text" style={{ display: 'none' }}>{toText(solution)}</span>
                 <FiCheckCircle className="solution-icon" />
-                <span>{solution}</span>
+                <span>{toText(solution)}</span>
               </motion.div>
             )})}
           </div>

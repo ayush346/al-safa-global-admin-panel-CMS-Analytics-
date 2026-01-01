@@ -8,6 +8,7 @@ import {
 } from 'react-icons/fi';
 import './Footer.css';
 import { useContent } from '../context/ContentContext';
+import { toText } from '../utils/cms';
 
 const Footer = () => {
   const { footer = {} } = useContent();
@@ -107,8 +108,8 @@ const Footer = () => {
             <ul className="footer-links" data-cms-list="footer.services">
               {services.map((s, idx) => (
                 <li key={`${s}-${idx}`} data-cms-item>
-                  <span data-cms-field="text" style={{ display: 'none' }}>{s}</span>
-                  {s}
+                  <span data-cms-field="text" style={{ display: 'none' }}>{toText(s)}</span>
+                  {toText(s)}
                 </li>
               ))}
             </ul>

@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import './Divisions.css';
 import { useEditMode } from '../context/EditModeContext';
 import { useContent } from '../context/ContentContext';
+import { toText } from '../utils/cms';
 
 const Divisions = () => {
   const { divisions: divisionsFromContent = [] } = useContent();
@@ -260,7 +261,7 @@ const Divisions = () => {
                             </button>
                         </div>
                       )}
-                      {item}
+                      {toText(item)}
                     </motion.li>
                   )})}
                 </ul>

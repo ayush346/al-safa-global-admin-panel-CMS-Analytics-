@@ -5,6 +5,7 @@ import './Contact.css';
 import { useEditMode } from '../context/EditModeContext';
 import { ConfirmDialog, useConfirmState } from '../components/ConfirmDialog';
 import { useContent } from '../context/ContentContext';
+import { toText } from '../utils/cms';
 
 const Contact = () => {
   const { contact = {}, forms = {} } = useContent();
@@ -179,7 +180,7 @@ Submitted on: ${new Date().toLocaleString()}
                     <h4>Head Office Address</h4>
                     <p>
                       <span data-cms-key="contact.addressLines" style={{ display: 'none' }} />
-                      {(contact?.addressLines || []).map((line, i) => (<React.Fragment key={i}>{line}<br /></React.Fragment>))}
+                      {(contact?.addressLines || []).map((line, i) => (<React.Fragment key={i}>{toText(line)}<br /></React.Fragment>))}
                       <a href={`tel:${(contact?.phone || '00971 4 3741 969').replace(/\\s/g, '')}`} style={{ color: 'inherit', textDecoration: 'underline' }}>{contact?.phone || '00971 4 3741 969'}</a>
                     </p>
                   </div>
@@ -191,7 +192,7 @@ Submitted on: ${new Date().toLocaleString()}
                     <h4>Business Hours</h4>
                     <div data-cms-list="contact.businessHours">
                       {(contact?.businessHours || []).map((h, i) => (
-                        <p key={i} data-cms-item><span data-cms-field="text" style={{ display: 'none' }}>{h}</span>{h}</p>
+                        <p key={i} data-cms-item><span data-cms-field="text" style={{ display: 'none' }}>{toText(h)}</span>{toText(h)}</p>
                       ))}
                     </div>
                   </div>
@@ -202,7 +203,7 @@ Submitted on: ${new Date().toLocaleString()}
                   <div>
                     <h4>Service Areas</h4>
                     <div data-cms-list="contact.serviceAreas">
-                      {(contact?.serviceAreas || []).map((s, i) => (<p key={i} data-cms-item><span data-cms-field="text" style={{ display: 'none' }}>{s}</span>{s}</p>))}
+                      {(contact?.serviceAreas || []).map((s, i) => (<p key={i} data-cms-item><span data-cms-field="text" style={{ display: 'none' }}>{toText(s)}</span>{toText(s)}</p>))}
                     </div>
                   </div>
                 </div>
