@@ -46,28 +46,6 @@ const Home = () => {
 
   const [lastScrollY, setLastScrollY] = useState(0);
   const [hasTransitioned, setHasTransitioned] = useState(false);
-  const draftKey = 'asg:state:/';
-  useEffect(() => {
-    if (isEditMode) {
-      try {
-        const raw = sessionStorage.getItem(draftKey);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed.features)) setFeatures(parsed.features);
-          if (Array.isArray(parsed.divisions)) setDivisions(parsed.divisions);
-          if (Array.isArray(parsed.bullets)) setBullets(parsed.bullets);
-        }
-      } catch {}
-    }
-    return () => {
-      if (isEditMode) {
-        try {
-          const payload = JSON.stringify({ features, divisions, bullets });
-          sessionStorage.setItem(draftKey, payload);
-        } catch {}
-      }
-    };
-  }, [isEditMode, features, divisions, bullets]);
   const initialBullets = Array.isArray(content?.home?.aboutPreview?.bullets)
     ? content.home.aboutPreview.bullets
     : [
@@ -273,6 +251,30 @@ const Home = () => {
   );
   const [divisions, setDivisions] = useState(initialDivisions);
   const dragIndexRef = useRef(null);
+
+  // Persist draft state across admin navigation in this tab (run after all states exist)
+  const draftKey = 'asg:state:/';
+  useEffect(() => {
+    if (isEditMode) {
+      try {
+        const raw = sessionStorage.getItem(draftKey);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed.features)) setFeatures(parsed.features);
+          if (Array.isArray(parsed.divisions)) setDivisions(parsed.divisions);
+          if (Array.isArray(parsed.bullets)) setBullets(parsed.bullets);
+        }
+      } catch {}
+    }
+    return () => {
+      if (isEditMode) {
+        try {
+          const payload = JSON.stringify({ features, divisions, bullets });
+          sessionStorage.setItem(draftKey, payload);
+        } catch {}
+      }
+    };
+  }, [isEditMode, features, divisions, bullets]);
 
   const handleAddDivision = () => {
     setDivisions(prev => ([
