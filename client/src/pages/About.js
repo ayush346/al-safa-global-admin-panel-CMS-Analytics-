@@ -596,6 +596,7 @@ const About = () => {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
+            data-cms-list="about.brands"
           >
             {brands.map((brand, index) => {
               const key = `about:brand:${index}`;
@@ -611,6 +612,7 @@ const About = () => {
                 transition={{ duration: 0.4, delay: index * 0.05 }}
                 whileHover={{ scale: 1.05 }}
                 style={{ position: 'relative', paddingTop: isEditMode ? 56 : 0, opacity: disabled ? 0.5 : 1 }}
+                data-cms-item
                 data-disabled={(disabled || persistDisabled) ? 'true' : 'false'}
               >
                 {isEditMode && (
@@ -628,7 +630,10 @@ const About = () => {
                       </button>
                   </div>
                 )}
+                <span data-cms-field="name" style={{ display: 'none' }}>{brand.name}</span>
                 <img 
+                  data-cms-field="image"
+                  data-cms-type="image"
                   src={brand.image} 
                   alt={brand.name}
                   onLoad={() => console.log(`${brand.name} logo loaded successfully`)}

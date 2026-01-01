@@ -61,7 +61,12 @@ const Header = () => {
             if (sublistAncestor && itemEl.contains(sublistAncestor)) return;
             const field = fieldEl.getAttribute('data-cms-field');
             if (!field) return;
-            obj[field] = (fieldEl.textContent || '').trim();
+            const fType = fieldEl.getAttribute('data-cms-type') || 'text';
+            if (fType === 'image') {
+              obj[field] = fieldEl.getAttribute('src') || '';
+            } else {
+              obj[field] = (fieldEl.textContent || '').trim();
+            }
           });
           // include disabled flag if present on the item
           const disabledAttr = itemEl.getAttribute('data-disabled');
@@ -81,7 +86,12 @@ const Header = () => {
               subFields.forEach((sf) => {
                 const f = sf.getAttribute('data-cms-field');
                 if (!f) return;
-                subObj[f] = (sf.textContent || '').trim();
+                const ft = sf.getAttribute('data-cms-type') || 'text';
+                if (ft === 'image') {
+                  subObj[f] = sf.getAttribute('src') || '';
+                } else {
+                  subObj[f] = (sf.textContent || '').trim();
+                }
               });
               const subDisabled = subItemEl.getAttribute('data-disabled');
               if (subDisabled === 'true') {

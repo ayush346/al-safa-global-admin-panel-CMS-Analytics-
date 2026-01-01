@@ -46,6 +46,14 @@ const Home = () => {
 
   const [lastScrollY, setLastScrollY] = useState(0);
   const [hasTransitioned, setHasTransitioned] = useState(false);
+  const initialBullets = Array.isArray(content?.home?.aboutPreview?.bullets)
+    ? content.home.aboutPreview.bullets
+    : [
+      "End-to-End Procurement Solutions",
+      "Global Sourcing & Supply",
+      "Integrated Logistics Management"
+    ];
+  const [bullets, setBullets] = useState(initialBullets);
 
   // Check if user is revisiting the home page
   useEffect(() => {
@@ -379,6 +387,38 @@ const Home = () => {
                 <FiArrowRight />
               </Link>
             </motion.div>
+          </div>
+        </div>
+      </section>
+      
+      {/* 2a. About Preview - Editable bullet list */}
+      <section>
+        <div className="container">
+          {isEditMode && (
+            <div style={{ display: 'flex', justifyContent: 'flex-end', margin: '0 0 12px' }} contentEditable={false}>
+              <button type="button" className="btn btn-secondary" onClick={() => setBullets(prev => [...prev, "New point - click to edit"])}>
+                Add
+              </button>
+            </div>
+          )}
+          <div data-cms-list="home.aboutPreview.bullets">
+            {bullets.map((b, i) => (
+              <p key={i} data-cms-item style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <FiCheckCircle className="feature-icon" />
+                <span data-cms-field="text" style={{ display: 'none' }}>{toText(b)}</span>
+                <span>{toText(b)}</span>
+                {isEditMode && (
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    style={{ marginLeft: 12 }}
+                    onClick={() => setBullets(prev => prev.filter((_, idx) => idx !== i))}
+                  >
+                    Delete
+                  </button>
+                )}
+              </p>
+            ))}
           </div>
         </div>
       </section>

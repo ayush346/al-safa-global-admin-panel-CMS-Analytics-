@@ -336,25 +336,14 @@ const Divisions = () => {
 
 function WhyChooseEditable({ askConfirm }) {
   const { isEditMode, isDisabled, disableContent, enableContent } = useEditMode();
-  const initialInfo = [
-    {
-      title: "Specialized Expertise",
-      text: "Each division is staffed with industry experts who understand the unique requirements and challenges of their respective sectors."
-    },
-    {
-      title: "Quality Assurance",
-      text: "We maintain rigorous quality control standards and source only from reputable manufacturers and suppliers."
-    },
-    {
-      title: "Comprehensive Solutions",
-      text: "From initial procurement to final delivery, we provide end-to-end solutions tailored to your specific needs."
-    },
-    {
-      title: "Global Network",
-      text: "Our extensive network of suppliers and partners enables us to source the best products at competitive prices."
-    }
+  const { divisionsWhy = [] } = useContent();
+  const defaults = [
+    { title: "Specialized Expertise", text: "Each division is staffed with industry experts who understand the unique requirements and challenges of their respective sectors." },
+    { title: "Quality Assurance", text: "We maintain rigorous quality control standards and source only from reputable manufacturers and suppliers." },
+    { title: "Comprehensive Solutions", text: "From initial procurement to final delivery, we provide end-to-end solutions tailored to your specific needs." },
+    { title: "Global Network", text: "Our extensive network of suppliers and partners enables us to source the best products at competitive prices." }
   ];
-  const [items, setItems] = useState(initialInfo);
+  const [items, setItems] = useState(Array.isArray(divisionsWhy) && divisionsWhy.length > 0 ? divisionsWhy : defaults);
 
   const handleAdd = () => {
     setItems(prev => ([
@@ -376,7 +365,7 @@ function WhyChooseEditable({ askConfirm }) {
           </button>
         </div>
       )}
-      <div className="info-grid">
+      <div className="info-grid" data-cms-list="divisions.why">
         {items.map((info, idx) => {
           const infoKey = `divisions:why:${idx}`;
           const disabled = isDisabled(infoKey);
@@ -386,6 +375,8 @@ function WhyChooseEditable({ askConfirm }) {
             key={`${info.title}-${idx}`}
             className="info-item"
             style={{ position: 'relative', paddingTop: isEditMode ? 56 : undefined, opacity: disabled ? 0.5 : 1 }}
+            data-cms-item
+            data-disabled={disabled ? 'true' : 'false'}
           >
             {isEditMode && (
               <div
@@ -414,8 +405,10 @@ function WhyChooseEditable({ askConfirm }) {
                   </button>
               </div>
             )}
-            <h3>{info.title}</h3>
-            <p>{info.text}</p>
+            <span data-cms-field="title" style={{ display: 'none' }}>{toText(info.title)}</span>
+            <span data-cms-field="text" style={{ display: 'none' }}>{toText(info.text)}</span>
+            <h3>{toText(info.title)}</h3>
+            <p>{toText(info.text)}</p>
           </div>
         )})}
       </div>
