@@ -15,6 +15,7 @@ import ContentEditor from './pages/ContentEditor';
 import './App.css';
 import { useEffect, useRef } from 'react';
 import { useEditMode } from './context/EditModeContext';
+import { MotionConfig } from 'framer-motion';
 
 function App() {
   const { isEditMode } = useEditMode();
@@ -173,38 +174,40 @@ function App() {
       </Helmet>
       
       <ScrollToTop />
-      <div className="App">
-        <Header />
-        <main
-          ref={mainRef}
-          className={isEditMode ? 'editing' : ''}
-          data-app-main
-          contentEditable={isEditMode && !isAnalytics}
-          suppressContentEditableWarning
-        >
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/divisions" element={<Divisions />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/quote" element={<Quote />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/admin/content" element={<ContentEditor />} />
-          </Routes>
-        </main>
-        {!isAnalytics && (
-          <div
-            ref={footerRef}
-            data-app-footer
+      <MotionConfig reducedMotion={isEditMode ? 'always' : 'user'}>
+        <div className="App">
+          <Header />
+          <main
+            ref={mainRef}
             className={isEditMode ? 'editing' : ''}
-            contentEditable={isEditMode}
+            data-app-main
+            contentEditable={isEditMode && !isAnalytics}
             suppressContentEditableWarning
           >
-            <Footer />
-          </div>
-        )}
-      </div>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/divisions" element={<Divisions />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/quote" element={<Quote />} />
+              <Route path="/admin" element={<Admin />} />
+              <Route path="/analytics" element={<Analytics />} />
+              <Route path="/admin/content" element={<ContentEditor />} />
+            </Routes>
+          </main>
+          {!isAnalytics && (
+            <div
+              ref={footerRef}
+              data-app-footer
+              className={isEditMode ? 'editing' : ''}
+              contentEditable={isEditMode}
+              suppressContentEditableWarning
+            >
+              <Footer />
+            </div>
+          )}
+        </div>
+      </MotionConfig>
     </>
   );
 }

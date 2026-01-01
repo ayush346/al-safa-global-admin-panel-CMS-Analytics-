@@ -97,6 +97,7 @@ const Home = () => {
 
   // Handle scroll effect for floating cards in mobile
   useEffect(() => {
+    if (isEditMode) return;
     const handleScroll = () => {
       const cardsContainer = document.querySelector('.image-container');
       if (cardsContainer) {
@@ -125,7 +126,7 @@ const Home = () => {
     };
 
     // Only add scroll listener on mobile
-    if (window.innerWidth <= 767) {
+    if (!isEditMode && window.innerWidth <= 767) {
       window.addEventListener('scroll', handleScroll);
       handleScroll(); // Check initial state
     }
@@ -133,7 +134,7 @@ const Home = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [lastScrollY, hasTransitioned]);
+  }, [lastScrollY, hasTransitioned, isEditMode]);
 
   const iconMap = {
     'globe': <FiGlobe />,
