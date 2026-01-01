@@ -260,7 +260,17 @@ const Home = () => {
         const raw = sessionStorage.getItem(draftKey);
         if (raw) {
           const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed.features)) setFeatures(parsed.features);
+          if (Array.isArray(parsed.features)) {
+            // Restore features but rebuild icons (avoid storing React elements)
+            const restored = parsed.features.map((f) => ({
+              title: f.title || '',
+              description: f.description || '',
+              // Use default icon to avoid React element serialization issues
+              icon: mapFeatureIcon(f.iconKey || 'check'),
+              _disabled: !!f._disabled,
+            }));
+            setFeatures(restored);
+          }
           if (Array.isArray(parsed.divisions)) setDivisions(parsed.divisions);
           if (Array.isArray(parsed.bullets)) setBullets(parsed.bullets);
         }
@@ -269,7 +279,15 @@ const Home = () => {
     return () => {
       if (isEditMode) {
         try {
-          const payload = JSON.stringify({ features, divisions, bullets });
+          // Serialize features without React elements
+          const serializableFeatures = features.map((f) => ({
+            title: f.title,
+            description: f.description,
+            // persist an icon key if present; otherwise just omit
+            iconKey: typeof f.icon === 'string' ? f.icon : (f.iconKey || 'check'),
+            _disabled: !!f._disabled,
+          }));
+          const payload = JSON.stringify({ features: serializableFeatures, divisions, bullets });
           sessionStorage.setItem(draftKey, payload);
         } catch {}
       }
