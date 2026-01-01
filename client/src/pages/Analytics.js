@@ -41,7 +41,7 @@ function Analytics() {
 			}
 		};
 		fetchData();
-	}, [granularity]);
+	}, [granularity, API_BASE]);
 
 	const graphData = useMemo(() => {
 		if (!data || !data.timeline || data.timeline.length === 0) return [];

@@ -24,7 +24,6 @@ function App() {
   const API_BASE = process.env.REACT_APP_API_BASE || '';
   const pathname = location.pathname || '/';
   const isAnalytics = pathname === '/analytics' || pathname.startsWith('/analytics');
-  const isCmsPage = pathname === '/' || pathname === '/about' || pathname === '/divisions' || pathname === '/contact';
 
   // Prevent navigation when editing and enable image replacement
   useEffect(() => {
@@ -121,7 +120,7 @@ function App() {
       navigator.sendBeacon?.(url, new Blob([JSON.stringify(payload)], { type: 'application/json' }))
         || fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
     } catch {}
-  }, [location]);
+  }, [location, API_BASE]);
 
   // Analytics: track clicks globally
   useEffect(() => {
@@ -148,7 +147,7 @@ function App() {
     };
     document.addEventListener('click', onClick, true);
     return () => document.removeEventListener('click', onClick, true);
-  }, []);
+  }, [API_BASE]);
 
   return (
     <>

@@ -7,9 +7,7 @@ import {
   FiUsers, 
   FiAward, 
   FiGlobe, 
-  FiShield,
   FiCheckCircle,
-  FiTrendingUp,
   FiClock,
   FiMail,
   FiMapPin

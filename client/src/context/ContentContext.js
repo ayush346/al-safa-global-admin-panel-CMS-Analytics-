@@ -3,6 +3,30 @@ import contentData from '../content.json';
 
 const ContentContext = createContext({ content: contentData });
 
+// Defined outside the component so it's stable and linter-friendly
+function mergeDeep(target, source) {
+	if (!source) return target;
+	if (Array.isArray(source)) {
+		return [...source];
+	}
+	const output = Array.isArray(target) ? [...target] : { ...target };
+	Object.keys(source).forEach(key => {
+		const srcVal = source[key];
+		const isEmptyScalar = srcVal === null || srcVal === undefined || (typeof srcVal === 'string' && srcVal.trim() === '');
+		if (isEmptyScalar) {
+			return;
+		}
+		if (Array.isArray(srcVal)) {
+			output[key] = [...srcVal];
+		} else if (srcVal && typeof srcVal === 'object') {
+			output[key] = mergeDeep(output[key] || {}, srcVal);
+		} else {
+			output[key] = srcVal;
+		}
+	});
+	return output;
+}
+
 export function ContentProvider({ children }) {
 	const [overrides, setOverrides] = useState(null);
 	const API_BASE = process.env.REACT_APP_API_BASE || '';
@@ -19,32 +43,7 @@ export function ContentProvider({ children }) {
 		};
 		load();
 		return () => { cancelled = true; };
-	}, []);
-
-	const mergeDeep = (target, source) => {
-		if (!source) return target;
-		// If source is an array, replace entirely (lists are authoritative from CMS)
-		if (Array.isArray(source)) {
-			return [...source];
-		}
-		const output = Array.isArray(target) ? [...target] : { ...target };
-		Object.keys(source).forEach(key => {
-			const srcVal = source[key];
-			// Skip null/undefined/empty-string overrides so we don't wipe defaults
-			const isEmptyScalar = srcVal === null || srcVal === undefined || (typeof srcVal === 'string' && srcVal.trim() === '');
-			if (isEmptyScalar) {
-				return;
-			}
-			if (Array.isArray(srcVal)) {
-				output[key] = [...srcVal];
-			} else if (srcVal && typeof srcVal === 'object') {
-				output[key] = mergeDeep(output[key] || {}, srcVal);
-			} else {
-				output[key] = srcVal;
-			}
-		});
-		return output;
-	};
+	}, [API_BASE]);
 
 	const merged = useMemo(() => mergeDeep(contentData, overrides), [overrides]);
 	const value = useMemo(() => ({ content: merged }), [merged]);
