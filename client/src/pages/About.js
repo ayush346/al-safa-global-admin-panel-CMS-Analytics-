@@ -113,6 +113,16 @@ const About = () => {
   const initialBrands = Array.isArray(about.brands) ? about.brands : [];
   const [brands, setBrands] = useState(initialBrands);
 
+  // Why Choose - editable list
+  const initialWhy = [
+    { title: "Global Sourcing Network", text: "Direct access to reputed brands and suppliers worldwide" },
+    { title: "End-to-End Solutions", text: "Complete procurement and logistics management services" },
+    { title: "Competitive Pricing", text: "Cost-effective solutions without compromising quality" },
+    { title: "Responsive Service", text: "Quick turnaround times and commitment to deadlines" },
+    { title: "Industry Expertise", text: "Experienced team with deep industry-specific knowledge" },
+  ];
+  const [whyItems, setWhyItems] = useState(initialWhy);
+
   // Persist draft state across admin navigation in this tab
   const draftKey = 'asg:state:/about';
   useEffect(() => {
@@ -148,16 +158,6 @@ const About = () => {
       }
     };
   }, [isEditMode, values, achievements, services, sectorSolutions, valueAddedServices, brands, whyItems]);
-
-  // Why Choose - editable list
-  const initialWhy = [
-    { title: "Global Sourcing Network", text: "Direct access to reputed brands and suppliers worldwide" },
-    { title: "End-to-End Solutions", text: "Complete procurement and logistics management services" },
-    { title: "Competitive Pricing", text: "Cost-effective solutions without compromising quality" },
-    { title: "Responsive Service", text: "Quick turnaround times and commitment to deadlines" },
-    { title: "Industry Expertise", text: "Experienced team with deep industry-specific knowledge" },
-  ];
-  const [whyItems, setWhyItems] = useState(initialWhy);
 
   // Handlers for add/delete across sections
   const handleAddService = () => setServices(prev => [...prev, "New service - click to edit"]);
