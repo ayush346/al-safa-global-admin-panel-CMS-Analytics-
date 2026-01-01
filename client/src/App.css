@@ -50,6 +50,17 @@ h1, h2, h3, .hero-title, .section-title {
   transition: none !important;
 }
 
+/* Keep vertical scrollbar reserved and disable smooth scroll in edit mode to avoid jitter */
+.editing-root {
+  overflow-y: scroll;
+  scroll-behavior: auto !important;
+  scrollbar-gutter: stable both-edges;
+}
+
+.editing * {
+  overflow-anchor: none;
+}
+
 /* Scrollbar Styling */
 ::-webkit-scrollbar {
   width: 8px;

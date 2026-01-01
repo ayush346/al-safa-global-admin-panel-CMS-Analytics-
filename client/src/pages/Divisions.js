@@ -180,7 +180,7 @@ const Divisions = () => {
             }
             return (
             <motion.div
-              key={division.title}
+              key={division.id || `div-${index}`}
               id={division.id}
               className="division-section"
               initial={{ opacity: 0, y: 30 }}

@@ -244,15 +244,18 @@ const Header = () => {
     }
   }
 
-  // Handle scroll effect
+  // Handle scroll effect (disabled in edit mode to avoid jitter)
   useEffect(() => {
+    if (isEditMode) {
+      setIsScrolled(true);
+      return;
+    }
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isEditMode]);
 
   // Close mobile menu when route changes
   useEffect(() => {

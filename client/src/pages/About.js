@@ -292,7 +292,7 @@ const About = () => {
               if (disabled && !isEditMode) return null;
               return (
               <motion.div
-                key={value.title}
+                key={`value-${index}`}
                 className="value-card"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -442,7 +442,7 @@ const About = () => {
               const persistDisabled = typeof service === 'object' && service?._disabled;
               return (
               <motion.div
-                key={service}
+                key={`service-${index}`}
                 className="service-item"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -507,7 +507,7 @@ const About = () => {
               const persistDisabled = typeof solution === 'object' && solution?._disabled;
               return (
               <motion.div
-                key={solution}
+                key={`solution-${index}`}
                 className="solution-item"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -641,7 +641,7 @@ const About = () => {
               const persistDisabled = !!brand?._disabled;
               return (
               <motion.div
-                key={brand.name}
+                key={`brand-${index}`}
                 className={`brand-item ${brandsAnimated ? 'in-view' : ''}`}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={brandsAnimated ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}

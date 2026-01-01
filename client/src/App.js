@@ -68,6 +68,19 @@ function App() {
 
   // Snapshots fully disabled in code to avoid any blank-page risks.
 
+  // While editing, add a class to body to stabilize scrollbars/behavior
+  useEffect(() => {
+    const cls = 'editing-root';
+    if (isEditMode) {
+      document.body.classList.add(cls);
+    } else {
+      document.body.classList.remove(cls);
+    }
+    return () => {
+      document.body.classList.remove(cls);
+    };
+  }, [isEditMode]);
+
   // Analytics: track page views on route change
   useEffect(() => {
     const ensureIds = () => {

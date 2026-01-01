@@ -45,7 +45,7 @@ const TestimonialSection = () => {
         <div className="testimonials-grid" data-cms-list="home.testimonials">
           {testimonials.map((testimonial, index) => (
             <motion.div
-              key={testimonial.name}
+              key={`t-${index}`}
               className="testimonial-card"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
