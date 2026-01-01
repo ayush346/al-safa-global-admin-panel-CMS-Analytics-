@@ -7,6 +7,11 @@ const ContentContext = createContext({ content: contentData });
 function mergeDeep(target, source) {
 	if (!source) return target;
 	if (Array.isArray(source)) {
+		// If source is an array of objects of the form { text: "..." }, normalize to primitives.
+		const allTextObjects = source.every((item) => item && typeof item === 'object' && 'text' in item);
+		if (allTextObjects) {
+			return source.map((item) => item && typeof item === 'object' ? item.text : item);
+		}
 		// If the target is an array of primitives (strings/numbers),
 		// and the source is an array of objects with { text }, normalize to primitives.
 		if (Array.isArray(target) && target.length > 0) {
