@@ -113,6 +113,42 @@ const About = () => {
   const initialBrands = Array.isArray(about.brands) ? about.brands : [];
   const [brands, setBrands] = useState(initialBrands);
 
+  // Persist draft state across admin navigation in this tab
+  const draftKey = 'asg:state:/about';
+  useEffect(() => {
+    if (isEditMode) {
+      try {
+        const raw = sessionStorage.getItem(draftKey);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed.values)) setValues(parsed.values);
+          if (Array.isArray(parsed.achievements)) setAchievements(parsed.achievements);
+          if (Array.isArray(parsed.services)) setServices(parsed.services);
+          if (Array.isArray(parsed.sectorSolutions)) setSectorSolutions(parsed.sectorSolutions);
+          if (Array.isArray(parsed.valueAddedServices)) setValueAddedServices(parsed.valueAddedServices);
+          if (Array.isArray(parsed.brands)) setBrands(parsed.brands);
+          if (Array.isArray(parsed.whyItems)) setWhyItems(parsed.whyItems);
+        }
+      } catch {}
+    }
+    return () => {
+      if (isEditMode) {
+        try {
+          const payload = JSON.stringify({
+            values,
+            achievements: achievements.map(a => ({ number: a.number, label: a.label })), // drop icon for storage
+            services,
+            sectorSolutions,
+            valueAddedServices,
+            brands,
+            whyItems,
+          });
+          sessionStorage.setItem(draftKey, payload);
+        } catch {}
+      }
+    };
+  }, [isEditMode, values, achievements, services, sectorSolutions, valueAddedServices, brands, whyItems]);
+
   // Why Choose - editable list
   const initialWhy = [
     { title: "Global Sourcing Network", text: "Direct access to reputed brands and suppliers worldwide" },
@@ -736,7 +772,7 @@ const About = () => {
                   </div>
                 )}
                 <div className="achievement-icon">
-                  {achievement.icon}
+                  {achievement.icon || <FiAward />}
                 </div>
                 <div className="achievement-number">{achievement.number}</div>
                 <div className="achievement-label">{achievement.label}</div>

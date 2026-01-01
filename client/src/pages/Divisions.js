@@ -77,6 +77,27 @@ const Divisions = () => {
 
   const initialDivisions = Array.isArray(divisionsFromContent) ? divisionsFromContent : [];
   const [divisions, setDivisions] = useState(initialDivisions);
+  // Persist draft state across admin navigation in this tab
+  const draftKey = 'asg:state:/divisions';
+  useEffect(() => {
+    if (isEditMode) {
+      try {
+        const raw = sessionStorage.getItem(draftKey);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed.divisions)) setDivisions(parsed.divisions);
+        }
+      } catch {}
+    }
+    return () => {
+      if (isEditMode) {
+        try {
+          const payload = JSON.stringify({ divisions });
+          sessionStorage.setItem(draftKey, payload);
+        } catch {}
+      }
+    };
+  }, [isEditMode, divisions]);
 
   const handleAddDivision = () => {
     setDivisions(prev => ([
@@ -344,6 +365,26 @@ function WhyChooseEditable({ askConfirm }) {
     { title: "Global Network", text: "Our extensive network of suppliers and partners enables us to source the best products at competitive prices." }
   ];
   const [items, setItems] = useState(Array.isArray(divisionsWhy) && divisionsWhy.length > 0 ? divisionsWhy : defaults);
+  const draftKey = 'asg:state:/divisions:why';
+  useEffect(() => {
+    if (isEditMode) {
+      try {
+        const raw = sessionStorage.getItem(draftKey);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed.items)) setItems(parsed.items);
+        }
+      } catch {}
+    }
+    return () => {
+      if (isEditMode) {
+        try {
+          const payload = JSON.stringify({ items });
+          sessionStorage.setItem(draftKey, payload);
+        } catch {}
+      }
+    };
+  }, [isEditMode, items]);
 
   const handleAdd = () => {
     setItems(prev => ([

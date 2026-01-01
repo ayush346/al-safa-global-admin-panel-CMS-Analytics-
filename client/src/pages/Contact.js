@@ -40,6 +40,27 @@ const Contact = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
+  // Persist draft state across admin navigation in this tab
+  const draftKey = 'asg:state:/contact';
+  React.useEffect(() => {
+    if (isEditMode) {
+      try {
+        const raw = sessionStorage.getItem(draftKey);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed.benefits)) setBenefits(parsed.benefits);
+        }
+      } catch {}
+    }
+    return () => {
+      if (isEditMode) {
+        try {
+          const payload = JSON.stringify({ benefits });
+          sessionStorage.setItem(draftKey, payload);
+        } catch {}
+      }
+    };
+  }, [isEditMode, benefits]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
