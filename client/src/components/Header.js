@@ -44,19 +44,54 @@ const Header = () => {
         }
         setNested(overrides, key, value);
       });
-      // Serialize lists
+      // Serialize lists (supports nested sublists and disabled flags)
       document.querySelectorAll('[data-cms-list]').forEach((listEl) => {
         const path = listEl.getAttribute('data-cms-list');
         if (!path) return;
         const items = [];
-        listEl.querySelectorAll(':scope [data-cms-item]').forEach((itemEl) => {
+        // take only direct children items of this list
+        const directItems = listEl.querySelectorAll(':scope > [data-cms-item]');
+        directItems.forEach((itemEl) => {
           const obj = {};
-          itemEl.querySelectorAll('[data-cms-field]').forEach((fieldEl) => {
+          // collect fields that are NOT inside a sublist
+          const allFields = itemEl.querySelectorAll('[data-cms-field]');
+          allFields.forEach((fieldEl) => {
+            // skip fields that live inside a nested sublist within this item
+            const sublistAncestor = fieldEl.closest('[data-cms-sublist]');
+            if (sublistAncestor && itemEl.contains(sublistAncestor)) return;
             const field = fieldEl.getAttribute('data-cms-field');
             if (!field) return;
             obj[field] = (fieldEl.textContent || '').trim();
           });
-          // Filter out completely empty objects
+          // include disabled flag if present on the item
+          const disabledAttr = itemEl.getAttribute('data-disabled');
+          if (disabledAttr === 'true') {
+            obj._disabled = true;
+          }
+          // handle any nested sublists within this item
+          const sublists = itemEl.querySelectorAll(':scope [data-cms-sublist]');
+          sublists.forEach((subEl) => {
+            const subKey = subEl.getAttribute('data-cms-sublist');
+            if (!subKey) return;
+            const subArray = [];
+            const subItems = subEl.querySelectorAll(':scope > [data-cms-item]');
+            subItems.forEach((subItemEl) => {
+              const subObj = {};
+              const subFields = subItemEl.querySelectorAll('[data-cms-field]');
+              subFields.forEach((sf) => {
+                const f = sf.getAttribute('data-cms-field');
+                if (!f) return;
+                subObj[f] = (sf.textContent || '').trim();
+              });
+              const subDisabled = subItemEl.getAttribute('data-disabled');
+              if (subDisabled === 'true') {
+                subObj._disabled = true;
+              }
+              if (Object.keys(subObj).length > 0) subArray.push(subObj);
+            });
+            obj[subKey] = subArray;
+          });
+          // push only if something was captured
           if (Object.keys(obj).length > 0) items.push(obj);
         });
         setNested(overrides, path, items);

@@ -400,6 +400,7 @@ Submitted on: ${new Date().toLocaleString()}
                   className="benefit-item"
                   style={{ position: 'relative', paddingTop: isEditMode ? 56 : 0, opacity: disabled ? 0.5 : 1 }}
                   data-cms-item
+                  data-disabled={(disabled || !!b?._disabled) ? 'true' : 'false'}
                 >
                   {isEditMode && (
                     <div style={{ position: 'absolute', top: 8, right: 8, zIndex: 5 }} contentEditable={false}>

@@ -218,22 +218,26 @@ const Divisions = () => {
                     </button>
                   </div>
                 )}
-                <ul className="division-items">
+                <ul className="division-items" data-cms-sublist="items">
                   {division.items.map((item, itemIndex) => {
                     const itemKey = `divisions:item:${division.id}:${itemIndex}`;
                     const itemDisabled = isDisabled(itemKey);
-                    if (itemDisabled && !isEditMode) {
+                    const persistItemDisabled = typeof item === 'object' && item?._disabled;
+                    if ((itemDisabled || persistItemDisabled) && !isEditMode) {
                       return null;
                     }
                     return (
                     <motion.li 
                       key={itemIndex}
+                      data-cms-item
+                      data-disabled={(itemDisabled || persistItemDisabled) ? 'true' : 'false'}
                       initial={{ opacity: 0, x: -20 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.4, delay: itemIndex * 0.1 }}
                       viewport={{ once: true }}
                       style={{ position: 'relative', paddingRight: isEditMode ? 160 : undefined, opacity: itemDisabled ? 0.5 : 1 }}
                     >
+                      <span data-cms-field="text" style={{ display: 'none' }}>{toText(item)}</span>
                       {isEditMode && (
                         <div
                           style={{ position: 'absolute', top: 8, right: 8, zIndex: 5 }}

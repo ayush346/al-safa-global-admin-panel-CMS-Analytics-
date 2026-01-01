@@ -411,7 +411,8 @@ const Home = () => {
             {divisions.map((division, index) => {
               const key = `home:division:${division.id}`;
               const disabled = isDisabled(key);
-              if (disabled && !isEditMode) return null;
+              const persistDisabled = !!division?._disabled;
+              if ((disabled || persistDisabled) && !isEditMode) return null;
               return (
               <motion.div
                 key={division.id}
@@ -425,6 +426,7 @@ const Home = () => {
                 onDragOver={(e) => { if (isEditMode) e.preventDefault(); }}
                 onDrop={() => handleDrop(index)}
                 data-cms-item
+                data-disabled={(disabled || persistDisabled) ? 'true' : 'false'}
               >
                 <div style={{ position: 'relative', paddingTop: isEditMode ? 56 : 0, opacity: disabled ? 0.5 : 1 }}>
                   {isEditMode && (
@@ -492,7 +494,8 @@ const Home = () => {
             {features.map((feature, index) => {
               const key = `home:feature:${index}`;
               const disabled = isDisabled(key);
-              if (disabled && !isEditMode) return null;
+              const persistDisabled = !!feature?._disabled;
+              if ((disabled || persistDisabled) && !isEditMode) return null;
               return (
               <motion.div
                 key={feature.title}
@@ -501,6 +504,7 @@ const Home = () => {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
                 data-cms-item
+                data-disabled={(disabled || persistDisabled) ? 'true' : 'false'}
               >
                 <div style={{ position: 'relative', paddingTop: isEditMode ? 56 : 0, opacity: disabled ? 0.5 : 1 }}>
                   {isEditMode && (

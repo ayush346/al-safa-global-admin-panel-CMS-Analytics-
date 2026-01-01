@@ -264,6 +264,7 @@ const About = () => {
                 viewport={{ once: true }}
                 whileHover={{ y: -5 }}
                 data-cms-item
+                data-disabled={(disabled || value?._disabled) ? 'true' : 'false'}
               >
                 <div style={{ position: 'relative', paddingTop: isEditMode ? 56 : 0, opacity: disabled ? 0.5 : 1 }}>
                   {isEditMode && (
@@ -329,6 +330,7 @@ const About = () => {
               const key = `about:why:${idx}`;
               const disabled = isDisabled(key);
               if (disabled && !isEditMode) return null;
+              const persistDisabled = !!item?._disabled;
               return (
               <motion.div 
                 key={`${item.title}-${idx}`}
@@ -337,6 +339,7 @@ const About = () => {
                 animate={inView ? { opacity: 1, x: 0 } : {}}
                 transition={{ duration: 0.6, delay: idx * 0.1 }}
                 data-cms-item
+                data-disabled={(disabled || persistDisabled) ? 'true' : 'false'}
               >
                 <div style={{ position: 'relative', paddingTop: isEditMode ? 56 : 0, opacity: disabled ? 0.5 : 1 }}>
                   {isEditMode && (
@@ -400,6 +403,7 @@ const About = () => {
               const key = `about:service:${index}`;
               const disabled = isDisabled(key);
               if (disabled && !isEditMode) return null;
+              const persistDisabled = typeof service === 'object' && service?._disabled;
               return (
               <motion.div
                 key={service}
@@ -410,6 +414,7 @@ const About = () => {
                 viewport={{ once: true }}
                 style={{ position: 'relative', paddingTop: isEditMode ? 56 : 0, opacity: disabled ? 0.5 : 1 }}
                 data-cms-item
+                data-disabled={(disabled || persistDisabled) ? 'true' : 'false'}
               >
                 {isEditMode && (
                   <div style={{ position: 'absolute', top: 8, right: 8, zIndex: 5 }} contentEditable={false}>
@@ -463,6 +468,7 @@ const About = () => {
               const key = `about:sector:${index}`;
               const disabled = isDisabled(key);
               if (disabled && !isEditMode) return null;
+              const persistDisabled = typeof solution === 'object' && solution?._disabled;
               return (
               <motion.div
                 key={solution}
@@ -473,6 +479,7 @@ const About = () => {
                 viewport={{ once: true }}
                 style={{ position: 'relative', paddingTop: isEditMode ? 56 : 0, opacity: disabled ? 0.5 : 1 }}
                 data-cms-item
+                data-disabled={(disabled || persistDisabled) ? 'true' : 'false'}
               >
                 {isEditMode && (
                   <div style={{ position: 'absolute', top: 8, right: 8, zIndex: 5 }} contentEditable={false}>
@@ -594,6 +601,7 @@ const About = () => {
               const key = `about:brand:${index}`;
               const disabled = isDisabled(key);
               if (disabled && !isEditMode) return null;
+              const persistDisabled = !!brand?._disabled;
               return (
               <motion.div
                 key={brand.name}
@@ -603,6 +611,7 @@ const About = () => {
                 transition={{ duration: 0.4, delay: index * 0.05 }}
                 whileHover={{ scale: 1.05 }}
                 style={{ position: 'relative', paddingTop: isEditMode ? 56 : 0, opacity: disabled ? 0.5 : 1 }}
+                data-disabled={(disabled || persistDisabled) ? 'true' : 'false'}
               >
                 {isEditMode && (
                   <div style={{ position: 'absolute', top: 4, right: 4, zIndex: 5 }} contentEditable={false}>
