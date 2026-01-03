@@ -12,10 +12,13 @@ const app = express();
 // Trust reverse proxy (Render/Heroku/etc.) so that rate-limit sees real client IPs
 app.set('trust proxy', 1);
 
-// CORS must be configured early and with a clean, explicit origin to avoid invalid header values.
-// NOTE: Replace the hard-coded origin below with your Render frontend origin if it changes.
+// CORS must be configured early and with an explicit origin from env.
+const clientOrigin =
+  process.env.NODE_ENV === 'production'
+    ? process.env.CLIENT_URL_PROD
+    : (process.env.CLIENT_URL || 'http://localhost:3000');
 app.use(cors({
-  origin: 'https://al-safa-global-web.onrender.com',
+  origin: clientOrigin,
   credentials: true,
 }));
 app.options('*', cors());

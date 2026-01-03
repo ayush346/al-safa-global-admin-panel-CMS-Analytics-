@@ -61,12 +61,7 @@ const Header = () => {
             if (sublistAncestor && itemEl.contains(sublistAncestor)) return;
             const field = fieldEl.getAttribute('data-cms-field');
             if (!field) return;
-            const fType = fieldEl.getAttribute('data-cms-type') || 'text';
-            if (fType === 'image') {
-              obj[field] = fieldEl.getAttribute('src') || '';
-            } else {
-              obj[field] = (fieldEl.textContent || '').trim();
-            }
+            obj[field] = (fieldEl.textContent || '').trim();
           });
           // include disabled flag if present on the item
           const disabledAttr = itemEl.getAttribute('data-disabled');
@@ -86,12 +81,7 @@ const Header = () => {
               subFields.forEach((sf) => {
                 const f = sf.getAttribute('data-cms-field');
                 if (!f) return;
-                const ft = sf.getAttribute('data-cms-type') || 'text';
-                if (ft === 'image') {
-                  subObj[f] = sf.getAttribute('src') || '';
-                } else {
-                  subObj[f] = (sf.textContent || '').trim();
-                }
+                subObj[f] = (sf.textContent || '').trim();
               });
               const subDisabled = subItemEl.getAttribute('data-disabled');
               if (subDisabled === 'true') {
@@ -244,18 +234,15 @@ const Header = () => {
     }
   }
 
-  // Handle scroll effect (disabled in edit mode to avoid jitter)
+  // Handle scroll effect
   useEffect(() => {
-    if (isEditMode) {
-      setIsScrolled(true);
-      return;
-    }
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isEditMode]);
+  }, []);
 
   // Close mobile menu when route changes
   useEffect(() => {

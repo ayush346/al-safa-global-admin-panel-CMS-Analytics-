@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import contentData from '../content.json';
+import { useEditMode } from './EditModeContext';
+import { draftStore } from '../utils/draftStore';
 
 const ContentContext = createContext({ content: contentData });
 
@@ -49,6 +51,8 @@ function mergeDeep(target, source) {
 export function ContentProvider({ children }) {
 	const [overrides, setOverrides] = useState(null);
 	const API_BASE = process.env.REACT_APP_API_BASE || '';
+	const { isEditMode } = useEditMode();
+	const [draftOverrides, setDraftOverrides] = useState(() => draftStore.readAll());
 
 	useEffect(() => {
 		let cancelled = false;
@@ -64,7 +68,25 @@ export function ContentProvider({ children }) {
 		return () => { cancelled = true; };
 	}, [API_BASE]);
 
-	const merged = useMemo(() => mergeDeep(contentData, overrides), [overrides]);
+	// Sync draft overrides in edit mode from session storage
+	useEffect(() => {
+		if (!isEditMode) return;
+		const onUpdate = () => {
+			setDraftOverrides(draftStore.readAll());
+		};
+		window.addEventListener('asg:draft-updated', onUpdate);
+		// initial pull
+		onUpdate();
+		return () => window.removeEventListener('asg:draft-updated', onUpdate);
+	}, [isEditMode]);
+
+	const merged = useMemo(() => {
+		let base = mergeDeep(contentData, overrides);
+		if (isEditMode && draftOverrides) {
+			base = mergeDeep(base, draftOverrides);
+		}
+		return base;
+	}, [overrides, isEditMode, draftOverrides]);
 	const value = useMemo(() => ({ content: merged }), [merged]);
 	return (
 		<ContentContext.Provider value={value}>

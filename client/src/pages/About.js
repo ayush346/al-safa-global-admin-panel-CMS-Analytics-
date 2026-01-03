@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { 
@@ -17,6 +17,7 @@ import { useEditMode } from '../context/EditModeContext';
 import { ConfirmDialog, useConfirmState } from '../components/ConfirmDialog';
 import { useContent } from '../context/ContentContext';
 import { toText } from '../utils/cms';
+import { useDraftList } from '../hooks/useDraftList';
 
 const About = () => {
   const { about = {} } = useContent();
@@ -26,7 +27,7 @@ const About = () => {
   });
 
   // State to track if brands have been animated in this page visit
-  const [brandsAnimated, setBrandsAnimated] = useState(false);
+  const [brandsAnimated, setBrandsAnimated] = React.useState(false);
   const { isEditMode, isDisabled, disableContent, enableContent } = useEditMode();
   const { confirmState, askConfirm, handleConfirm, handleCancel } = useConfirmState();
 
@@ -49,7 +50,7 @@ const About = () => {
     { title: "Partnership", description: "We build long-term relationships based on trust, collaboration, and mutual success." },
     { title: "Innovation", description: "We continuously improve our processes and solutions to meet evolving market needs." }
   ]);
-  const [values, setValues] = useState(initialValues);
+  const [values, setValues] = useDraftList('about.values', initialValues, (v) => ({ title: toText(v.title), description: toText(v.description) }), (v) => ({ title: toText(v.title), description: toText(v.description) }));
 
   const handleAddValue = () => {
     setValues(prev => ([
@@ -76,7 +77,7 @@ const About = () => {
       { number: "50+", label: "Global Partners", icon: <FiGlobe /> },
       { number: "100%", label: "Quality Assurance", icon: <FiAward /> }
     ]);
-  const [achievements, setAchievements] = useState(initialAchievements);
+  const [achievements, setAchievements] = React.useState(initialAchievements);
 
   const initialServices = Array.isArray(about.services) ? about.services : [
     "End-to-End Procurement Solutions",
@@ -90,7 +91,7 @@ const About = () => {
     "Project Procurement Support",
     "Supply Chain Optimization Consulting"
   ];
-  const [services, setServices] = useState(initialServices);
+  const [services, setServices] = useDraftList('about.services', initialServices, (s) => toText(s), (s) => toText(s));
 
   const initialSectorSolutions = Array.isArray(about.sectorSolutions) ? about.sectorSolutions : [
     "Construction & Infrastructure Supply",
@@ -101,17 +102,17 @@ const About = () => {
     "Defence Sector Procurement",
     "Office & IT Solutions"
   ];
-  const [sectorSolutions, setSectorSolutions] = useState(initialSectorSolutions);
+  const [sectorSolutions, setSectorSolutions] = useDraftList('about.sectorSolutions', initialSectorSolutions, (s) => toText(s), (s) => toText(s));
 
   const initialValueAdded = [
     "Supply of Genuine OEM Parts",
     "Competitive Quotation (RFQ) Response",
     "Partnership & Collaboration"
   ];
-  const [valueAddedServices, setValueAddedServices] = useState(initialValueAdded);
+  const [valueAddedServices, setValueAddedServices] = React.useState(initialValueAdded);
 
   const initialBrands = Array.isArray(about.brands) ? about.brands : [];
-  const [brands, setBrands] = useState(initialBrands);
+  const [brands, setBrands] = useDraftList('about.brands', initialBrands, (b) => ({ name: toText(b.name), image: toText(b.image) }), (b) => ({ name: toText(b.name), image: toText(b.image) }));
 
   // Why Choose - editable list
   const initialWhy = [
@@ -122,42 +123,6 @@ const About = () => {
     { title: "Industry Expertise", text: "Experienced team with deep industry-specific knowledge" },
   ];
   const [whyItems, setWhyItems] = useState(initialWhy);
-
-  // Persist draft state across admin navigation in this tab
-  const draftKey = 'asg:state:/about';
-  useEffect(() => {
-    if (isEditMode) {
-      try {
-        const raw = sessionStorage.getItem(draftKey);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed.values)) setValues(parsed.values);
-          if (Array.isArray(parsed.achievements)) setAchievements(parsed.achievements);
-          if (Array.isArray(parsed.services)) setServices(parsed.services);
-          if (Array.isArray(parsed.sectorSolutions)) setSectorSolutions(parsed.sectorSolutions);
-          if (Array.isArray(parsed.valueAddedServices)) setValueAddedServices(parsed.valueAddedServices);
-          if (Array.isArray(parsed.brands)) setBrands(parsed.brands);
-          if (Array.isArray(parsed.whyItems)) setWhyItems(parsed.whyItems);
-        }
-      } catch {}
-    }
-    return () => {
-      if (isEditMode) {
-        try {
-          const payload = JSON.stringify({
-            values,
-            achievements: achievements.map(a => ({ number: a.number, label: a.label })), // drop icon for storage
-            services,
-            sectorSolutions,
-            valueAddedServices,
-            brands,
-            whyItems,
-          });
-          sessionStorage.setItem(draftKey, payload);
-        } catch {}
-      }
-    };
-  }, [isEditMode, values, achievements, services, sectorSolutions, valueAddedServices, brands, whyItems]);
 
   // Handlers for add/delete across sections
   const handleAddService = () => setServices(prev => [...prev, "New service - click to edit"]);
@@ -292,7 +257,7 @@ const About = () => {
               if (disabled && !isEditMode) return null;
               return (
               <motion.div
-                key={`value-${index}`}
+                key={value.title}
                 className="value-card"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -442,7 +407,7 @@ const About = () => {
               const persistDisabled = typeof service === 'object' && service?._disabled;
               return (
               <motion.div
-                key={`service-${index}`}
+                key={service}
                 className="service-item"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -507,7 +472,7 @@ const About = () => {
               const persistDisabled = typeof solution === 'object' && solution?._disabled;
               return (
               <motion.div
-                key={`solution-${index}`}
+                key={solution}
                 className="solution-item"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -641,14 +606,13 @@ const About = () => {
               const persistDisabled = !!brand?._disabled;
               return (
               <motion.div
-                key={`brand-${index}`}
+                key={brand.name}
                 className={`brand-item ${brandsAnimated ? 'in-view' : ''}`}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={brandsAnimated ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
                 transition={{ duration: 0.4, delay: index * 0.05 }}
                 whileHover={{ scale: 1.05 }}
                 style={{ position: 'relative', paddingTop: isEditMode ? 56 : 0, opacity: disabled ? 0.5 : 1 }}
-                data-cms-item
                 data-disabled={(disabled || persistDisabled) ? 'true' : 'false'}
               >
                 {isEditMode && (
@@ -667,9 +631,8 @@ const About = () => {
                   </div>
                 )}
                 <span data-cms-field="name" style={{ display: 'none' }}>{brand.name}</span>
+                <span data-cms-field="image" style={{ display: 'none' }}>{brand.image}</span>
                 <img 
-                  data-cms-field="image"
-                  data-cms-type="image"
                   src={brand.image} 
                   alt={brand.name}
                   onLoad={() => console.log(`${brand.name} logo loaded successfully`)}
@@ -772,7 +735,7 @@ const About = () => {
                   </div>
                 )}
                 <div className="achievement-icon">
-                  {achievement.icon || <FiAward />}
+                  {achievement.icon}
                 </div>
                 <div className="achievement-number">{achievement.number}</div>
                 <div className="achievement-label">{achievement.label}</div>

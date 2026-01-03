@@ -5,12 +5,13 @@ import './Divisions.css';
 import { useEditMode } from '../context/EditModeContext';
 import { useContent } from '../context/ContentContext';
 import { toText } from '../utils/cms';
+import { useDraftList } from '../hooks/useDraftList';
 
 const Divisions = () => {
   const { divisions: divisionsFromContent = [] } = useContent();
   const location = useLocation();
   const { isEditMode, isDisabled, disableContent, enableContent } = useEditMode();
-  const [confirmState, setConfirmState] = useState({
+  const [confirmState, setConfirmState] = React.useState({
     open: false,
     message: '',
     onConfirm: null,
@@ -76,28 +77,7 @@ const Divisions = () => {
   }, [location]);
 
   const initialDivisions = Array.isArray(divisionsFromContent) ? divisionsFromContent : [];
-  const [divisions, setDivisions] = useState(initialDivisions);
-  // Persist draft state across admin navigation in this tab
-  const draftKey = 'asg:state:/divisions';
-  useEffect(() => {
-    if (isEditMode) {
-      try {
-        const raw = sessionStorage.getItem(draftKey);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed.divisions)) setDivisions(parsed.divisions);
-        }
-      } catch {}
-    }
-    return () => {
-      if (isEditMode) {
-        try {
-          const payload = JSON.stringify({ divisions });
-          sessionStorage.setItem(draftKey, payload);
-        } catch {}
-      }
-    };
-  }, [isEditMode, divisions]);
+  const [divisions, setDivisions] = useDraftList('divisions', initialDivisions, (d) => ({ ...d, items: Array.isArray(d.items) ? d.items.map((it) => toText(it)) : [] }), (d) => ({ ...d, items: Array.isArray(d.items) ? d.items.map((it) => toText(it)) : [] }));
 
   const handleAddDivision = () => {
     setDivisions(prev => ([
@@ -180,7 +160,7 @@ const Divisions = () => {
             }
             return (
             <motion.div
-              key={division.id || `div-${index}`}
+              key={division.title}
               id={division.id}
               className="division-section"
               initial={{ opacity: 0, y: 30 }}
@@ -357,34 +337,25 @@ const Divisions = () => {
 
 function WhyChooseEditable({ askConfirm }) {
   const { isEditMode, isDisabled, disableContent, enableContent } = useEditMode();
-  const { divisionsWhy = [] } = useContent();
-  const defaults = [
-    { title: "Specialized Expertise", text: "Each division is staffed with industry experts who understand the unique requirements and challenges of their respective sectors." },
-    { title: "Quality Assurance", text: "We maintain rigorous quality control standards and source only from reputable manufacturers and suppliers." },
-    { title: "Comprehensive Solutions", text: "From initial procurement to final delivery, we provide end-to-end solutions tailored to your specific needs." },
-    { title: "Global Network", text: "Our extensive network of suppliers and partners enables us to source the best products at competitive prices." }
-  ];
-  const [items, setItems] = useState(Array.isArray(divisionsWhy) && divisionsWhy.length > 0 ? divisionsWhy : defaults);
-  const draftKey = 'asg:state:/divisions:why';
-  useEffect(() => {
-    if (isEditMode) {
-      try {
-        const raw = sessionStorage.getItem(draftKey);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed.items)) setItems(parsed.items);
-        }
-      } catch {}
+  const initialInfo = [
+    {
+      title: "Specialized Expertise",
+      text: "Each division is staffed with industry experts who understand the unique requirements and challenges of their respective sectors."
+    },
+    {
+      title: "Quality Assurance",
+      text: "We maintain rigorous quality control standards and source only from reputable manufacturers and suppliers."
+    },
+    {
+      title: "Comprehensive Solutions",
+      text: "From initial procurement to final delivery, we provide end-to-end solutions tailored to your specific needs."
+    },
+    {
+      title: "Global Network",
+      text: "Our extensive network of suppliers and partners enables us to source the best products at competitive prices."
     }
-    return () => {
-      if (isEditMode) {
-        try {
-          const payload = JSON.stringify({ items });
-          sessionStorage.setItem(draftKey, payload);
-        } catch {}
-      }
-    };
-  }, [isEditMode, items]);
+  ];
+  const [items, setItems] = useState(initialInfo);
 
   const handleAdd = () => {
     setItems(prev => ([
@@ -406,7 +377,7 @@ function WhyChooseEditable({ askConfirm }) {
           </button>
         </div>
       )}
-      <div className="info-grid" data-cms-list="divisions.why">
+      <div className="info-grid">
         {items.map((info, idx) => {
           const infoKey = `divisions:why:${idx}`;
           const disabled = isDisabled(infoKey);
@@ -416,8 +387,6 @@ function WhyChooseEditable({ askConfirm }) {
             key={`${info.title}-${idx}`}
             className="info-item"
             style={{ position: 'relative', paddingTop: isEditMode ? 56 : undefined, opacity: disabled ? 0.5 : 1 }}
-            data-cms-item
-            data-disabled={disabled ? 'true' : 'false'}
           >
             {isEditMode && (
               <div
@@ -446,10 +415,8 @@ function WhyChooseEditable({ askConfirm }) {
                   </button>
               </div>
             )}
-            <span data-cms-field="title" style={{ display: 'none' }}>{toText(info.title)}</span>
-            <span data-cms-field="text" style={{ display: 'none' }}>{toText(info.text)}</span>
-            <h3>{toText(info.title)}</h3>
-            <p>{toText(info.text)}</p>
+            <h3>{info.title}</h3>
+            <p>{info.text}</p>
           </div>
         )})}
       </div>

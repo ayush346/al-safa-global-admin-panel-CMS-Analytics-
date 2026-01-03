@@ -34,7 +34,9 @@ Deployed on Render (use your Render URL or custom domain).
 - **Multer** - File upload handling
 
 ### Deployment
-- **Render** - Node Web Service (serves React build + API)
+- **Render** - Separate services:
+  - Backend: Node Web Service (`al-safa-global-backend`)
+  - Frontend: Static Site (`al-safa-global-frontend`)
 
 ## 📁 Project Structure
 
@@ -104,20 +106,25 @@ Deployed on Render (use your Render URL or custom domain).
 
 ### Render Deployment
 
-The project includes a `render.yaml` for one-click Blueprint deploy on Render:
+The included `render.yaml` sets up two services (frontend and backend) for Render:
 
 1. In Render, click New → Blueprint and connect this repo
-2. Add environment variables (see below)
-3. Deploy
+2. Review the two services created:
+   - `al-safa-global-backend` (Node web service)
+   - `al-safa-global-frontend` (Static site)
+3. The blueprint auto-wires:
+   - Backend `CLIENT_URL_PROD` ← frontend URL
+   - Frontend `REACT_APP_API_BASE` ← backend URL
+4. Add/confirm the environment variables below, then deploy
 
 ### Environment Variables
 
 Set these environment variables in Render:
 
-- `NODE_ENV=production`
+- `NODE_ENV=production` (preset in blueprint)
 - `MONGODB_URI_PROD`
 - `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_USER`, `EMAIL_PASS`, `EMAIL_FROM`
-- `CLIENT_URL_PROD` (your Render URL or custom domain)
+- `CLIENT_URL_PROD` and `REACT_APP_API_BASE` are auto-linked by `render.yaml` (can be overridden if needed)
 
 ## 📱 Responsive Design
 

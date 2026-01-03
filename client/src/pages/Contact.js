@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { FiMail, FiMapPin, FiPhone, FiGlobe, FiClock, FiUsers } from 'react-icons/fi';
 import './Contact.css';
@@ -6,6 +6,7 @@ import { useEditMode } from '../context/EditModeContext';
 import { ConfirmDialog, useConfirmState } from '../components/ConfirmDialog';
 import { useContent } from '../context/ContentContext';
 import { toText } from '../utils/cms';
+import { useDraftList } from '../hooks/useDraftList';
 
 const Contact = () => {
   const { contact = {}, forms = {} } = useContent();
@@ -19,7 +20,7 @@ const Contact = () => {
     { title: "Quality Assurance", text: "Rigorous quality control and genuine OEM parts guarantee for all products and services." },
     { title: "Responsive Service", text: "Quick turnaround times and commitment to deadlines with personalized customer support." }
   ];
-  const [benefits, setBenefits] = useState(initialBenefits);
+  const [benefits, setBenefits] = useDraftList('contact.benefits', initialBenefits, (b) => ({ title: toText(b.title), text: toText(b.text) }), (b) => ({ title: toText(b.title), text: toText(b.text) }));
   const handleAddBenefit = () => {
     setBenefits(prev => [...prev, { title: "New Benefit", text: "Click here to describe the benefit." }]);
   };
@@ -28,7 +29,7 @@ const Contact = () => {
       setBenefits(prev => prev.filter((_, i) => i !== indexToRemove));
     });
   };
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = React.useState({
     name: '',
     email: '',
     company: '',
@@ -38,29 +39,8 @@ const Contact = () => {
     message: ''
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null);
-  // Persist draft state across admin navigation in this tab
-  const draftKey = 'asg:state:/contact';
-  React.useEffect(() => {
-    if (isEditMode) {
-      try {
-        const raw = sessionStorage.getItem(draftKey);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed.benefits)) setBenefits(parsed.benefits);
-        }
-      } catch {}
-    }
-    return () => {
-      if (isEditMode) {
-        try {
-          const payload = JSON.stringify({ benefits });
-          sessionStorage.setItem(draftKey, payload);
-        } catch {}
-      }
-    };
-  }, [isEditMode, benefits]);
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [submitStatus, setSubmitStatus] = React.useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

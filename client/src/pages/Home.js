@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Link } from 'react-router-dom';
@@ -25,6 +25,7 @@ import CtaSection from '../components/CtaSection';
 import './Home.css';
 import { ConfirmDialog, useConfirmState } from '../components/ConfirmDialog';
 import { useContent } from '../context/ContentContext';
+import { useDraftList } from '../hooks/useDraftList';
 import { toText } from '../utils/cms';
 
 const Home = () => {
@@ -36,7 +37,7 @@ const Home = () => {
     triggerOnce: true
   });
   
-  const [cardsScrolled, setCardsScrolled] = useState({
+  const [cardsScrolled, setCardsScrolled] = React.useState({
     card1: false,
     card2: false,
     card3: false,
@@ -44,16 +45,8 @@ const Home = () => {
     card5: false
   });
 
-  const [lastScrollY, setLastScrollY] = useState(0);
-  const [hasTransitioned, setHasTransitioned] = useState(false);
-  const initialBullets = Array.isArray(content?.home?.aboutPreview?.bullets)
-    ? content.home.aboutPreview.bullets
-    : [
-      "End-to-End Procurement Solutions",
-      "Global Sourcing & Supply",
-      "Integrated Logistics Management"
-    ];
-  const [bullets, setBullets] = useState(initialBullets);
+  const [lastScrollY, setLastScrollY] = React.useState(0);
+  const [hasTransitioned, setHasTransitioned] = React.useState(false);
 
   // Check if user is revisiting the home page
   useEffect(() => {
@@ -97,7 +90,6 @@ const Home = () => {
 
   // Handle scroll effect for floating cards in mobile
   useEffect(() => {
-    if (isEditMode) return;
     const handleScroll = () => {
       const cardsContainer = document.querySelector('.image-container');
       if (cardsContainer) {
@@ -126,7 +118,7 @@ const Home = () => {
     };
 
     // Only add scroll listener on mobile
-    if (!isEditMode && window.innerWidth <= 767) {
+    if (window.innerWidth <= 767) {
       window.addEventListener('scroll', handleScroll);
       handleScroll(); // Check initial state
     }
@@ -134,7 +126,7 @@ const Home = () => {
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [lastScrollY, hasTransitioned, isEditMode]);
+  }, [lastScrollY, hasTransitioned]);
 
   const iconMap = {
     'globe': <FiGlobe />,
@@ -182,7 +174,17 @@ const Home = () => {
     title: f.title,
     description: f.description
   }));
-  const [features, setFeatures] = useState(initialFeatures);
+  const serializeFeature = (f, idx) => ({
+    icon: (typeof f.icon === 'string' ? f.icon : (content?.home?.features?.[idx]?.icon || '')),
+    title: f.title,
+    description: f.description
+  });
+  const deserializeFeature = (f) => ({
+    icon: mapFeatureIcon(f.icon),
+    title: toText(f.title),
+    description: toText(f.description)
+  });
+  const [features, setFeatures] = useDraftList('home.features', initialFeatures, serializeFeature, deserializeFeature);
 
   const handleAddFeature = () => {
     setFeatures(prev => ([
@@ -250,50 +252,8 @@ const Home = () => {
           ? content.home.divisions
           : fallbackDivisions)
   );
-  const [divisions, setDivisions] = useState(initialDivisions);
+  const [divisions, setDivisions] = useDraftList('home.divisions', initialDivisions, (d) => ({ ...d }), (d) => ({ ...d }));
   const dragIndexRef = useRef(null);
-
-  // Persist draft state across admin navigation in this tab (run after all states exist)
-  const draftKey = 'asg:state:/';
-  useEffect(() => {
-    if (isEditMode) {
-      try {
-        const raw = sessionStorage.getItem(draftKey);
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed.features)) {
-            // Restore features but rebuild icons (avoid storing React elements)
-            const restored = parsed.features.map((f) => ({
-              title: f.title || '',
-              description: f.description || '',
-              // Use default icon to avoid React element serialization issues
-              icon: mapFeatureIcon(f.iconKey || 'check'),
-              _disabled: !!f._disabled,
-            }));
-            setFeatures(restored);
-          }
-          if (Array.isArray(parsed.divisions)) setDivisions(parsed.divisions);
-          if (Array.isArray(parsed.bullets)) setBullets(parsed.bullets);
-        }
-      } catch {}
-    }
-    return () => {
-      if (isEditMode) {
-        try {
-          // Serialize features without React elements
-          const serializableFeatures = features.map((f) => ({
-            title: f.title,
-            description: f.description,
-            // persist an icon key if present; otherwise just omit
-            iconKey: typeof f.icon === 'string' ? f.icon : (f.iconKey || 'check'),
-            _disabled: !!f._disabled,
-          }));
-          const payload = JSON.stringify({ features: serializableFeatures, divisions, bullets });
-          sessionStorage.setItem(draftKey, payload);
-        } catch {}
-      }
-    };
-  }, [isEditMode, features, divisions, bullets]);
 
   const handleAddDivision = () => {
     setDivisions(prev => ([
@@ -433,38 +393,6 @@ const Home = () => {
           </div>
         </div>
       </section>
-      
-      {/* 2a. About Preview - Editable bullet list */}
-      <section>
-        <div className="container">
-          {isEditMode && (
-            <div style={{ display: 'flex', justifyContent: 'flex-end', margin: '0 0 12px' }} contentEditable={false}>
-              <button type="button" className="btn btn-secondary" onClick={() => setBullets(prev => [...prev, "New point - click to edit"])}>
-                Add
-              </button>
-            </div>
-          )}
-          <div data-cms-list="home.aboutPreview.bullets">
-            {bullets.map((b, i) => (
-              <p key={i} data-cms-item style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <FiCheckCircle className="feature-icon" />
-                <span data-cms-field="text" style={{ display: 'none' }}>{toText(b)}</span>
-                <span>{toText(b)}</span>
-                {isEditMode && (
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    style={{ marginLeft: 12 }}
-                    onClick={() => setBullets(prev => prev.filter((_, idx) => idx !== i))}
-                  >
-                    Delete
-                  </button>
-                )}
-              </p>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* 3. Our Business Segments */}
       <section className="divisions-section">
@@ -581,7 +509,7 @@ const Home = () => {
               if ((disabled || persistDisabled) && !isEditMode) return null;
               return (
               <motion.div
-                key={`feature-${index}`}
+                key={feature.title}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}

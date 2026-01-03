@@ -15,7 +15,7 @@ import ContentEditor from './pages/ContentEditor';
 import './App.css';
 import { useEffect, useRef } from 'react';
 import { useEditMode } from './context/EditModeContext';
-import { MotionConfig } from 'framer-motion';
+import { draftStore } from './utils/draftStore';
 
 function App() {
   const { isEditMode } = useEditMode();
@@ -51,6 +51,10 @@ function App() {
           const reader = new FileReader();
           reader.onload = () => {
             img.src = reader.result;
+              const keyAttr = img.getAttribute('data-cms-key');
+              if (keyAttr) {
+                draftStore.setPath(keyAttr, reader.result);
+              }
           };
           reader.readAsDataURL(file);
         };
@@ -64,22 +68,40 @@ function App() {
     };
   }, [isEditMode, isAnalytics]);
 
+  // Capture text edits for [data-cms-key] elements into draft (edit mode only)
+  useEffect(() => {
+    if (!isEditMode || isAnalytics) return;
+    const targets = [mainRef.current, footerRef.current].filter(Boolean);
+    if (targets.length === 0) return;
+    const onInput = (e) => {
+      const el = e.target.closest('[data-cms-key]');
+      if (!el) return;
+      const key = el.getAttribute('data-cms-key');
+      const type = el.getAttribute('data-cms-type') || 'text';
+      let value;
+      if (type === 'image') {
+        value = el.getAttribute('src') || '';
+      } else {
+        value = (el.textContent || '').trim();
+      }
+      draftStore.setPath(key, value);
+    };
+    targets.forEach(el => {
+      el.addEventListener('input', onInput, true);
+      el.addEventListener('blur', onInput, true);
+      el.addEventListener('change', onInput, true);
+    });
+    return () => {
+      targets.forEach(el => {
+        el.removeEventListener('input', onInput, true);
+        el.removeEventListener('blur', onInput, true);
+        el.removeEventListener('change', onInput, true);
+      });
+    };
+  }, [isEditMode, isAnalytics]);
   // Note: Avoid restoring raw innerHTML to prevent React reconciliation issues.
 
   // Snapshots fully disabled in code to avoid any blank-page risks.
-
-  // While editing, add a class to body to stabilize scrollbars/behavior
-  useEffect(() => {
-    const cls = 'editing-root';
-    if (isEditMode) {
-      document.body.classList.add(cls);
-    } else {
-      document.body.classList.remove(cls);
-    }
-    return () => {
-      document.body.classList.remove(cls);
-    };
-  }, [isEditMode]);
 
   // Analytics: track page views on route change
   useEffect(() => {
@@ -187,40 +209,38 @@ function App() {
       </Helmet>
       
       <ScrollToTop />
-      <MotionConfig reducedMotion={isEditMode ? 'always' : 'user'}>
-        <div className="App">
-          <Header />
-          <main
-            ref={mainRef}
+      <div className="App">
+        <Header />
+        <main
+          ref={mainRef}
+          className={isEditMode ? 'editing' : ''}
+          data-app-main
+          contentEditable={isEditMode && !isAnalytics}
+          suppressContentEditableWarning
+        >
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/divisions" element={<Divisions />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/quote" element={<Quote />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/admin/content" element={<ContentEditor />} />
+          </Routes>
+        </main>
+        {!isAnalytics && (
+          <div
+            ref={footerRef}
+            data-app-footer
             className={isEditMode ? 'editing' : ''}
-            data-app-main
-            contentEditable={isEditMode && !isAnalytics}
+            contentEditable={isEditMode}
             suppressContentEditableWarning
           >
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/divisions" element={<Divisions />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/quote" element={<Quote />} />
-              <Route path="/admin" element={<Admin />} />
-              <Route path="/analytics" element={<Analytics />} />
-              <Route path="/admin/content" element={<ContentEditor />} />
-            </Routes>
-          </main>
-          {!isAnalytics && (
-            <div
-              ref={footerRef}
-              data-app-footer
-              className={isEditMode ? 'editing' : ''}
-              contentEditable={isEditMode}
-              suppressContentEditableWarning
-            >
-              <Footer />
-            </div>
-          )}
-        </div>
-      </MotionConfig>
+            <Footer />
+          </div>
+        )}
+      </div>
     </>
   );
 }

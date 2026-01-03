@@ -12,7 +12,7 @@ const StatsSection = ({ stats }) => {
         <div className="stats-grid" data-cms-list="home.stats">
           {liveStats.map((stat, index) => (
             <motion.div
-              key={`stat-${index}`}
+              key={stat.label}
               className="stat-card"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}

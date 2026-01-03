@@ -33,6 +33,7 @@ Thumbs.db
 # Logs
 logs
 *.log
+server/data/*.jsonl
 
 # Runtime data
 pids
@@ -95,3 +96,10 @@ jspm_packages/
 # Temporary folders
 tmp/
 temp/ 
+
+# Client dependencies and builds
+client/node_modules/
+client/build/
+
+# Server uploads (optional local)
+uploads/

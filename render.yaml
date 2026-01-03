@@ -1,28 +1,41 @@
 services:
+  # Backend API (Node Web Service)
   - type: web
-    name: al-safa-global
+    name: al-safa-global-backend
     env: node
     plan: free
-    buildCommand: npm install && npm run install-client && npm run build
+    rootDir: .
+    buildCommand: npm install
     startCommand: npm start
     autoDeploy: true
     envVars:
       - key: NODE_ENV
         value: production
-      # Set these in Render dashboard after creating the service:
+      # Link frontend URL to CORS automatically
+      - key: CLIENT_URL_PROD
+        fromService:
+          type: static
+          name: al-safa-global-frontend
+          property: url
+      # Set these in Render dashboard (or via secrets) as needed:
       # - key: MONGODB_URI_PROD
-      #   sync: false
       # - key: EMAIL_HOST
-      #   sync: false
       # - key: EMAIL_PORT
-      #   sync: false
       # - key: EMAIL_USER
-      #   sync: false
       # - key: EMAIL_PASS
-      #   sync: false
       # - key: EMAIL_FROM
-      #   sync: false
-      # - key: CLIENT_URL_PROD
-      #   value: https://your-service.onrender.com
-      #   sync: false
+
+  # Frontend (Static Site)
+  - type: static
+    name: al-safa-global-frontend
+    rootDir: client
+    buildCommand: npm ci && npm run build
+    staticPublishPath: build
+    envVars:
+      # Point the frontend to the backend's public URL
+      - key: REACT_APP_API_BASE
+        fromService:
+          type: web
+          name: al-safa-global-backend
+          property: url
 
