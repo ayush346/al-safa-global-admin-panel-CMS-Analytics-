@@ -155,8 +155,9 @@ const Home = () => {
   const [featuresDraft, setFeaturesDraft] = useDraftList('home.features', featuresCMS, serializeFeature, deserializeFeature);
   const featuresToRender = isEditMode ? featuresDraft : featuresCMS;
 
+  // Removed leftover setFeatures reference after CMS migration to avoid no-undef build error.
   const handleAddFeature = () => {
-    setFeatures(prev => ([
+    setFeaturesDraft(prev => ([
       ...prev,
       {
         icon: "➕",
@@ -168,7 +169,7 @@ const Home = () => {
 
   const handleRemoveFeature = (indexToRemove) => {
     askConfirm('Are you sure you want to delete this item?', () => {
-      setFeatures(prev => prev.filter((_, i) => i !== indexToRemove));
+      setFeaturesDraft(prev => prev.filter((_, i) => i !== indexToRemove));
     });
   };
 
