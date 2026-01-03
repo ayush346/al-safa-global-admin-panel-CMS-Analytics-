@@ -13,14 +13,24 @@ import { toText } from '../utils/cms';
 const Footer = () => {
   const { footer = {} } = useContent();
   const currentYear = new Date().getFullYear();
-  // Phase-16 CMS migration — Footer is now fully CMS-driven with no static fallback.
-  const emails = Array.isArray(footer.emails) ? footer.emails.map(e => toText(e)) : [];
-  const phones = Array.isArray(footer.phones) ? footer.phones.map(p => toText(p)) : [];
-  const locationText = toText(footer.locationText);
-  const quickLinks = Array.isArray(footer.quickLinks) ? footer.quickLinks.map(l => ({ label: toText(l.label), path: toText(l.path) })) : [];
-  const services = Array.isArray(footer.services) ? footer.services.map(s => toText(s)) : [];
-  const footerImage = footer.footerImage;
-  const legal = toText(footer.legal);
+  const emails = Array.isArray(footer.emails) ? footer.emails : ['info@alsafaglobal.com'];
+  const phones = Array.isArray(footer.phones) ? footer.phones : ['00971 4 3741 969', '00971 50 5671441'];
+  const locationText = footer.locationText || 'Ras Al Khaimah, UAE';
+  const quickLinks = Array.isArray(footer.quickLinks) ? footer.quickLinks : [
+    { label: 'Home', path: '/' },
+    { label: 'About Us', path: '/about' },
+    { label: 'Segments', path: '/divisions' },
+    { label: 'Contact', path: '/contact' }
+  ];
+  const services = Array.isArray(footer.services) ? footer.services : [
+    'Office, Construction & Infrastructure',
+    'Oil & Gas',
+    'Industrial & Manufacturing',
+    'Aviation & Marine',
+    'Defence Sector'
+  ];
+  const footerImage = footer.footerImage || '/images/footer-image.jpg';
+  const legal = footer.legal || 'Al Safa Global General Trading FZ LLC. All rights reserved.';
 
   return (
     <footer className="footer">

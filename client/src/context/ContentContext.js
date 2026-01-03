@@ -1,8 +1,9 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import contentData from '../content.json';
 import { useEditMode } from './EditModeContext';
 import { draftStore } from '../utils/draftStore';
 
-const ContentContext = createContext({ content: {} });
+const ContentContext = createContext({ content: contentData });
 
 // Defined outside the component so it's stable and linter-friendly
 function mergeDeep(target, source) {
@@ -80,7 +81,7 @@ export function ContentProvider({ children }) {
 	}, [isEditMode]);
 
 	const merged = useMemo(() => {
-		let base = mergeDeep({}, overrides);
+		let base = mergeDeep(contentData, overrides);
 		if (isEditMode && draftOverrides) {
 			base = mergeDeep(base, draftOverrides);
 		}
@@ -95,7 +96,7 @@ export function ContentProvider({ children }) {
 }
 
 export function useContent() {
-	return useContext(ContentContext).content || {};
+	return useContext(ContentContext).content || contentData;
 }
 
 

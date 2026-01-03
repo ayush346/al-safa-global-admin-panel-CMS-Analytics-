@@ -44,9 +44,13 @@ const About = () => {
     }
   }, [brandsInView, brandsAnimated]);
 
-  // Phase-10 CMS migration — About Page is now fully CMS-driven with no static fallback.
-  const valuesCMS = Array.isArray(about.values) ? about.values.map(v => ({ title: toText(v.title), description: toText(v.description) })) : [];
-  const [values, setValues] = useDraftList('about.values', valuesCMS, (v) => ({ title: toText(v.title), description: toText(v.description) }), (v) => ({ title: toText(v.title), description: toText(v.description) }));
+  const initialValues = (Array.isArray(about.values) ? about.values.map(v => ({ title: v.title, description: v.description })) : [
+    { title: "Integrity", description: "We conduct business with honesty, transparency, and ethical practices in all our dealings." },
+    { title: "Global Excellence", description: "We maintain the highest standards of quality and service across all our operations." },
+    { title: "Partnership", description: "We build long-term relationships based on trust, collaboration, and mutual success." },
+    { title: "Innovation", description: "We continuously improve our processes and solutions to meet evolving market needs." }
+  ]);
+  const [values, setValues] = useDraftList('about.values', initialValues, (v) => ({ title: toText(v.title), description: toText(v.description) }), (v) => ({ title: toText(v.title), description: toText(v.description) }));
 
   const handleAddValue = () => {
     setValues(prev => ([
@@ -65,25 +69,59 @@ const About = () => {
     });
   };
 
-  const achievementsCMS = Array.isArray(about.achievements)
-    ? about.achievements.map(a => ({ number: toText(a.number), label: toText(a.label), icon: <FiAward /> }))
-    : [];
-  const [achievements, setAchievements] = React.useState(achievementsCMS);
+  const initialAchievements = (Array.isArray(about.achievements)
+    ? about.achievements.map(a => ({ ...a, icon: <FiAward /> }))
+    : [
+      { number: "500+", label: "Satisfied Clients", icon: <FiUsers /> },
+      { number: "15+", label: "Years Experience", icon: <FiClock /> },
+      { number: "50+", label: "Global Partners", icon: <FiGlobe /> },
+      { number: "100%", label: "Quality Assurance", icon: <FiAward /> }
+    ]);
+  const [achievements, setAchievements] = React.useState(initialAchievements);
 
-  const initialServices = Array.isArray(about.services) ? about.services : [];
+  const initialServices = Array.isArray(about.services) ? about.services : [
+    "End-to-End Procurement Solutions",
+    "Global Sourcing & Supply",
+    "Integrated Logistics Management",
+    "Cost-Effective Sourcing",
+    "Timely & Reliable Delivery",
+    "Industry-Specific Procurement Expertise",
+    "Supplier Management",
+    "Operational Procurement Support",
+    "Project Procurement Support",
+    "Supply Chain Optimization Consulting"
+  ];
   const [services, setServices] = useDraftList('about.services', initialServices, (s) => toText(s), (s) => toText(s));
 
-  const initialSectorSolutions = Array.isArray(about.sectorSolutions) ? about.sectorSolutions : [];
+  const initialSectorSolutions = Array.isArray(about.sectorSolutions) ? about.sectorSolutions : [
+    "Construction & Infrastructure Supply",
+    "Oil & Gas Equipment & Consumables",
+    "Industrial & Manufacturing Support",
+    "Marine & Shipping Supplies",
+    "Aviation Support Services",
+    "Defence Sector Procurement",
+    "Office & IT Solutions"
+  ];
   const [sectorSolutions, setSectorSolutions] = useDraftList('about.sectorSolutions', initialSectorSolutions, (s) => toText(s), (s) => toText(s));
 
-  const initialValueAdded = Array.isArray(about.valueAddedServices) ? about.valueAddedServices.map(s => toText(s)) : [];
+  const initialValueAdded = [
+    "Supply of Genuine OEM Parts",
+    "Competitive Quotation (RFQ) Response",
+    "Partnership & Collaboration"
+  ];
   const [valueAddedServices, setValueAddedServices] = React.useState(initialValueAdded);
 
   const initialBrands = Array.isArray(about.brands) ? about.brands : [];
   const [brands, setBrands] = useDraftList('about.brands', initialBrands, (b) => ({ name: toText(b.name), image: toText(b.image) }), (b) => ({ name: toText(b.name), image: toText(b.image) }));
 
   // Why Choose - editable list
-  const initialWhy = Array.isArray(about.why) ? about.why.map(i => ({ title: toText(i.title), text: toText(i.text) })) : [];
+  const initialWhy = [
+    { title: "Global Sourcing Network", text: "Direct access to reputed brands and suppliers worldwide" },
+    { title: "End-to-End Solutions", text: "Complete procurement and logistics management services" },
+    { title: "Competitive Pricing", text: "Cost-effective solutions without compromising quality" },
+    { title: "Responsive Service", text: "Quick turnaround times and commitment to deadlines" },
+    { title: "Industry Expertise", text: "Experienced team with deep industry-specific knowledge" },
+  ];
   const [whyItems, setWhyItems] = useState(initialWhy);
 
   // Handlers for add/delete across sections
@@ -140,15 +178,14 @@ const About = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            {/* Phase-10 CMS migration — About Page is now fully CMS-driven with no static fallback. */}
-            <h1 className="gradient-text" data-cms-key="about.heroTitle">{toText(about?.heroTitle)}</h1>
-            {!!toText(about?.heroSubtitle) && (
+            <h1 className="gradient-text" data-cms-key="about.heroTitle">{about?.heroTitle || <>About <span className="gold-text">Al Safa Global</span></>}</h1>
+            {!!about?.heroSubtitle && (
               <p className="hero-subtitle" data-cms-key="about.heroSubtitle">
-                {toText(about.heroSubtitle)}
+                {about.heroSubtitle}
               </p>
             )}
             <p className="hero-description" data-cms-key="about.introParagraph">
-              {toText(about?.introParagraph)}
+              {about?.introParagraph || 'Al Safa Global General Trading FZ LLC is a UAE-based company specializing in comprehensive procurement and supply chain solutions.'}
             </p>
           </motion.div>
         </div>
@@ -170,7 +207,7 @@ const About = () => {
               </div>
               <h3>Our Vision</h3>
               <p data-cms-key="about.vision">
-                {toText(about?.vision)}
+                {about?.vision || 'To be a globally trusted procurement partner...'}
               </p>
             </motion.div>
 
@@ -186,7 +223,7 @@ const About = () => {
               </div>
               <h3>Our Mission</h3>
               <p data-cms-key="about.mission">
-                {toText(about?.mission)}
+                {about?.mission || 'To provide reliable, cost-effective sourcing and supply solutions...'}
               </p>
             </motion.div>
           </div>

@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { FiArrowRight } from 'react-icons/fi';
 import './HeroSection.css';
 import { useContent } from '../context/ContentContext';
-import { toText } from '../utils/cms';
 
 const HeroSection = () => {
   const { hero = {} } = useContent();
@@ -13,13 +12,13 @@ const HeroSection = () => {
       {/* Landing Page Banner Image */}
       <section className="landing-banner">
         <img 
-          src={hero.bannerImage} 
+          src={hero.bannerImage || (process.env.PUBLIC_URL + "/images/hero-landing-image.jpg")} 
           alt="Al Safa Global - Global Procurement Solutions" 
           className="landing-banner-image"
           onLoad={() => console.log('Hero landing image loaded successfully from:', process.env.PUBLIC_URL + "/images/hero-landing-image.jpg")}
           onError={(e) => {
             console.error('Error loading hero landing image:', e);
-            console.error('Attempted URL:', hero.bannerImage);
+            console.error('Attempted URL:', hero.bannerImage || (process.env.PUBLIC_URL + "/images/hero-landing-image.jpg"));
             console.error('PUBLIC_URL:', process.env.PUBLIC_URL);
           }}
         />
@@ -45,9 +44,8 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              {/* Live CMS data source */}
-              <span data-cms-key="hero.titlePrefix">{toText(hero.titlePrefix)}</span>{' '}
-              <span className="gradient-text" data-cms-key="hero.brandHighlight">{toText(hero.brandHighlight)}</span>
+              <span data-cms-key="hero.titlePrefix">{hero.titlePrefix || 'Welcome to'}</span>{' '}
+              <span className="gradient-text" data-cms-key="hero.brandHighlight">{hero.brandHighlight || 'Al Safa Global'}</span>
             </motion.h1>
             
             <motion.p 
@@ -56,8 +54,7 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
             >
-              {/* Live CMS data source */}
-              <span data-cms-key="hero.subtitle">{toText(hero.subtitle)}</span>
+              <span data-cms-key="hero.subtitle">{hero.subtitle || 'Your Trusted Partner in Procurement and Supply Chain Solutions'}</span>
             </motion.p>
             
             <motion.p 
@@ -65,8 +62,7 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 }}
             >
-              {/* Live CMS data source */}
-              {Array.isArray(hero.paragraphs) ? toText(hero.paragraphs[0]) : ''}
+              {(Array.isArray(hero.paragraphs) && hero.paragraphs[0]) || 'Al Safa Global General Trading FZ LLC is a UAE-based company specializing in comprehensive procurement and supply chain solutions.'}
             </motion.p>
             
             {/* Mobile-only image display */}
@@ -79,13 +75,13 @@ const HeroSection = () => {
               <div className="hero-image-container">
                 <div className="hero-main-image">
                   <img 
-                    src={hero.mainImage} 
+                    src={hero.mainImage || (process.env.PUBLIC_URL + "/images/global-procurement.png")} 
                     alt="Global Procurement Solutions" 
                     className="hero-image"
                     onLoad={() => console.log('Mobile global procurement image loaded successfully')}
                     onError={(e) => {
                       console.error('Error loading mobile global procurement image:', e);
-                      console.error('Attempted URL:', hero.mainImage);
+                      console.error('Attempted URL:', hero.mainImage || (process.env.PUBLIC_URL + "/images/global-procurement.png"));
                     }}
                   />
                 </div>
@@ -98,14 +94,13 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.0 }}
             >
-              {/* Live CMS data source */}
-              <Link to={(hero.primaryCta?.href)} className="btn btn-primary btn-large">
-                {toText(hero.primaryCta?.label)}
+              <Link to={(hero.primaryCta?.href || '/contact')} className="btn btn-primary btn-large">
+                {hero.primaryCta?.label || 'Contact Us'}
                 <FiArrowRight />
               </Link>
               
-              <Link to={(hero.secondaryCta?.href)} className="btn btn-secondary btn-large">
-                {toText(hero.secondaryCta?.label)}
+              <Link to={(hero.secondaryCta?.href || '/divisions')} className="btn btn-secondary btn-large">
+                {hero.secondaryCta?.label || 'Explore Our Divisions'}
                 <FiArrowRight />
               </Link>
             </motion.div>
@@ -116,10 +111,14 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.2 }}
             >
-              {(Array.isArray(hero.stats) ? hero.stats : []).map((s, idx) => (
+              {(Array.isArray(hero.stats) ? hero.stats : [
+                { number: '500+', label: 'Satisfied Clients' },
+                { number: '15+', label: 'Years Experience' },
+                { number: '50+', label: 'Global Partners' }
+              ]).map((s, idx) => (
                 <div className="stat-item" key={`${s.label}-${idx}`}>
-                  <span className="stat-number">{toText(s.number)}</span>
-                  <span className="stat-label">{toText(s.label)}</span>
+                  <span className="stat-number">{s.number}</span>
+                  <span className="stat-label">{s.label}</span>
                 </div>
               ))}
             </motion.div>
@@ -136,13 +135,13 @@ const HeroSection = () => {
                 <img 
                   data-cms-key="hero.mainImage"
                   data-cms-type="image"
-                  src={hero.mainImage} 
+                  src={hero.mainImage || (process.env.PUBLIC_URL + "/images/global-procurement.png")} 
                   alt="Global Procurement Solutions" 
                   className="hero-image"
                   onLoad={() => console.log('Desktop global procurement image loaded successfully')}
                   onError={(e) => {
                     console.error('Error loading desktop global procurement image:', e);
-                    console.error('Attempted URL:', hero.mainImage);
+                    console.error('Attempted URL:', hero.mainImage || (process.env.PUBLIC_URL + "/images/global-procurement.png"));
                   }}
                 />
               </div>

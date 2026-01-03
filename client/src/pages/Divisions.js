@@ -8,7 +8,7 @@ import { toText } from '../utils/cms';
 import { useDraftList } from '../hooks/useDraftList';
 
 const Divisions = () => {
-  const { divisions: divisionsFromContent = [], divisionsPage = {} } = useContent();
+  const { divisions: divisionsFromContent = [] } = useContent();
   const location = useLocation();
   const { isEditMode, isDisabled, disableContent, enableContent } = useEditMode();
   const [confirmState, setConfirmState] = React.useState({
@@ -76,21 +76,8 @@ const Divisions = () => {
     scrollToSection();
   }, [location]);
 
-  // Phase-12 CMS migration — Divisions Page is now fully CMS-driven with no static fallback.
-  const normalizeDivision = (d) => ({
-    id: d?.id || '',
-    title: toText(d?.title),
-    description: toText(d?.description),
-    icon: d?.icon,
-    color: d?.color,
-    link: d?.link,
-    items: Array.isArray(d?.items) ? d.items.map((it) => toText(it)) : []
-  });
-  const divisionsCMS = Array.isArray(divisionsFromContent) ? divisionsFromContent.map(normalizeDivision) : [];
-  const [divisions, setDivisions] = useDraftList('divisions', divisionsCMS, (d) => ({ id: d.id, title: d.title, description: d.description, icon: d.icon, color: d.color, link: d.link, items: Array.isArray(d.items) ? d.items.map((it) => toText(it)) : [] }), normalizeDivision);
-  const divisionsToRender = isEditMode ? divisions : divisionsCMS;
-  // Live CMS data source
-  const heroTitle = toText(divisionsPage?.heroTitle);
+  const initialDivisions = Array.isArray(divisionsFromContent) ? divisionsFromContent : [];
+  const [divisions, setDivisions] = useDraftList('divisions', initialDivisions, (d) => ({ ...d, items: Array.isArray(d.items) ? d.items.map((it) => toText(it)) : [] }), (d) => ({ ...d, items: Array.isArray(d.items) ? d.items.map((it) => toText(it)) : [] }));
 
   const handleAddDivision = () => {
     setDivisions(prev => ([
@@ -142,11 +129,13 @@ const Divisions = () => {
             transition={{ duration: 0.8 }}
           >
             <h1 className="gradient-text" data-cms-key="divisions.heroTitle">
-              {heroTitle}
+              <span className="gold-text">Al Safa Global</span> Segments
             </h1>
 
             <p data-cms-key="divisions.heroIntro">
-              {toText(divisionsPage?.heroIntro)}
+              We provide comprehensive procurement and supply chain solutions across multiple industries, 
+              ensuring our clients receive the highest quality products and services tailored to their 
+              specific sector requirements.
             </p>
           </motion.div>
         </div>
@@ -163,7 +152,7 @@ const Divisions = () => {
             </div>
           )}
 
-          {divisionsToRender.map((division, index) => {
+          {divisions.map((division, index) => {
             const sectionKey = `divisions:segment:${division.id}`;
             const sectionDisabled = isDisabled(sectionKey);
             if (sectionDisabled && !isEditMode) {

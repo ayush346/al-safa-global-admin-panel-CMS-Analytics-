@@ -12,8 +12,14 @@ const Contact = () => {
   const { contact = {}, forms = {} } = useContent();
   const { isEditMode, isDisabled, disableContent, enableContent } = useEditMode();
   const { confirmState, askConfirm, handleConfirm, handleCancel } = useConfirmState();
-  // Phase-14 CMS migration — Contact Page is now fully CMS-driven with no static fallback.
-  const initialBenefits = Array.isArray(contact.benefits) ? contact.benefits : [];
+  const initialBenefits = Array.isArray(contact.benefits) ? contact.benefits : [
+    { title: "Global Sourcing Network", text: "Direct access to reputed brands and suppliers worldwide for comprehensive procurement solutions." },
+    { title: "End-to-End Solutions", text: "Complete procurement and logistics management from sourcing to delivery coordination." },
+    { title: "Competitive Pricing", text: "Cost-effective sourcing without compromising on quality or authenticity of products." },
+    { title: "Industry Expertise", text: "Experienced team with deep industry-specific knowledge across multiple sectors." },
+    { title: "Quality Assurance", text: "Rigorous quality control and genuine OEM parts guarantee for all products and services." },
+    { title: "Responsive Service", text: "Quick turnaround times and commitment to deadlines with personalized customer support." }
+  ];
   const [benefits, setBenefits] = useDraftList('contact.benefits', initialBenefits, (b) => ({ title: toText(b.title), text: toText(b.text) }), (b) => ({ title: toText(b.title), text: toText(b.text) }));
   const handleAddBenefit = () => {
     setBenefits(prev => [...prev, { title: "New Benefit", text: "Click here to describe the benefit." }]);
@@ -116,12 +122,11 @@ Submitted on: ${new Date().toLocaleString()}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-              {/* Phase-14 CMS migration — Contact Page is now fully CMS-driven with no static fallback. */}
               <h1 className="gradient-text" data-cms-key="contact.heroTitle">
-              {toText(contact?.heroTitle)}
+              {contact?.heroTitle || <>Contact <span className="gold-text">Al Safa Global</span></>}
             </h1>
               <p className="hero-subtitle" data-cms-key="contact.heroSubtitle">
-              {toText(contact?.heroSubtitle)}
+              {contact?.heroSubtitle || "We would love to hear from you. For all inquiries, business proposals, or partnership opportunities, please reach out to us."}
             </p>
           </motion.div>
         </div>
@@ -139,8 +144,8 @@ Submitted on: ${new Date().toLocaleString()}
               viewport={{ once: true }}
             >
               <h2 className="contact-heading">Get In Touch</h2>
-              <p data-cms-key="contact.description">
-                {toText(contact?.description)}
+              <p>
+                Al Safa Global General Trading FZ LLC is your trusted partner in procurement and supply chain solutions. We're here to help you with all your business needs across multiple industries and sectors.
               </p>
               
               <div className="contact-details">
@@ -149,8 +154,8 @@ Submitted on: ${new Date().toLocaleString()}
                   <div>
                     <h4>Email</h4>
                     <p>
-                      <a href={`mailto:${toText(contact?.email) || ''}`} className="contact-link" data-cms-key="contact.email">
-                        {toText(contact?.email)}
+                      <a href={`mailto:${contact?.email || 'info@alsafaglobal.com'}`} className="contact-link" data-cms-key="contact.email">
+                        {contact?.email || 'info@alsafaglobal.com'}
                       </a>
                     </p>
                     <p>For business inquiries and partnerships</p>
@@ -162,8 +167,8 @@ Submitted on: ${new Date().toLocaleString()}
                   <div>
                     <h4>Phone</h4>
                     <p>
-                      <a href={`tel:${(toText(contact?.phone) || '').replace(/\\s/g, '')}`} className="contact-link" data-cms-key="contact.phone">
-                        {toText(contact?.phone)}
+                      <a href={`tel:${(contact?.phone || '00971 4 3741 969').replace(/\\s/g, '')}`} className="contact-link" data-cms-key="contact.phone">
+                        {contact?.phone || '00971 4 3741 969'}
                       </a>
                     </p>
                     <p>Available during business hours</p>
@@ -177,7 +182,7 @@ Submitted on: ${new Date().toLocaleString()}
                     <p>
                       <span data-cms-key="contact.addressLines" style={{ display: 'none' }} />
                       {(contact?.addressLines || []).map((line, i) => (<React.Fragment key={i}>{toText(line)}<br /></React.Fragment>))}
-                      <a href={`tel:${(toText(contact?.phone) || '').replace(/\\s/g, '')}`} style={{ color: 'inherit', textDecoration: 'underline' }}>{toText(contact?.phone)}</a>
+                      <a href={`tel:${(contact?.phone || '00971 4 3741 969').replace(/\\s/g, '')}`} style={{ color: 'inherit', textDecoration: 'underline' }}>{contact?.phone || '00971 4 3741 969'}</a>
                     </p>
                   </div>
                 </div>
