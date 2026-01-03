@@ -136,7 +136,38 @@ const Home = () => {
     'users': <FiUsers />,
     'shield': <FiShield />
   };
-  const initialFeaturesRaw = Array.isArray(content?.home?.features) ? content.home.features : [];
+  const initialFeaturesRaw = Array.isArray(content?.home?.features) ? content.home.features : [
+    {
+      icon: 'globe',
+      title: "Global Sourcing Network",
+      description: "Direct access to reputed brands and suppliers worldwide for comprehensive procurement solutions."
+    },
+    {
+      icon: 'truck',
+      title: "End-to-End Solutions",
+      description: "Complete procurement and logistics management from sourcing to delivery coordination."
+    },
+    {
+      icon: 'trending-up',
+      title: "Competitive Pricing",
+      description: "Cost-effective sourcing without compromising on quality or authenticity of products."
+    },
+    {
+      icon: 'clock',
+      title: "Timely Delivery",
+      description: "Committed to meeting project deadlines and operational schedules with responsive turnaround."
+    },
+    {
+      icon: 'users',
+      title: "Industry Expertise",
+      description: "Experienced team with deep industry-specific knowledge across multiple sectors."
+    },
+    {
+      icon: 'shield',
+      title: "Quality Assurance",
+      description: "Rigorous quality control and genuine OEM parts guarantee for all products and services."
+    }
+  ];
   const mapFeatureIcon = (iconKey) => iconMap[iconKey] || <FiCheckCircle />;
   const initialFeatures = initialFeaturesRaw.map(f => ({
     icon: mapFeatureIcon(f.icon),
@@ -172,7 +203,55 @@ const Home = () => {
     });
   };
 
-  const initialDivisions = (Array.isArray(content?.home?.divisions) ? content.home.divisions : []);
+  const fallbackDivisions = [
+    {
+      id: 'office-construction',
+      title: 'Office, Construction & Infrastructure',
+      description: 'End-to-end supply for office fit-outs, construction materials and infrastructure projects.',
+      icon: '🏗️',
+      color: 'var(--primary-blue)',
+      link: '/divisions#office-construction'
+    },
+    {
+      id: 'oil-gas',
+      title: 'Oil & Gas',
+      description: 'Equipment, spares and consumables for upstream and downstream operations.',
+      icon: '🛢️',
+      color: 'var(--primary-gold)',
+      link: '/divisions#oil-gas'
+    },
+    {
+      id: 'industrial-manufacturing',
+      title: 'Industrial & Manufacturing',
+      description: 'MRO, tooling, machinery spares and production consumables.',
+      icon: '🏭',
+      color: 'var(--primary-blue)',
+      link: '/divisions#industrial-manufacturing'
+    },
+    {
+      id: 'aviation-marine',
+      title: 'Aviation & Marine',
+      description: 'Specialized parts and supplies for aviation, marine and shipping.',
+      icon: '✈️',
+      color: 'var(--primary-gold)',
+      link: '/divisions#aviation-marine'
+    },
+    {
+      id: 'defence',
+      title: 'Defence Sector',
+      description: 'Trusted sourcing for mission‑critical and compliant defence supplies.',
+      icon: '🛡️',
+      color: 'var(--primary-blue)',
+      link: '/divisions#defence'
+    }
+  ];
+  const initialDivisions = (
+    (Array.isArray(content?.divisions) && content.divisions.length > 0)
+      ? content.divisions
+      : (Array.isArray(content?.home?.divisions) && content.home.divisions.length > 0
+          ? content.home.divisions
+          : fallbackDivisions)
+  );
   const [divisions, setDivisions] = useDraftList('home.divisions', initialDivisions, (d) => ({ ...d }), (d) => ({ ...d }));
   const dragIndexRef = useRef(null);
 
@@ -236,7 +315,7 @@ const Home = () => {
             >
               <h2>
                 <span data-cms-key="home.aboutPreview.title">
-                  {content?.home?.aboutPreview?.title ?? ''}
+                  {content?.home?.aboutPreview?.title || <>About <span className="gold-text">Al Safa Global</span></>}
                 </span>
               </h2>
               {(content?.home?.aboutPreview?.paragraphs || []).slice(0, 3).map((p, i) => (
@@ -245,15 +324,15 @@ const Home = () => {
               <div className="about-features">
                 <div className="feature-item">
                   <FiCheckCircle className="feature-icon" />
-                  <span>{(content?.home?.aboutPreview?.floatingWords || [])[0] ?? ''}</span>
+                  <span>End-to-End Procurement Solutions</span>
                 </div>
                 <div className="feature-item">
                   <FiCheckCircle className="feature-icon" />
-                  <span>{(content?.home?.aboutPreview?.floatingWords || [])[1] ?? ''}</span>
+                  <span>Global Sourcing & Supply</span>
                 </div>
                 <div className="feature-item">
                   <FiCheckCircle className="feature-icon" />
-                  <span>{(content?.home?.aboutPreview?.floatingWords || [])[2] ?? ''}</span>
+                  <span>Integrated Logistics Management</span>
                 </div>
               </div>
             </motion.div>
@@ -269,8 +348,8 @@ const Home = () => {
                 <img 
                   data-cms-key="home.aboutPreview.companyImage"
                   data-cms-type="image"
-                  src={content?.home?.aboutPreview?.companyImage?.url ?? ''} 
-                  alt={content?.home?.aboutPreview?.companyImage?.alt ?? "Al Safa Global Company Overview"} 
+                  src={content?.home?.aboutPreview?.companyImage || "/images/company-overview.jpg"} 
+                  alt="Al Safa Global Company Overview" 
                   className="company-overview-image"
                 />
               </div>
@@ -325,9 +404,9 @@ const Home = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 data-cms-key="home.sections.divisions.title">{content?.home?.sections?.divisions?.title ?? ''}</h2>
+            <h2 data-cms-key="home.sections.divisions.title">{content?.home?.sections?.divisions?.title || 'Our Business Segments'}</h2>
             <p className="section-subtitle" data-cms-key="home.sections.divisions.subtitle">
-              {content?.home?.sections?.divisions?.subtitle ?? ''}
+              {content?.home?.sections?.divisions?.subtitle || 'Al Safa Global specializes in a wide array of supply and service segments'}
             </p>
           </motion.div>
           
@@ -387,9 +466,9 @@ const Home = () => {
                   <span data-cms-field="id" style={{ display: 'none' }}>{division.id}</span>
                   <span data-cms-field="title" style={{ display: 'none' }}>{division.title}</span>
                   <span data-cms-field="description" style={{ display: 'none' }}>{division.description}</span>
-                  <span data-cms-field="link" style={{ display: 'none' }}>{division.link ?? ''}</span>
-                  <span data-cms-field="icon" style={{ display: 'none' }}>{division.icon ?? ''}</span>
-                  <span data-cms-field="color" style={{ display: 'none' }}>{division.color ?? ''}</span>
+                  <span data-cms-field="link" style={{ display: 'none' }}>{division.link || '/divisions'}</span>
+                  <span data-cms-field="icon" style={{ display: 'none' }}>{division.icon || ''}</span>
+                  <span data-cms-field="color" style={{ display: 'none' }}>{division.color || ''}</span>
                   <DivisionCard {...division} />
                 </div>
               </motion.div>
@@ -408,9 +487,9 @@ const Home = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 data-cms-key="home.sections.features.title">{content?.home?.sections?.features?.title ?? ''}</h2>
+            <h2 data-cms-key="home.sections.features.title">{content?.home?.sections?.features?.title || <>Why Choose <span className="gold-text">Al Safa Global</span>?</>}</h2>
             <p className="section-subtitle" data-cms-key="home.sections.features.subtitle">
-              {content?.home?.sections?.features?.subtitle ?? ''}
+              {content?.home?.sections?.features?.subtitle || 'We combine industry expertise with innovative solutions to deliver exceptional value to our clients'}
             </p>
           </motion.div>
 

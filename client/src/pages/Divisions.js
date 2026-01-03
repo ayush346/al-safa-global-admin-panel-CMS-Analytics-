@@ -8,8 +8,7 @@ import { toText } from '../utils/cms';
 import { useDraftList } from '../hooks/useDraftList';
 
 const Divisions = () => {
-  const { content } = useContent();
-  const divisionsFromContent = Array.isArray(content?.divisions) ? content.divisions : [];
+  const { divisions: divisionsFromContent = [] } = useContent();
   const location = useLocation();
   const { isEditMode, isDisabled, disableContent, enableContent } = useEditMode();
   const [confirmState, setConfirmState] = React.useState({
@@ -130,11 +129,13 @@ const Divisions = () => {
             transition={{ duration: 0.8 }}
           >
             <h1 className="gradient-text" data-cms-key="divisions.heroTitle">
-              {content?.home?.sections?.divisions?.title ?? ''}
+              <span className="gold-text">Al Safa Global</span> Segments
             </h1>
 
             <p data-cms-key="divisions.heroIntro">
-              {content?.home?.sections?.divisions?.subtitle ?? ''}
+              We provide comprehensive procurement and supply chain solutions across multiple industries, 
+              ensuring our clients receive the highest quality products and services tailored to their 
+              specific sector requirements.
             </p>
           </motion.div>
         </div>
