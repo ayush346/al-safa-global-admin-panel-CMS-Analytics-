@@ -8,7 +8,7 @@ import { toText } from '../utils/cms';
 import { useDraftList } from '../hooks/useDraftList';
 
 const Divisions = () => {
-  const { divisions: divisionsFromContent = [] } = useContent();
+  const { divisions: divisionsFromContent = [], divisionsItemsHeading } = useContent();
   const location = useLocation();
   const { isEditMode, isDisabled, disableContent, enableContent } = useEditMode();
   const [confirmState, setConfirmState] = React.useState({
@@ -207,7 +207,7 @@ const Divisions = () => {
               </div>
               
               <div className="division-items-container">
-                <h3 data-cms-key="divisions.itemsHeading">{toText(content?.divisionsItemsHeading || '')}</h3>
+                <h3 data-cms-key="divisions.itemsHeading">{toText(divisionsItemsHeading || '')}</h3>
                 {isEditMode && (
                   <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '0.5rem' }} contentEditable={false}>
                     <button
