@@ -14,7 +14,7 @@ services:
       # Link frontend URL to CORS automatically
       - key: CLIENT_URL_PROD
         fromService:
-          type: static
+          type: static_site
           name: al-safa-global-frontend
           property: url
       # Set these in Render dashboard (or via secrets) as needed:
@@ -26,7 +26,7 @@ services:
       # - key: EMAIL_FROM
 
   # Frontend (Static Site)
-  - type: static
+  - type: static_site
     name: al-safa-global-frontend
     rootDir: client
     buildCommand: npm ci && npm run build
