@@ -6,6 +6,7 @@ import './Header.css';
 import { useEditMode } from '../context/EditModeContext';
 import { toast } from 'react-hot-toast';
 import { useContent } from '../context/ContentContext';
+import { toText } from '../utils/cms';
 
 const Header = () => {
   const { content } = useContent();
@@ -249,13 +250,8 @@ const Header = () => {
     setIsOpen(false);
   }, [location]);
 
-  const navItems = Array.isArray(content?.nav) ? content.nav : [
-    { name: 'Home', path: '/' },
-    { name: 'About Us', path: '/about' },
-    { name: 'Segments', path: '/divisions' },
-    { name: 'Contact', path: '/contact' },
-    { name: 'Admin', path: '/admin' }
-  ];
+  // Live CMS data source
+  const navItems = Array.isArray(content?.nav) ? content.nav : [];
 
   const isActive = (path) => location.pathname === path;
 
@@ -278,19 +274,19 @@ const Header = () => {
               <div className="logo-container">
                 <div className="logo-icon">
                   <img 
-                    src={content?.site?.logo || (process.env.PUBLIC_URL + "/images/logo.png")}
-                    alt={(content?.site?.name || "Al Safa Global") + " Logo"} 
+                    src={content?.site?.logo}
+                    alt={`${toText(content?.site?.name)} Logo`} 
                     className="logo-image"
                     onLoad={() => console.log('Logo loaded successfully')}
                     onError={(e) => {
                       console.error('Error loading logo:', e);
-                      console.error('Attempted URL:', content?.site?.logo || (process.env.PUBLIC_URL + "/images/logo.png"));
+                      console.error('Attempted URL:', content?.site?.logo);
                     }}
                   />
                 </div>
                 <div className="logo-text-container">
-                  <span className="company-name">{content?.site?.name || 'Al Safa Global'}</span>
-                  <span className="company-tagline">{content?.site?.tagline || 'General Trading FZ LLC'}</span>
+                  <span className="company-name">{toText(content?.site?.name)}</span>
+                  <span className="company-tagline">{toText(content?.site?.tagline)}</span>
                 </div>
               </div>
             </Link>

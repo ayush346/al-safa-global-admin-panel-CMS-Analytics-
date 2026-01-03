@@ -89,8 +89,8 @@ const Divisions = () => {
   const divisionsCMS = Array.isArray(divisionsFromContent) ? divisionsFromContent.map(normalizeDivision) : [];
   const [divisions, setDivisions] = useDraftList('divisions', divisionsCMS, (d) => ({ id: d.id, title: d.title, description: d.description, icon: d.icon, color: d.color, link: d.link, items: Array.isArray(d.items) ? d.items.map((it) => toText(it)) : [] }), normalizeDivision);
   const divisionsToRender = isEditMode ? divisions : divisionsCMS;
-  // Fallback provided for divisions heroTitle to prevent blank heading if CMS value is missing.
-  const heroTitle = toText(divisionsPage?.heroTitle) || 'Al Safa Global Segments';
+  // Live CMS data source
+  const heroTitle = toText(divisionsPage?.heroTitle);
 
   const handleAddDivision = () => {
     setDivisions(prev => ([

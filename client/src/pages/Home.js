@@ -452,9 +452,9 @@ const Home = () => {
                   <span data-cms-field="id" style={{ display: 'none' }}>{division.id}</span>
                   <span data-cms-field="title" style={{ display: 'none' }}>{division.title}</span>
                   <span data-cms-field="description" style={{ display: 'none' }}>{division.description}</span>
-                  <span data-cms-field="link" style={{ display: 'none' }}>{division.link || '/divisions'}</span>
-                  <span data-cms-field="icon" style={{ display: 'none' }}>{division.icon || ''}</span>
-                  <span data-cms-field="color" style={{ display: 'none' }}>{division.color || ''}</span>
+                  <span data-cms-field="link" style={{ display: 'none' }}>{division.link}</span>
+                  <span data-cms-field="icon" style={{ display: 'none' }}>{division.icon}</span>
+                  <span data-cms-field="color" style={{ display: 'none' }}>{division.color}</span>
                   <DivisionCard {...division} />
                 </div>
               </motion.div>
@@ -473,9 +473,10 @@ const Home = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 data-cms-key="home.sections.features.title">{content?.home?.sections?.features?.title || <>Why Choose <span className="gold-text">Al Safa Global</span>?</>}</h2>
+            {/* Live CMS data source */}
+            <h2 data-cms-key="home.sections.features.title">{toText(content?.home?.sections?.features?.title)}</h2>
             <p className="section-subtitle" data-cms-key="home.sections.features.subtitle">
-              {content?.home?.sections?.features?.subtitle || 'We combine industry expertise with innovative solutions to deliver exceptional value to our clients'}
+              {toText(content?.home?.sections?.features?.subtitle)}
             </p>
           </motion.div>
 
@@ -528,7 +529,7 @@ const Home = () => {
                   )}
                   {/* Hidden fields for CMS serialization */}
                   <span data-cms-field="icon" style={{ display: 'none' }}>
-                    {(content?.home?.features?.[index]?.icon) || ''}
+                    {(content?.home?.features?.[index]?.icon)}
                   </span>
                   <span data-cms-field="title" style={{ display: 'none' }}>{feature.title}</span>
                   <span data-cms-field="description" style={{ display: 'none' }}>{feature.description}</span>
