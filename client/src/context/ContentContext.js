@@ -9,26 +9,14 @@ const ContentContext = createContext({ content: contentData });
 function mergeDeep(target, source) {
 	if (!source) return target;
 	if (Array.isArray(source)) {
-		// If source is an array of objects of the form { text: "..." }, normalize to primitives.
-		const allTextObjects = source.every((item) => item && typeof item === 'object' && 'text' in item);
-		if (allTextObjects) {
-			return source.map((item) => item && typeof item === 'object' ? item.text : item);
-		}
-		// If the target is an array of primitives (strings/numbers),
-		// and the source is an array of objects with { text }, normalize to primitives.
-		if (Array.isArray(target) && target.length > 0) {
-			const targetIsPrimitiveArray = typeof target[0] !== 'object' || target[0] === null;
-			if (targetIsPrimitiveArray) {
-				return source.map((item) => {
-					if (item && typeof item === 'object' && 'text' in item) {
-						return item.text;
-					}
-					return item;
-				});
+		// Normalize any { text: "..." } objects into primitive strings
+		// and overwrite with the source array (authoritative).
+		return source.map((item) => {
+			if (item && typeof item === 'object' && 'text' in item) {
+				return item.text;
 			}
-		}
-		// Otherwise, replace with source as-is (arrays are authoritative)
-		return [...source];
+			return item;
+		});
 	}
 	const output = Array.isArray(target) ? [...target] : { ...target };
 	Object.keys(source).forEach(key => {
