@@ -48,7 +48,8 @@
         { "text": "Integrated Logistics Management" }
       ],
       "floatingWords": ["Growth", "Global", "Quality", "Procurement", "Supply Chain"],
-      "companyImage": "/images/company-overview.jpg"
+      "companyImage": "/images/company-overview.jpg",
+      "ctaLabel": "Learn More About Us"
     },
     "sections": {
       "divisions": {
@@ -125,11 +126,23 @@
     },
     "vision": "To be a globally trusted procurement partner...",
     "mission": "To provide reliable, cost-effective sourcing and supply solutions...",
+    "why": [
+      { "title": "Global Sourcing Network", "text": "Direct access to reputed brands and suppliers worldwide" },
+      { "title": "End-to-End Solutions", "text": "Complete procurement and logistics management services" },
+      { "title": "Competitive Pricing", "text": "Cost-effective solutions without compromising quality" },
+      { "title": "Responsive Service", "text": "Quick turnaround times and commitment to deadlines" },
+      { "title": "Industry Expertise", "text": "Experienced team with deep industry-specific knowledge" }
+    ],
     "values": [
       { "title": "Integrity", "description": "We conduct business with honesty, transparency, and ethical practices in all our dealings." },
       { "title": "Global Excellence", "description": "We maintain the highest standards of quality and service across all our operations." },
       { "title": "Partnership", "description": "We build long-term relationships based on trust, collaboration, and mutual success." },
       { "title": "Innovation", "description": "We continuously improve our processes and solutions to meet evolving market needs." }
+    ],
+    "valueAddedServices": [
+      "Supply of Genuine OEM Parts",
+      "Competitive Quotation (RFQ) Response",
+      "Partnership & Collaboration"
     ],
     "achievements": [
       { "number": "500+", "label": "Satisfied Clients" },

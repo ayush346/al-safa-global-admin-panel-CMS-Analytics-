@@ -212,12 +212,22 @@ const Home = () => {
     dragIndexRef.current = null;
   };
 
-  const stats = [
-    { number: "500+", label: "Satisfied Clients", icon: <FiUsers /> },
-    { number: "15+", label: "Years Experience", icon: <FiAward /> },
-    { number: "50+", label: "Global Partners", icon: <FiGlobe /> },
-    { number: "24/7", label: "Support Available", icon: <FiClock /> }
-  ];
+  const stats = Array.isArray(content?.hero?.stats)
+    ? content.hero.stats.map((s) => ({
+        number: toText(s.number),
+        label: toText(s.label),
+        icon: (() => {
+          const m = {
+            users: <FiUsers />,
+            award: <FiAward />,
+            globe: <FiGlobe />,
+            clock: <FiClock />,
+          };
+          const key = String(s.icon || '').toLowerCase();
+          return m[key] || <FiCheckCircle />;
+        })()
+      }))
+    : [];
 
   return (
     <div className="home-page">
@@ -272,23 +282,23 @@ const Home = () => {
               <div className="image-container">
                 <div className={`floating-card card-1 ${cardsScrolled.card1 ? 'scrolled' : ''}`}>
                   <FiTrendingUp />
-                  <span>Growth</span>
+                  <span>{toText(content?.home?.aboutPreview?.floatingWords?.[0] || '')}</span>
                 </div>
                 <div className={`floating-card card-2 ${cardsScrolled.card2 ? 'scrolled' : ''}`}>
                   <FiGlobe />
-                  <span>Global</span>
+                  <span>{toText(content?.home?.aboutPreview?.floatingWords?.[1] || '')}</span>
                 </div>
                 <div className={`floating-card card-3 ${cardsScrolled.card3 ? 'scrolled' : ''}`}>
                   <FiAward />
-                  <span>Quality</span>
+                  <span>{toText(content?.home?.aboutPreview?.floatingWords?.[2] || '')}</span>
                 </div>
                 <div className={`floating-card card-4 ${cardsScrolled.card4 ? 'scrolled' : ''}`}>
                   <FiPackage />
-                  <span>Procurement</span>
+                  <span>{toText(content?.home?.aboutPreview?.floatingWords?.[3] || '')}</span>
                 </div>
                 <div className={`floating-card card-5 ${cardsScrolled.card5 ? 'scrolled' : ''}`}>
                   <FiLink />
-                  <span>Supply Chain</span>
+                  <span>{toText(content?.home?.aboutPreview?.floatingWords?.[4] || '')}</span>
                 </div>
               </div>
             </motion.div>
@@ -301,7 +311,7 @@ const Home = () => {
               transition={{ duration: 0.6, delay: 0.4 }}
             >
               <Link to="/about" className="btn btn-primary">
-                Learn More About Us
+                {toText(content?.home?.aboutPreview?.ctaLabel || '')}
                 <FiArrowRight />
               </Link>
             </motion.div>
@@ -319,9 +329,9 @@ const Home = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 data-cms-key="home.sections.divisions.title">{content?.home?.sections?.divisions?.title || 'Our Business Segments'}</h2>
+            <h2 data-cms-key="home.sections.divisions.title">{toText(content?.home?.sections?.divisions?.title || '')}</h2>
             <p className="section-subtitle" data-cms-key="home.sections.divisions.subtitle">
-              {content?.home?.sections?.divisions?.subtitle || 'Al Safa Global specializes in a wide array of supply and service segments'}
+              {toText(content?.home?.sections?.divisions?.subtitle || '')}
             </p>
           </motion.div>
           
@@ -402,9 +412,9 @@ const Home = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 data-cms-key="home.sections.features.title">{content?.home?.sections?.features?.title || <>Why Choose <span className="gold-text">Al Safa Global</span>?</>}</h2>
+            <h2 data-cms-key="home.sections.features.title">{toText(content?.home?.sections?.features?.title || '')}</h2>
             <p className="section-subtitle" data-cms-key="home.sections.features.subtitle">
-              {content?.home?.sections?.features?.subtitle || 'We combine industry expertise with innovative solutions to deliver exceptional value to our clients'}
+              {toText(content?.home?.sections?.features?.subtitle || '')}
             </p>
           </motion.div>
 
