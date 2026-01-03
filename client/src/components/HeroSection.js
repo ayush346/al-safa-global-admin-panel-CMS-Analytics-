@@ -6,20 +6,20 @@ import './HeroSection.css';
 import { useContent } from '../context/ContentContext';
 
 const HeroSection = () => {
-  const { hero = {} } = useContent();
+  const { content } = useContent();
+  const hero = content?.hero ?? {};
   return (
     <>
       {/* Landing Page Banner Image */}
       <section className="landing-banner">
         <img 
-          src={hero.bannerImage || (process.env.PUBLIC_URL + "/images/hero-landing-image.jpg")} 
-          alt="Al Safa Global - Global Procurement Solutions" 
+          src={hero?.bannerImage?.url ?? ''} 
+          alt={hero?.bannerImage?.alt ?? "Al Safa Global - Global Procurement Solutions"} 
           className="landing-banner-image"
-          onLoad={() => console.log('Hero landing image loaded successfully from:', process.env.PUBLIC_URL + "/images/hero-landing-image.jpg")}
+          onLoad={() => console.log('Hero landing image loaded successfully')}
           onError={(e) => {
             console.error('Error loading hero landing image:', e);
-            console.error('Attempted URL:', hero.bannerImage || (process.env.PUBLIC_URL + "/images/hero-landing-image.jpg"));
-            console.error('PUBLIC_URL:', process.env.PUBLIC_URL);
+            console.error('Attempted URL:', hero?.bannerImage?.url);
           }}
         />
       </section>
@@ -44,8 +44,8 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              <span data-cms-key="hero.titlePrefix">{hero.titlePrefix || 'Welcome to'}</span>{' '}
-              <span className="gradient-text" data-cms-key="hero.brandHighlight">{hero.brandHighlight || 'Al Safa Global'}</span>
+              <span data-cms-key="hero.titlePrefix">{hero.titlePrefix ?? ''}</span>{' '}
+              <span className="gradient-text" data-cms-key="hero.brandHighlight">{hero.brandHighlight ?? ''}</span>
             </motion.h1>
             
             <motion.p 
@@ -54,7 +54,7 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
             >
-              <span data-cms-key="hero.subtitle">{hero.subtitle || 'Your Trusted Partner in Procurement and Supply Chain Solutions'}</span>
+              <span data-cms-key="hero.subtitle">{hero.subtitle ?? ''}</span>
             </motion.p>
             
             <motion.p 
@@ -62,7 +62,7 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 }}
             >
-              {(Array.isArray(hero.paragraphs) && hero.paragraphs[0]) || 'Al Safa Global General Trading FZ LLC is a UAE-based company specializing in comprehensive procurement and supply chain solutions.'}
+              {(Array.isArray(hero.paragraphs) && hero.paragraphs[0]) ?? ''}
             </motion.p>
             
             {/* Mobile-only image display */}
@@ -75,13 +75,13 @@ const HeroSection = () => {
               <div className="hero-image-container">
                 <div className="hero-main-image">
                   <img 
-                    src={hero.mainImage || (process.env.PUBLIC_URL + "/images/global-procurement.png")} 
-                    alt="Global Procurement Solutions" 
+                    src={hero?.mainImage?.url ?? ''} 
+                    alt={hero?.mainImage?.alt ?? "Global Procurement Solutions"} 
                     className="hero-image"
                     onLoad={() => console.log('Mobile global procurement image loaded successfully')}
                     onError={(e) => {
                       console.error('Error loading mobile global procurement image:', e);
-                      console.error('Attempted URL:', hero.mainImage || (process.env.PUBLIC_URL + "/images/global-procurement.png"));
+                      console.error('Attempted URL:', hero?.mainImage?.url);
                     }}
                   />
                 </div>
@@ -95,12 +95,12 @@ const HeroSection = () => {
               transition={{ duration: 0.8, delay: 1.0 }}
             >
               <Link to={(hero.primaryCta?.href || '/contact')} className="btn btn-primary btn-large">
-                {hero.primaryCta?.label || 'Contact Us'}
+                {hero.primaryCta?.label ?? ''}
                 <FiArrowRight />
               </Link>
               
               <Link to={(hero.secondaryCta?.href || '/divisions')} className="btn btn-secondary btn-large">
-                {hero.secondaryCta?.label || 'Explore Our Divisions'}
+                {hero.secondaryCta?.label ?? ''}
                 <FiArrowRight />
               </Link>
             </motion.div>
@@ -111,11 +111,7 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.2 }}
             >
-              {(Array.isArray(hero.stats) ? hero.stats : [
-                { number: '500+', label: 'Satisfied Clients' },
-                { number: '15+', label: 'Years Experience' },
-                { number: '50+', label: 'Global Partners' }
-              ]).map((s, idx) => (
+              {(Array.isArray(hero.stats) ? hero.stats : []).map((s, idx) => (
                 <div className="stat-item" key={`${s.label}-${idx}`}>
                   <span className="stat-number">{s.number}</span>
                   <span className="stat-label">{s.label}</span>
@@ -135,13 +131,13 @@ const HeroSection = () => {
                 <img 
                   data-cms-key="hero.mainImage"
                   data-cms-type="image"
-                  src={hero.mainImage || (process.env.PUBLIC_URL + "/images/global-procurement.png")} 
-                  alt="Global Procurement Solutions" 
+                  src={hero?.mainImage?.url ?? ''} 
+                  alt={hero?.mainImage?.alt ?? "Global Procurement Solutions"} 
                   className="hero-image"
                   onLoad={() => console.log('Desktop global procurement image loaded successfully')}
                   onError={(e) => {
                     console.error('Error loading desktop global procurement image:', e);
-                    console.error('Attempted URL:', hero.mainImage || (process.env.PUBLIC_URL + "/images/global-procurement.png"));
+                    console.error('Attempted URL:', hero?.mainImage?.url);
                   }}
                 />
               </div>

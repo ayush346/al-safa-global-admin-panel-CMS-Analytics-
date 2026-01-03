@@ -11,26 +11,17 @@ import { useContent } from '../context/ContentContext';
 import { toText } from '../utils/cms';
 
 const Footer = () => {
-  const { footer = {} } = useContent();
+  const { content } = useContent();
+  const footer = content?.footer ?? {};
   const currentYear = new Date().getFullYear();
-  const emails = Array.isArray(footer.emails) ? footer.emails : ['info@alsafaglobal.com'];
-  const phones = Array.isArray(footer.phones) ? footer.phones : ['00971 4 3741 969', '00971 50 5671441'];
-  const locationText = footer.locationText || 'Ras Al Khaimah, UAE';
-  const quickLinks = Array.isArray(footer.quickLinks) ? footer.quickLinks : [
-    { label: 'Home', path: '/' },
-    { label: 'About Us', path: '/about' },
-    { label: 'Segments', path: '/divisions' },
-    { label: 'Contact', path: '/contact' }
-  ];
-  const services = Array.isArray(footer.services) ? footer.services : [
-    'Office, Construction & Infrastructure',
-    'Oil & Gas',
-    'Industrial & Manufacturing',
-    'Aviation & Marine',
-    'Defence Sector'
-  ];
-  const footerImage = footer.footerImage || '/images/footer-image.jpg';
-  const legal = footer.legal || 'Al Safa Global General Trading FZ LLC. All rights reserved.';
+  const emails = Array.isArray(footer.emails) ? footer.emails : [];
+  const phones = Array.isArray(footer.phones) ? footer.phones : [];
+  const locationText = footer.locationText ?? '';
+  const quickLinks = Array.isArray(footer.quickLinks) ? footer.quickLinks : [];
+  const services = Array.isArray(footer.services) ? footer.services : [];
+  const footerImage = footer?.footerImage?.url ?? '';
+  const footerImageAlt = footer?.footerImage?.alt ?? 'Al Safa Global';
+  const legal = footer.legal ?? '';
 
   return (
     <footer className="footer">
@@ -126,7 +117,7 @@ const Footer = () => {
             <div className="footer-image-wrapper">
               <img 
                 src={footerImage}
-                alt="Al Safa Global" 
+                alt={footerImageAlt} 
                 className="footer-image"
               />
             </div>

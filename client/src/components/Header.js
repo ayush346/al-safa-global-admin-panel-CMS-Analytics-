@@ -249,13 +249,7 @@ const Header = () => {
     setIsOpen(false);
   }, [location]);
 
-  const navItems = Array.isArray(content?.nav) ? content.nav : [
-    { name: 'Home', path: '/' },
-    { name: 'About Us', path: '/about' },
-    { name: 'Segments', path: '/divisions' },
-    { name: 'Contact', path: '/contact' },
-    { name: 'Admin', path: '/admin' }
-  ];
+  const navItems = Array.isArray(content?.nav) ? content.nav : [];
 
   const isActive = (path) => location.pathname === path;
 
@@ -278,19 +272,19 @@ const Header = () => {
               <div className="logo-container">
                 <div className="logo-icon">
                   <img 
-                    src={content?.site?.logo || (process.env.PUBLIC_URL + "/images/logo.png")}
-                    alt={(content?.site?.name || "Al Safa Global") + " Logo"} 
+                    src={content?.site?.logo?.url ?? ''}
+                    alt={`${content?.site?.name ?? ''} Logo`} 
                     className="logo-image"
                     onLoad={() => console.log('Logo loaded successfully')}
                     onError={(e) => {
                       console.error('Error loading logo:', e);
-                      console.error('Attempted URL:', content?.site?.logo || (process.env.PUBLIC_URL + "/images/logo.png"));
+                      console.error('Attempted URL:', content?.site?.logo?.url);
                     }}
                   />
                 </div>
                 <div className="logo-text-container">
-                  <span className="company-name">{content?.site?.name || 'Al Safa Global'}</span>
-                  <span className="company-tagline">{content?.site?.tagline || 'General Trading FZ LLC'}</span>
+                  <span className="company-name">{content?.site?.name ?? ''}</span>
+                  <span className="company-tagline">{content?.site?.tagline ?? ''}</span>
                 </div>
               </div>
             </Link>

@@ -48,6 +48,174 @@ function mergeDeep(target, source) {
 	return output;
 }
 
+// Normalize images to { url, alt } consistently
+function ensureImage(value) {
+	if (!value) return { url: '', alt: '' };
+	if (typeof value === 'string') return { url: value, alt: '' };
+	if (typeof value === 'object') {
+		const url = typeof value.url === 'string' ? value.url : '';
+		const alt = typeof value.alt === 'string' ? value.alt : '';
+		return { url, alt };
+	}
+	return { url: '', alt: '' };
+}
+
+const imageLikeKeys = new Set([
+	'image','logo','banner','bannerImage','mainImage','footerImage','companyImage','socialImage','brandImage','iconImage'
+]);
+
+// Ensure base structure exists to avoid undefined access
+function baseSkeleton() {
+	return {
+		site: { name: '', tagline: '', logo: { url: '', alt: '' } },
+		seo: { title: '', description: '', keywords: '', socialImage: { url: '', alt: '' } },
+		nav: [],
+		hero: {
+			bannerImage: { url: '', alt: '' },
+			titlePrefix: '',
+			brandHighlight: '',
+			subtitle: '',
+			paragraphs: [],
+			primaryCta: { label: '', href: '' },
+			secondaryCta: { label: '', href: '' },
+			mainImage: { url: '', alt: '' },
+			stats: []
+		},
+		home: {
+			aboutPreview: {
+				title: '',
+				paragraphs: [],
+				floatingWords: [],
+				companyImage: { url: '', alt: '' }
+			},
+			sections: {
+				divisions: { title: '', subtitle: '' },
+				features: { title: '', subtitle: '' }
+			},
+			features: [],
+			divisions: []
+		},
+		about: {
+			heroTitle: '',
+			heroSubtitle: '',
+			introParagraph: '',
+			vision: '',
+			mission: '',
+			values: [],
+			services: [],
+			sectorSolutions: [],
+			valueAddedServices: [],
+			brands: [],
+			why: []
+		},
+		divisions: [],
+		contact: {
+			heroTitle: '',
+			heroSubtitle: '',
+			email: '',
+			phone: '',
+			addressLines: [],
+			businessHours: [],
+			serviceAreas: [],
+			benefits: [],
+			partnershipText: ''
+		},
+		forms: {
+			divisionsOptions: [],
+			inquiryTypes: []
+		},
+		footer: {
+			emails: [],
+			phones: [],
+			locationText: '',
+			quickLinks: [],
+			services: [],
+			footerImage: { url: '', alt: '' },
+			legal: ''
+		}
+	};
+}
+
+// Recursively normalize content to guarantee predictable structures
+function normalizeNode(node, key) {
+	if (node === null || node === undefined) {
+		return undefined;
+	}
+	// images by key hint
+	if (typeof key === 'string' && imageLikeKeys.has(key)) {
+		return ensureImage(node);
+	}
+	if (Array.isArray(node)) {
+		return node.map((item) => normalizeNode(item));
+	}
+	if (typeof node === 'object') {
+		const out = {};
+		Object.keys(node).forEach((k) => {
+			// preserve control flags
+			if (k === '_disabled') {
+				out[k] = !!node[k];
+				return;
+			}
+			out[k] = normalizeNode(node[k], k);
+			// Default arrays/objects if undefined slipped through
+			if (out[k] === undefined) {
+				// If key name hints at image, enforce image object
+				if (imageLikeKeys.has(k)) {
+					out[k] = { url: '', alt: '' };
+				}
+			}
+		});
+		return out;
+	}
+	// primitives remain as-is; strings rule is enforced at consumption via ??
+	return node;
+}
+
+function normalizeContent(input) {
+	// Merge onto base skeleton to fill all required paths
+	const mergedOnSkeleton = mergeDeep(baseSkeleton(), input || {});
+	// Walk to ensure image shapes and nested defaults
+	const normalized = normalizeNode(mergedOnSkeleton);
+	// Final: force arrays to at least [] for known array paths
+	const ensureArray = (obj, path) => {
+		const parts = path.split('.');
+		let cur = obj;
+		for (let i = 0; i < parts.length - 1; i++) {
+			cur[parts[i]] = cur[parts[i]] || {};
+			cur = cur[parts[i]];
+		}
+		const last = parts[parts.length - 1];
+		if (!Array.isArray(cur[last])) cur[last] = [];
+	};
+	[
+		'nav',
+		'hero.paragraphs',
+		'hero.stats',
+		'home.aboutPreview.paragraphs',
+		'home.aboutPreview.floatingWords',
+		'home.features',
+		'home.divisions',
+		'about.values',
+		'about.services',
+		'about.sectorSolutions',
+		'about.valueAddedServices',
+		'about.brands',
+		'about.why',
+		'divisions',
+		'contact.addressLines',
+		'contact.businessHours',
+		'contact.serviceAreas',
+		'contact.benefits',
+		'forms.divisionsOptions',
+		'forms.inquiryTypes',
+		'footer.emails',
+		'footer.phones',
+		'footer.quickLinks',
+		'footer.services'
+	].forEach((p) => ensureArray(normalized, p));
+	return normalized;
+}
+
 export function ContentProvider({ children }) {
 	const [overrides, setOverrides] = useState(null);
 	const API_BASE = process.env.REACT_APP_API_BASE || '';
@@ -85,7 +253,7 @@ export function ContentProvider({ children }) {
 		if (isEditMode && draftOverrides) {
 			base = mergeDeep(base, draftOverrides);
 		}
-		return base;
+		return normalizeContent(base);
 	}, [overrides, isEditMode, draftOverrides]);
 	const value = useMemo(() => ({ content: merged }), [merged]);
 	return (
