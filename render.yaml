@@ -11,14 +11,9 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      # Link frontend URL to CORS automatically
-      - key: CLIENT_URL_PROD
-        fromService:
-          type: web
-          name: al-safa-global-frontend
-          property: url
       # Set these in Render dashboard (or via secrets) as needed:
       # - key: MONGODB_URI_PROD
+      # - key: CLIENT_URL_PROD        # set to your frontend URL (https://...)
       # - key: EMAIL_HOST
       # - key: EMAIL_PORT
       # - key: EMAIL_USER
@@ -35,10 +30,5 @@ services:
     startCommand: npx serve -s build -l $PORT
     autoDeploy: true
     envVars:
-      # Point the frontend to the backend's public URL
-      - key: REACT_APP_API_BASE
-        fromService:
-          type: web
-          name: al-safa-global-backend
-          property: url
+      # - key: REACT_APP_API_BASE     # set to your backend URL (https://...)
 
