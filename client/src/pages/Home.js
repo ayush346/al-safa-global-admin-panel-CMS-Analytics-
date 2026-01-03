@@ -136,44 +136,7 @@ const Home = () => {
     'users': <FiUsers />,
     'shield': <FiShield />
   };
-  const initialFeaturesRaw = Array.isArray(content?.home?.features) ? content.home.features : [
-    {
-      icon: 'globe',
-      title: "Global Sourcing Network",
-      description: "Direct access to reputed brands and suppliers worldwide for comprehensive procurement solutions."
-    },
-    {
-      icon: 'truck',
-      title: "End-to-End Solutions",
-      description: "Complete procurement and logistics management from sourcing to delivery coordination."
-    },
-    {
-      icon: 'trending-up',
-      title: "Competitive Pricing",
-      description: "Cost-effective sourcing without compromising on quality or authenticity of products."
-    },
-    {
-      icon: 'clock',
-      title: "Timely Delivery",
-      description: "Committed to meeting project deadlines and operational schedules with responsive turnaround."
-    },
-    {
-      icon: 'users',
-      title: "Industry Expertise",
-      description: "Experienced team with deep industry-specific knowledge across multiple sectors."
-    },
-    {
-      icon: 'shield',
-      title: "Quality Assurance",
-      description: "Rigorous quality control and genuine OEM parts guarantee for all products and services."
-    }
-  ];
   const mapFeatureIcon = (iconKey) => iconMap[iconKey] || <FiCheckCircle />;
-  const initialFeatures = initialFeaturesRaw.map(f => ({
-    icon: mapFeatureIcon(f.icon),
-    title: f.title,
-    description: f.description
-  }));
   const serializeFeature = (f, idx) => ({
     icon: (typeof f.icon === 'string' ? f.icon : (content?.home?.features?.[idx]?.icon || '')),
     title: f.title,
@@ -184,7 +147,13 @@ const Home = () => {
     title: toText(f.title),
     description: toText(f.description)
   });
-  const [features, setFeatures] = useDraftList('home.features', initialFeatures, serializeFeature, deserializeFeature);
+  // Phase-2 CMS migration — Home Features now fully CMS-driven with no static fallback.
+  const featuresCMS = Array.isArray(content?.home?.features)
+    ? content.home.features.map(deserializeFeature)
+    : [];
+  // Keep draft for edit mode authoring, seeded from current CMS data
+  const [featuresDraft, setFeaturesDraft] = useDraftList('home.features', featuresCMS, serializeFeature, deserializeFeature);
+  const featuresToRender = isEditMode ? featuresDraft : featuresCMS;
 
   const handleAddFeature = () => {
     setFeatures(prev => ([
@@ -245,14 +214,24 @@ const Home = () => {
       link: '/divisions#defence'
     }
   ];
-  const initialDivisions = (
-    (Array.isArray(content?.divisions) && content.divisions.length > 0)
-      ? content.divisions
-      : (Array.isArray(content?.home?.divisions) && content.home.divisions.length > 0
-          ? content.home.divisions
-          : fallbackDivisions)
+  // Phase-4 CMS migration — Home Divisions is now fully CMS-driven with no static fallback.
+  const deserializeDivision = (d) => ({
+    id: d?.id || '',
+    title: toText(d?.title),
+    description: toText(d?.description),
+    icon: d?.icon,
+    color: d?.color,
+    link: d?.link
+  });
+  const divisionsCMS = (Array.isArray(content?.home?.divisions) ? content.home.divisions : []).map(deserializeDivision);
+  // Keep draft for edit mode authoring; viewers render LIVE CMS (with fallback)
+  const [divisions, setDivisions] = useDraftList(
+    'home.divisions',
+    divisionsCMS,
+    (d) => ({ id: d.id, title: d.title, description: d.description, icon: d.icon, color: d.color, link: d.link }),
+    deserializeDivision
   );
-  const [divisions, setDivisions] = useDraftList('home.divisions', initialDivisions, (d) => ({ ...d }), (d) => ({ ...d }));
+  const divisionsToRender = isEditMode ? divisions : divisionsCMS;
   const dragIndexRef = useRef(null);
 
   const handleAddDivision = () => {
@@ -298,6 +277,12 @@ const Home = () => {
     { number: "24/7", label: "Support Available", icon: <FiClock /> }
   ];
 
+  // Phase-6 CMS migration — Home About Preview is now fully CMS-driven with no static fallback.
+  const aboutPreview = content?.home?.aboutPreview || null;
+  const aboutTitle = toText(aboutPreview?.title);
+  const aboutParagraphs = Array.isArray(aboutPreview?.paragraphs) ? aboutPreview.paragraphs : [];
+  const aboutCompanyImage = aboutPreview?.companyImage;
+
   return (
     <div className="home-page">
       {/* 1. Hero Section - Welcoming */}
@@ -315,10 +300,10 @@ const Home = () => {
             >
               <h2>
                 <span data-cms-key="home.aboutPreview.title">
-                  {content?.home?.aboutPreview?.title || <>About <span className="gold-text">Al Safa Global</span></>}
+                  {aboutTitle}
                 </span>
               </h2>
-              {(content?.home?.aboutPreview?.paragraphs || []).slice(0, 3).map((p, i) => (
+              {aboutParagraphs.slice(0, 3).map((p, i) => (
                 <p key={i} data-cms-key={`home.aboutPreview.paragraphs.${i}`}>{toText(p)}</p>
               ))}
               <div className="about-features">
@@ -348,7 +333,7 @@ const Home = () => {
                 <img 
                   data-cms-key="home.aboutPreview.companyImage"
                   data-cms-type="image"
-                  src={content?.home?.aboutPreview?.companyImage || "/images/company-overview.jpg"} 
+                  src={aboutCompanyImage} 
                   alt="Al Safa Global Company Overview" 
                   className="company-overview-image"
                 />
@@ -404,9 +389,9 @@ const Home = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 data-cms-key="home.sections.divisions.title">{content?.home?.sections?.divisions?.title || 'Our Business Segments'}</h2>
+            <h2 data-cms-key="home.sections.divisions.title">{toText(content?.home?.sections?.divisions?.title)}</h2>
             <p className="section-subtitle" data-cms-key="home.sections.divisions.subtitle">
-              {content?.home?.sections?.divisions?.subtitle || 'Al Safa Global specializes in a wide array of supply and service segments'}
+              {toText(content?.home?.sections?.divisions?.subtitle)}
             </p>
           </motion.div>
           
@@ -419,7 +404,7 @@ const Home = () => {
           )}
 
           <div className="divisions-grid" data-cms-list="home.divisions">
-            {divisions.map((division, index) => {
+            {divisionsToRender.map((division, index) => {
               const key = `home:division:${division.id}`;
               const disabled = isDisabled(key);
               const persistDisabled = !!division?._disabled;
@@ -502,7 +487,7 @@ const Home = () => {
           )}
 
           <div className="features-grid" data-cms-list="home.features">
-            {features.map((feature, index) => {
+            {featuresToRender.map((feature, index) => {
               const key = `home:feature:${index}`;
               const disabled = isDisabled(key);
               const persistDisabled = !!feature?._disabled;

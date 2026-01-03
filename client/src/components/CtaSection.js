@@ -4,12 +4,22 @@ import { Link } from 'react-router-dom';
 import { FiArrowRight } from 'react-icons/fi';
 import './CtaSection.css';
 import { useContent } from '../context/ContentContext';
+import { toText } from '../utils/cms';
 
 const CtaSection = () => {
   const { home = {} } = useContent();
+  // Phase-8 CMS migration — Home CTA is now fully CMS-driven with no static fallback.
   const cta = home.cta || {};
-  const primary = cta.primary || { label: 'Get a Quote', href: '/quote' };
-  const secondary = cta.secondary || { label: 'Explore Our Divisions', href: '/divisions' };
+  const title = toText(cta.title);
+  const text = toText(cta.text);
+  const primary = {
+    label: toText(cta.primary?.label),
+    href: toText(cta.primary?.href)
+  };
+  const secondary = {
+    label: toText(cta.secondary?.label),
+    href: toText(cta.secondary?.href)
+  };
   return (
     <section className="cta-section">
       <div className="container">
@@ -20,9 +30,9 @@ const CtaSection = () => {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h2 data-cms-key="home.cta.title">{cta.title || 'Ready to Get Started?'}</h2>
+          <h2 data-cms-key="home.cta.title">{title}</h2>
           <p data-cms-key="home.cta.text">
-            {cta.text || "Let's discuss how Al Safa Global can help you with your procurement and supply chain needs."}
+            {text}
           </p>
           <div className="cta-buttons">
             <Link to={primary.href} className="btn btn-primary">
