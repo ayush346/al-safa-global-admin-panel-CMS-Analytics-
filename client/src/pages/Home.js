@@ -136,38 +136,7 @@ const Home = () => {
     'users': <FiUsers />,
     'shield': <FiShield />
   };
-  const initialFeaturesRaw = Array.isArray(content?.home?.features) ? content.home.features : [
-    {
-      icon: 'globe',
-      title: "Global Sourcing Network",
-      description: "Direct access to reputed brands and suppliers worldwide for comprehensive procurement solutions."
-    },
-    {
-      icon: 'truck',
-      title: "End-to-End Solutions",
-      description: "Complete procurement and logistics management from sourcing to delivery coordination."
-    },
-    {
-      icon: 'trending-up',
-      title: "Competitive Pricing",
-      description: "Cost-effective sourcing without compromising on quality or authenticity of products."
-    },
-    {
-      icon: 'clock',
-      title: "Timely Delivery",
-      description: "Committed to meeting project deadlines and operational schedules with responsive turnaround."
-    },
-    {
-      icon: 'users',
-      title: "Industry Expertise",
-      description: "Experienced team with deep industry-specific knowledge across multiple sectors."
-    },
-    {
-      icon: 'shield',
-      title: "Quality Assurance",
-      description: "Rigorous quality control and genuine OEM parts guarantee for all products and services."
-    }
-  ];
+  const initialFeaturesRaw = Array.isArray(content?.home?.features) ? content.home.features : [];
   const mapFeatureIcon = (iconKey) => iconMap[iconKey] || <FiCheckCircle />;
   const initialFeatures = initialFeaturesRaw.map(f => ({
     icon: mapFeatureIcon(f.icon),
@@ -203,55 +172,7 @@ const Home = () => {
     });
   };
 
-  const fallbackDivisions = [
-    {
-      id: 'office-construction',
-      title: 'Office, Construction & Infrastructure',
-      description: 'End-to-end supply for office fit-outs, construction materials and infrastructure projects.',
-      icon: '🏗️',
-      color: 'var(--primary-blue)',
-      link: '/divisions#office-construction'
-    },
-    {
-      id: 'oil-gas',
-      title: 'Oil & Gas',
-      description: 'Equipment, spares and consumables for upstream and downstream operations.',
-      icon: '🛢️',
-      color: 'var(--primary-gold)',
-      link: '/divisions#oil-gas'
-    },
-    {
-      id: 'industrial-manufacturing',
-      title: 'Industrial & Manufacturing',
-      description: 'MRO, tooling, machinery spares and production consumables.',
-      icon: '🏭',
-      color: 'var(--primary-blue)',
-      link: '/divisions#industrial-manufacturing'
-    },
-    {
-      id: 'aviation-marine',
-      title: 'Aviation & Marine',
-      description: 'Specialized parts and supplies for aviation, marine and shipping.',
-      icon: '✈️',
-      color: 'var(--primary-gold)',
-      link: '/divisions#aviation-marine'
-    },
-    {
-      id: 'defence',
-      title: 'Defence Sector',
-      description: 'Trusted sourcing for mission‑critical and compliant defence supplies.',
-      icon: '🛡️',
-      color: 'var(--primary-blue)',
-      link: '/divisions#defence'
-    }
-  ];
-  const initialDivisions = (
-    (Array.isArray(content?.divisions) && content.divisions.length > 0)
-      ? content.divisions
-      : (Array.isArray(content?.home?.divisions) && content.home.divisions.length > 0
-          ? content.home.divisions
-          : fallbackDivisions)
-  );
+  const initialDivisions = Array.isArray(content?.home?.divisions) ? content.home.divisions : [];
   const [divisions, setDivisions] = useDraftList('home.divisions', initialDivisions, (d) => ({ ...d }), (d) => ({ ...d }));
   const dragIndexRef = useRef(null);
 
@@ -315,25 +236,19 @@ const Home = () => {
             >
               <h2>
                 <span data-cms-key="home.aboutPreview.title">
-                  {content?.home?.aboutPreview?.title || <>About <span className="gold-text">Al Safa Global</span></>}
+                  {content?.home?.aboutPreview?.title || ''}
                 </span>
               </h2>
               {(content?.home?.aboutPreview?.paragraphs || []).slice(0, 3).map((p, i) => (
                 <p key={i} data-cms-key={`home.aboutPreview.paragraphs.${i}`}>{toText(p)}</p>
               ))}
               <div className="about-features">
-                <div className="feature-item">
-                  <FiCheckCircle className="feature-icon" />
-                  <span>End-to-End Procurement Solutions</span>
-                </div>
-                <div className="feature-item">
-                  <FiCheckCircle className="feature-icon" />
-                  <span>Global Sourcing & Supply</span>
-                </div>
-                <div className="feature-item">
-                  <FiCheckCircle className="feature-icon" />
-                  <span>Integrated Logistics Management</span>
-                </div>
+                {(content?.home?.aboutPreview?.featureBullets || []).map((b, i) => (
+                  <div className="feature-item" key={i} data-cms-item>
+                    <FiCheckCircle className="feature-icon" />
+                    <span data-cms-field="text">{toText(b)}</span>
+                  </div>
+                ))}
               </div>
             </motion.div>
 

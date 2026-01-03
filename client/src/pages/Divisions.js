@@ -207,7 +207,7 @@ const Divisions = () => {
               </div>
               
               <div className="division-items-container">
-                <h3>Our Products & Services Include:</h3>
+                <h3 data-cms-key="divisions.itemsHeading">{toText(content?.divisionsItemsHeading || '')}</h3>
                 {isEditMode && (
                   <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '0.5rem' }} contentEditable={false}>
                     <button

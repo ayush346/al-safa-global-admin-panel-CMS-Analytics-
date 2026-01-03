@@ -42,6 +42,11 @@
         "We partner with globally recognized brands and supply high-quality products that meet international standards. Whether supporting complex industrial projects, critical defense requirements, specialized marine and aerospace needs, or everyday office and IT demands, we ensure reliable and efficient sourcing for our clients worldwide.",
         "Our strength lies in delivering cost-effective, timely, and dependable procurement solutions, backed by a deep understanding of market dynamics and logistical challenges. We position ourselves as a trusted partner — committed to helping clients achieve operational efficiency, project success, and sustainable growth."
       ],
+      "featureBullets": [
+        { "text": "End-to-End Procurement Solutions" },
+        { "text": "Global Sourcing & Supply" },
+        { "text": "Integrated Logistics Management" }
+      ],
       "floatingWords": ["Growth", "Global", "Quality", "Procurement", "Supply Chain"],
       "companyImage": "/images/company-overview.jpg"
     },
@@ -110,6 +115,14 @@
     "heroTitle": "About Al Safa Global",
     "heroSubtitle": "Trusted procurement and supply chain partner across multiple industries in the UAE and beyond.",
     "introParagraph": "Al Safa Global General Trading FZ LLC is a UAE-based company specializing in comprehensive procurement and supply chain solutions.",
+    "sectionTitles": {
+      "coreValues": "Our Core Values",
+      "whyChooseUs": "Why Choose Al Safa Global?",
+      "coreServices": "Core Procurement & Supply Chain Services",
+      "sectorSolutions": "Sector-Specific Supply Solutions",
+      "valueAddedServices": "Value-Added Services",
+      "trustedBrands": "Trusted Brand Partners"
+    },
     "vision": "To be a globally trusted procurement partner...",
     "mission": "To provide reliable, cost-effective sourcing and supply solutions...",
     "values": [
@@ -241,9 +254,33 @@
       ]
     }
   ],
+  "divisionsItemsHeading": "Our Products & Services Include:",
   "contact": {
     "heroTitle": "Contact Al Safa Global",
     "heroSubtitle": "We would love to hear from you. For all inquiries, business proposals, or partnership opportunities, please reach out to us.",
+    "introText": "Al Safa Global General Trading FZ LLC is your trusted partner in procurement and supply chain solutions. We're here to help you with all your business needs across multiple industries and sectors.",
+    "sectionTitles": {
+      "getInTouch": "Get In Touch",
+      "sendMessage": "Send us a Message"
+    },
+    "labels": {
+      "emailHeading": "Email",
+      "emailCaption": "For business inquiries and partnerships",
+      "phoneHeading": "Phone",
+      "phoneCaption": "Available during business hours",
+      "addressHeading": "Head Office Address",
+      "hoursHeading": "Business Hours",
+      "serviceAreasHeading": "Service Areas",
+      "partnershipHeading": "Partnership Opportunities",
+      "partnershipCaption": "Contact us to discuss potential partnerships",
+      "formIntro": "Fill out the form below and click \"Send Message\" to open your email client with a pre-filled message.",
+      "successTitle": "Email Client Opened!",
+      "successText": "Your default email client should have opened with a pre-filled message. Please review and send the email to info@alsafaglobal.com",
+      "errorTitle": "Something went wrong",
+      "errorText": "Please try again or contact us directly at info@alsafaglobal.com",
+      "sendMessage": "Send Message",
+      "openingEmail": "Opening Email..."
+    },
     "email": "info@alsafaglobal.com",
     "phone": "00971 4 3741 969",
     "addressLines": [
