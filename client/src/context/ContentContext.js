@@ -3,7 +3,8 @@ import contentData from '../content.json';
 import { useEditMode } from './EditModeContext';
 import { draftStore } from '../utils/draftStore';
 
-const ContentContext = createContext({ content: contentData });
+// Provide empty content by default; avoid build-time content unless API is missing.
+const ContentContext = createContext({ content: {} });
 
 // Defined outside the component so it's stable and linter-friendly
 function mergeDeep(target, source) {
@@ -69,7 +70,11 @@ export function ContentProvider({ children }) {
 	}, [isEditMode]);
 
 	const merged = useMemo(() => {
-		let base = mergeDeep(contentData, overrides);
+		// Prefer live overrides from API; fallback to build-time content only if API has no data
+		let base = mergeDeep({}, overrides || {});
+		if (!overrides || Object.keys(overrides || {}).length === 0) {
+			base = mergeDeep(base, contentData);
+		}
 		if (isEditMode && draftOverrides) {
 			base = mergeDeep(base, draftOverrides);
 		}
@@ -84,7 +89,7 @@ export function ContentProvider({ children }) {
 }
 
 export function useContent() {
-	return useContext(ContentContext).content || contentData;
+	return useContext(ContentContext).content || {};
 }
 
 

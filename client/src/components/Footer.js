@@ -13,24 +13,13 @@ import { toText } from '../utils/cms';
 const Footer = () => {
   const { footer = {} } = useContent();
   const currentYear = new Date().getFullYear();
-  const emails = Array.isArray(footer.emails) ? footer.emails : ['info@alsafaglobal.com'];
-  const phones = Array.isArray(footer.phones) ? footer.phones : ['00971 4 3741 969', '00971 50 5671441'];
-  const locationText = footer.locationText || 'Ras Al Khaimah, UAE';
-  const quickLinks = Array.isArray(footer.quickLinks) ? footer.quickLinks : [
-    { label: 'Home', path: '/' },
-    { label: 'About Us', path: '/about' },
-    { label: 'Segments', path: '/divisions' },
-    { label: 'Contact', path: '/contact' }
-  ];
-  const services = Array.isArray(footer.services) ? footer.services : [
-    'Office, Construction & Infrastructure',
-    'Oil & Gas',
-    'Industrial & Manufacturing',
-    'Aviation & Marine',
-    'Defence Sector'
-  ];
-  const footerImage = footer.footerImage || '/images/footer-image.jpg';
-  const legal = footer.legal || 'Al Safa Global General Trading FZ LLC. All rights reserved.';
+  const emails = Array.isArray(footer.emails) ? footer.emails : [];
+  const phones = Array.isArray(footer.phones) ? footer.phones : [];
+  const locationText = footer.locationText;
+  const quickLinks = Array.isArray(footer.quickLinks) ? footer.quickLinks : [];
+  const services = Array.isArray(footer.services) ? footer.services : [];
+  const footerImage = footer.footerImage;
+  const legal = footer.legal;
 
   return (
     <footer className="footer">
@@ -71,7 +60,7 @@ const Footer = () => {
               </div>
               <div className="contact-item">
                 <FiMapPin className="contact-icon" />
-                <span data-cms-key="footer.locationText">{locationText}</span>
+                {locationText && <span data-cms-key="footer.locationText">{locationText}</span>}
               </div>
             </div>
           </motion.div>
@@ -124,11 +113,13 @@ const Footer = () => {
             viewport={{ once: true }}
           >
             <div className="footer-image-wrapper">
+              {footerImage && (
               <img 
                 src={footerImage}
                 alt="Al Safa Global" 
                 className="footer-image"
               />
+              )}
             </div>
           </motion.div>
         </div>
@@ -142,7 +133,7 @@ const Footer = () => {
           viewport={{ once: true }}
         >
           <div className="footer-bottom-content">
-            <p>&copy; {currentYear} <span data-cms-key="footer.legal">{legal}</span></p>
+            <p>&copy; {currentYear} {legal && <span data-cms-key="footer.legal">{legal}</span>}</p>
           </div>
         </motion.div>
       </div>
