@@ -44,8 +44,8 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
             >
-              {hero.titlePrefix && <span data-cms-key="hero.titlePrefix">{hero.titlePrefix}</span>}{' '}
-              {hero.brandHighlight && <span className="gradient-text" data-cms-key="hero.brandHighlight">{hero.brandHighlight}</span>}
+              <span data-cms-key="hero.titlePrefix">{hero.titlePrefix || 'Welcome to'}</span>{' '}
+              <span className="gradient-text" data-cms-key="hero.brandHighlight">{hero.brandHighlight || 'Al Safa Global'}</span>
             </motion.h1>
             
             <motion.p 
@@ -54,7 +54,7 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
             >
-              {hero.subtitle && <span data-cms-key="hero.subtitle">{hero.subtitle}</span>}
+              <span data-cms-key="hero.subtitle">{hero.subtitle || 'Your Trusted Partner in Procurement and Supply Chain Solutions'}</span>
             </motion.p>
             
             <motion.p 
@@ -62,7 +62,7 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 }}
             >
-              {(Array.isArray(hero.paragraphs) && hero.paragraphs[0])}
+              {(Array.isArray(hero.paragraphs) && hero.paragraphs[0]) || 'Al Safa Global General Trading FZ LLC is a UAE-based company specializing in comprehensive procurement and supply chain solutions.'}
             </motion.p>
             
             {/* Mobile-only image display */}
@@ -94,18 +94,15 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.0 }}
             >
-              {hero.primaryCta?.href && hero.primaryCta?.label && (
-                <Link to={hero.primaryCta.href} className="btn btn-primary btn-large">
-                  {hero.primaryCta.label}
-                  <FiArrowRight />
-                </Link>
-              )}
-              {hero.secondaryCta?.href && hero.secondaryCta?.label && (
-                <Link to={hero.secondaryCta.href} className="btn btn-secondary btn-large">
-                  {hero.secondaryCta.label}
-                  <FiArrowRight />
-                </Link>
-              )}
+              <Link to={(hero.primaryCta?.href || '/contact')} className="btn btn-primary btn-large">
+                {hero.primaryCta?.label || 'Contact Us'}
+                <FiArrowRight />
+              </Link>
+              
+              <Link to={(hero.secondaryCta?.href || '/divisions')} className="btn btn-secondary btn-large">
+                {hero.secondaryCta?.label || 'Explore Our Divisions'}
+                <FiArrowRight />
+              </Link>
             </motion.div>
             
             <motion.div 
@@ -114,7 +111,11 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.2 }}
             >
-              {(Array.isArray(hero.stats) ? hero.stats : []).map((s, idx) => (
+              {(Array.isArray(hero.stats) ? hero.stats : [
+                { number: '500+', label: 'Satisfied Clients' },
+                { number: '15+', label: 'Years Experience' },
+                { number: '50+', label: 'Global Partners' }
+              ]).map((s, idx) => (
                 <div className="stat-item" key={`${s.label}-${idx}`}>
                   <span className="stat-number">{s.number}</span>
                   <span className="stat-label">{s.label}</span>

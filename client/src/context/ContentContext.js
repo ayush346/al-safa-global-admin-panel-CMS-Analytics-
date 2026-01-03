@@ -3,21 +3,32 @@ import contentData from '../content.json';
 import { useEditMode } from './EditModeContext';
 import { draftStore } from '../utils/draftStore';
 
-// Provide empty content by default; avoid build-time content unless API is missing.
-const ContentContext = createContext({ content: {} });
+const ContentContext = createContext({ content: contentData });
 
 // Defined outside the component so it's stable and linter-friendly
 function mergeDeep(target, source) {
 	if (!source) return target;
 	if (Array.isArray(source)) {
-		// Normalize any { text: "..." } objects into primitive strings
-		// and overwrite with the source array (authoritative).
-		return source.map((item) => {
-			if (item && typeof item === 'object' && 'text' in item) {
-				return item.text;
+		// If source is an array of objects of the form { text: "..." }, normalize to primitives.
+		const allTextObjects = source.every((item) => item && typeof item === 'object' && 'text' in item);
+		if (allTextObjects) {
+			return source.map((item) => item && typeof item === 'object' ? item.text : item);
+		}
+		// If the target is an array of primitives (strings/numbers),
+		// and the source is an array of objects with { text }, normalize to primitives.
+		if (Array.isArray(target) && target.length > 0) {
+			const targetIsPrimitiveArray = typeof target[0] !== 'object' || target[0] === null;
+			if (targetIsPrimitiveArray) {
+				return source.map((item) => {
+					if (item && typeof item === 'object' && 'text' in item) {
+						return item.text;
+					}
+					return item;
+				});
 			}
-			return item;
-		});
+		}
+		// Otherwise, replace with source as-is (arrays are authoritative)
+		return [...source];
 	}
 	const output = Array.isArray(target) ? [...target] : { ...target };
 	Object.keys(source).forEach(key => {
@@ -70,11 +81,7 @@ export function ContentProvider({ children }) {
 	}, [isEditMode]);
 
 	const merged = useMemo(() => {
-		// Prefer live overrides from API; fallback to build-time content only if API has no data
-		let base = mergeDeep({}, overrides || {});
-		if (!overrides || Object.keys(overrides || {}).length === 0) {
-			base = mergeDeep(base, contentData);
-		}
+		let base = mergeDeep(contentData, overrides);
 		if (isEditMode && draftOverrides) {
 			base = mergeDeep(base, draftOverrides);
 		}
@@ -89,7 +96,7 @@ export function ContentProvider({ children }) {
 }
 
 export function useContent() {
-	return useContext(ContentContext).content || {};
+	return useContext(ContentContext).content || contentData;
 }
 
 

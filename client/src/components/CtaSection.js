@@ -8,8 +8,8 @@ import { useContent } from '../context/ContentContext';
 const CtaSection = () => {
   const { home = {} } = useContent();
   const cta = home.cta || {};
-  const primary = cta.primary;
-  const secondary = cta.secondary;
+  const primary = cta.primary || { label: 'Get a Quote', href: '/quote' };
+  const secondary = cta.secondary || { label: 'Explore Our Divisions', href: '/divisions' };
   return (
     <section className="cta-section">
       <div className="container">
@@ -20,30 +20,20 @@ const CtaSection = () => {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          {cta.title && <h2 data-cms-key="home.cta.title">{cta.title}</h2>}
-          {cta.text && (
-            <p data-cms-key="home.cta.text">
-              {cta.text}
-            </p>
-          )}
+          <h2 data-cms-key="home.cta.title">{cta.title || 'Ready to Get Started?'}</h2>
+          <p data-cms-key="home.cta.text">
+            {cta.text || "Let's discuss how Al Safa Global can help you with your procurement and supply chain needs."}
+          </p>
           <div className="cta-buttons">
-            {primary?.href && primary?.label && (
-              <>
-                <Link to={primary.href} className="btn btn-primary">
-                  <span data-cms-key="home.cta.primary.label">{primary.label}</span>
-                  <FiArrowRight />
-                </Link>
-                <span style={{ display: 'none' }} data-cms-key="home.cta.primary.href">{primary.href}</span>
-              </>
-            )}
-            {secondary?.href && secondary?.label && (
-              <>
-                <Link to={secondary.href} className="btn btn-outline">
-                  <span data-cms-key="home.cta.secondary.label">{secondary.label}</span>
-                </Link>
-                <span style={{ display: 'none' }} data-cms-key="home.cta.secondary.href">{secondary.href}</span>
-              </>
-            )}
+            <Link to={primary.href} className="btn btn-primary">
+              <span data-cms-key="home.cta.primary.label">{primary.label}</span>
+              <FiArrowRight />
+            </Link>
+            <span style={{ display: 'none' }} data-cms-key="home.cta.primary.href">{primary.href}</span>
+            <Link to={secondary.href} className="btn btn-outline">
+              <span data-cms-key="home.cta.secondary.label">{secondary.label}</span>
+            </Link>
+            <span style={{ display: 'none' }} data-cms-key="home.cta.secondary.href">{secondary.href}</span>
           </div>
         </motion.div>
       </div>

@@ -122,16 +122,12 @@ Submitted on: ${new Date().toLocaleString()}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            {contact?.heroTitle && (
               <h1 className="gradient-text" data-cms-key="contact.heroTitle">
-                {contact.heroTitle}
-              </h1>
-            )}
-            {contact?.heroSubtitle && (
+              {contact?.heroTitle || <>Contact <span className="gold-text">Al Safa Global</span></>}
+            </h1>
               <p className="hero-subtitle" data-cms-key="contact.heroSubtitle">
-                {contact.heroSubtitle}
-              </p>
-            )}
+              {contact?.heroSubtitle || "We would love to hear from you. For all inquiries, business proposals, or partnership opportunities, please reach out to us."}
+            </p>
           </motion.div>
         </div>
       </section>
@@ -157,13 +153,11 @@ Submitted on: ${new Date().toLocaleString()}
                   <FiMail className="contact-icon" />
                   <div>
                     <h4>Email</h4>
-                    {contact?.email && (
-                      <p>
-                        <a href={`mailto:${contact.email}`} className="contact-link" data-cms-key="contact.email">
-                          {contact.email}
-                        </a>
-                      </p>
-                    )}
+                    <p>
+                      <a href={`mailto:${contact?.email || 'info@alsafaglobal.com'}`} className="contact-link" data-cms-key="contact.email">
+                        {contact?.email || 'info@alsafaglobal.com'}
+                      </a>
+                    </p>
                     <p>For business inquiries and partnerships</p>
                   </div>
                 </div>
@@ -172,13 +166,11 @@ Submitted on: ${new Date().toLocaleString()}
                   <FiPhone className="contact-icon" />
                   <div>
                     <h4>Phone</h4>
-                    {contact?.phone && (
-                      <p>
-                        <a href={`tel:${(contact.phone || '').replace(/\s/g, '')}`} className="contact-link" data-cms-key="contact.phone">
-                          {contact.phone}
-                        </a>
-                      </p>
-                    )}
+                    <p>
+                      <a href={`tel:${(contact?.phone || '00971 4 3741 969').replace(/\\s/g, '')}`} className="contact-link" data-cms-key="contact.phone">
+                        {contact?.phone || '00971 4 3741 969'}
+                      </a>
+                    </p>
                     <p>Available during business hours</p>
                   </div>
                 </div>
@@ -190,9 +182,7 @@ Submitted on: ${new Date().toLocaleString()}
                     <p>
                       <span data-cms-key="contact.addressLines" style={{ display: 'none' }} />
                       {(contact?.addressLines || []).map((line, i) => (<React.Fragment key={i}>{toText(line)}<br /></React.Fragment>))}
-                      {contact?.phone && (
-                        <a href={`tel:${(contact.phone || '').replace(/\s/g, '')}`} style={{ color: 'inherit', textDecoration: 'underline' }}>{contact.phone}</a>
-                      )}
+                      <a href={`tel:${(contact?.phone || '00971 4 3741 969').replace(/\\s/g, '')}`} style={{ color: 'inherit', textDecoration: 'underline' }}>{contact?.phone || '00971 4 3741 969'}</a>
                     </p>
                   </div>
                 </div>
@@ -223,7 +213,7 @@ Submitted on: ${new Date().toLocaleString()}
                   <FiUsers className="contact-icon" />
                   <div>
                     <h4>Partnership Opportunities</h4>
-                    {contact?.partnershipText && <p>{contact.partnershipText}</p>}
+                    <p>{contact?.partnershipText || 'We welcome collaboration with suppliers, manufacturers, and business partners worldwide'}</p>
                     <p>Contact us to discuss potential partnerships</p>
                   </div>
                 </div>

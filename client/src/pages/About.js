@@ -44,7 +44,12 @@ const About = () => {
     }
   }, [brandsInView, brandsAnimated]);
 
-  const initialValues = (Array.isArray(about.values) ? about.values.map(v => ({ title: v.title, description: v.description })) : []);
+  const initialValues = (Array.isArray(about.values) ? about.values.map(v => ({ title: v.title, description: v.description })) : [
+    { title: "Integrity", description: "We conduct business with honesty, transparency, and ethical practices in all our dealings." },
+    { title: "Global Excellence", description: "We maintain the highest standards of quality and service across all our operations." },
+    { title: "Partnership", description: "We build long-term relationships based on trust, collaboration, and mutual success." },
+    { title: "Innovation", description: "We continuously improve our processes and solutions to meet evolving market needs." }
+  ]);
   const [values, setValues] = useDraftList('about.values', initialValues, (v) => ({ title: toText(v.title), description: toText(v.description) }), (v) => ({ title: toText(v.title), description: toText(v.description) }));
 
   const handleAddValue = () => {
@@ -66,16 +71,44 @@ const About = () => {
 
   const initialAchievements = (Array.isArray(about.achievements)
     ? about.achievements.map(a => ({ ...a, icon: <FiAward /> }))
-    : []);
+    : [
+      { number: "500+", label: "Satisfied Clients", icon: <FiUsers /> },
+      { number: "15+", label: "Years Experience", icon: <FiClock /> },
+      { number: "50+", label: "Global Partners", icon: <FiGlobe /> },
+      { number: "100%", label: "Quality Assurance", icon: <FiAward /> }
+    ]);
   const [achievements, setAchievements] = React.useState(initialAchievements);
 
-  const initialServices = Array.isArray(about.services) ? about.services : [];
+  const initialServices = Array.isArray(about.services) ? about.services : [
+    "End-to-End Procurement Solutions",
+    "Global Sourcing & Supply",
+    "Integrated Logistics Management",
+    "Cost-Effective Sourcing",
+    "Timely & Reliable Delivery",
+    "Industry-Specific Procurement Expertise",
+    "Supplier Management",
+    "Operational Procurement Support",
+    "Project Procurement Support",
+    "Supply Chain Optimization Consulting"
+  ];
   const [services, setServices] = useDraftList('about.services', initialServices, (s) => toText(s), (s) => toText(s));
 
-  const initialSectorSolutions = Array.isArray(about.sectorSolutions) ? about.sectorSolutions : [];
+  const initialSectorSolutions = Array.isArray(about.sectorSolutions) ? about.sectorSolutions : [
+    "Construction & Infrastructure Supply",
+    "Oil & Gas Equipment & Consumables",
+    "Industrial & Manufacturing Support",
+    "Marine & Shipping Supplies",
+    "Aviation Support Services",
+    "Defence Sector Procurement",
+    "Office & IT Solutions"
+  ];
   const [sectorSolutions, setSectorSolutions] = useDraftList('about.sectorSolutions', initialSectorSolutions, (s) => toText(s), (s) => toText(s));
 
-  const initialValueAdded = Array.isArray(about.valueAddedServices) ? about.valueAddedServices : [];
+  const initialValueAdded = [
+    "Supply of Genuine OEM Parts",
+    "Competitive Quotation (RFQ) Response",
+    "Partnership & Collaboration"
+  ];
   const [valueAddedServices, setValueAddedServices] = React.useState(initialValueAdded);
 
   const initialBrands = Array.isArray(about.brands) ? about.brands : [];
@@ -145,19 +178,15 @@ const About = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            {about?.heroTitle && (
-              <h1 className="gradient-text" data-cms-key="about.heroTitle">{about.heroTitle}</h1>
-            )}
+            <h1 className="gradient-text" data-cms-key="about.heroTitle">{about?.heroTitle || <>About <span className="gold-text">Al Safa Global</span></>}</h1>
             {!!about?.heroSubtitle && (
               <p className="hero-subtitle" data-cms-key="about.heroSubtitle">
                 {about.heroSubtitle}
               </p>
             )}
-            {about?.introParagraph && (
-              <p className="hero-description" data-cms-key="about.introParagraph">
-                {about.introParagraph}
-              </p>
-            )}
+            <p className="hero-description" data-cms-key="about.introParagraph">
+              {about?.introParagraph || 'Al Safa Global General Trading FZ LLC is a UAE-based company specializing in comprehensive procurement and supply chain solutions.'}
+            </p>
           </motion.div>
         </div>
       </section>
