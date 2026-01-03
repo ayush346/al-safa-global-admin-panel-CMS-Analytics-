@@ -44,7 +44,12 @@ const About = () => {
     }
   }, [brandsInView, brandsAnimated]);
 
-  const initialValues = (Array.isArray(about.values) ? about.values.map(v => ({ title: v.title, description: v.description })) : []);
+  const initialValues = (Array.isArray(about.values) ? about.values.map(v => ({ title: v.title, description: v.description })) : [
+    { title: "Integrity", description: "We conduct business with honesty, transparency, and ethical practices in all our dealings." },
+    { title: "Global Excellence", description: "We maintain the highest standards of quality and service across all our operations." },
+    { title: "Partnership", description: "We build long-term relationships based on trust, collaboration, and mutual success." },
+    { title: "Innovation", description: "We continuously improve our processes and solutions to meet evolving market needs." }
+  ]);
   const [values, setValues] = useDraftList('about.values', initialValues, (v) => ({ title: toText(v.title), description: toText(v.description) }), (v) => ({ title: toText(v.title), description: toText(v.description) }));
 
   const handleAddValue = () => {
@@ -66,23 +71,57 @@ const About = () => {
 
   const initialAchievements = (Array.isArray(about.achievements)
     ? about.achievements.map(a => ({ ...a, icon: <FiAward /> }))
-    : []);
+    : [
+      { number: "500+", label: "Satisfied Clients", icon: <FiUsers /> },
+      { number: "15+", label: "Years Experience", icon: <FiClock /> },
+      { number: "50+", label: "Global Partners", icon: <FiGlobe /> },
+      { number: "100%", label: "Quality Assurance", icon: <FiAward /> }
+    ]);
   const [achievements, setAchievements] = React.useState(initialAchievements);
 
-  const initialServices = Array.isArray(about.services) ? about.services : [];
+  const initialServices = Array.isArray(about.services) ? about.services : [
+    "End-to-End Procurement Solutions",
+    "Global Sourcing & Supply",
+    "Integrated Logistics Management",
+    "Cost-Effective Sourcing",
+    "Timely & Reliable Delivery",
+    "Industry-Specific Procurement Expertise",
+    "Supplier Management",
+    "Operational Procurement Support",
+    "Project Procurement Support",
+    "Supply Chain Optimization Consulting"
+  ];
   const [services, setServices] = useDraftList('about.services', initialServices, (s) => toText(s), (s) => toText(s));
 
-  const initialSectorSolutions = Array.isArray(about.sectorSolutions) ? about.sectorSolutions : [];
+  const initialSectorSolutions = Array.isArray(about.sectorSolutions) ? about.sectorSolutions : [
+    "Construction & Infrastructure Supply",
+    "Oil & Gas Equipment & Consumables",
+    "Industrial & Manufacturing Support",
+    "Marine & Shipping Supplies",
+    "Aviation Support Services",
+    "Defence Sector Procurement",
+    "Office & IT Solutions"
+  ];
   const [sectorSolutions, setSectorSolutions] = useDraftList('about.sectorSolutions', initialSectorSolutions, (s) => toText(s), (s) => toText(s));
 
-  const initialValueAdded = [];
+  const initialValueAdded = [
+    "Supply of Genuine OEM Parts",
+    "Competitive Quotation (RFQ) Response",
+    "Partnership & Collaboration"
+  ];
   const [valueAddedServices, setValueAddedServices] = React.useState(initialValueAdded);
 
   const initialBrands = Array.isArray(about.brands) ? about.brands : [];
   const [brands, setBrands] = useDraftList('about.brands', initialBrands, (b) => ({ name: toText(b.name), image: toText(b.image) }), (b) => ({ name: toText(b.name), image: toText(b.image) }));
 
   // Why Choose - editable list
-  const initialWhy = Array.isArray(about.why) ? about.why : [];
+  const initialWhy = [
+    { title: "Global Sourcing Network", text: "Direct access to reputed brands and suppliers worldwide" },
+    { title: "End-to-End Solutions", text: "Complete procurement and logistics management services" },
+    { title: "Competitive Pricing", text: "Cost-effective solutions without compromising quality" },
+    { title: "Responsive Service", text: "Quick turnaround times and commitment to deadlines" },
+    { title: "Industry Expertise", text: "Experienced team with deep industry-specific knowledge" },
+  ];
   const [whyItems, setWhyItems] = useState(initialWhy);
 
   // Handlers for add/delete across sections
@@ -201,7 +240,7 @@ const About = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 data-cms-key="about.sectionTitles.coreValues">{about?.sectionTitles?.coreValues || ''}</h2>
+            <h2>Our Core Values</h2>
             <p className="section-subtitle">
               The principles that guide our business and relationships
             </p>
@@ -278,7 +317,7 @@ const About = () => {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
           >
-            <h2 data-cms-key="about.sectionTitles.whyChooseUs">{about?.sectionTitles?.whyChooseUs || ''}</h2>
+            <h2>Why Choose <span className="gold-text">Al Safa Global</span>?</h2>
             <p className="section-subtitle">
               We combine industry expertise with innovative solutions to deliver exceptional value
             </p>
@@ -351,7 +390,7 @@ const About = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 data-cms-key="about.sectionTitles.coreServices">{about?.sectionTitles?.coreServices || ''}</h2>
+            <h2>Core Procurement & Supply Chain Services</h2>
             <p className="section-subtitle">
               Comprehensive solutions tailored to your business needs
             </p>
@@ -416,7 +455,7 @@ const About = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 data-cms-key="about.sectionTitles.sectorSolutions">{about?.sectionTitles?.sectorSolutions || ''}</h2>
+            <h2>Sector-Specific Supply Solutions</h2>
             <p className="section-subtitle">
               Specialized procurement services for different industries
             </p>
@@ -481,7 +520,7 @@ const About = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 data-cms-key="about.sectionTitles.valueAddedServices">{about?.sectionTitles?.valueAddedServices || ''}</h2>
+            <h2>Value-Added Services</h2>
             <p className="section-subtitle">
               Additional benefits that set us apart from the competition
             </p>
@@ -542,7 +581,7 @@ const About = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 data-cms-key="about.sectionTitles.trustedBrands">{about?.sectionTitles?.trustedBrands || ''}</h2>
+            <h2>Trusted Brand Partners</h2>
             <p className="section-subtitle">
               We source and supply materials from a wide network of reputed international brands, 
               ensuring genuine quality and trusted performance

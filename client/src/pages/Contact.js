@@ -12,7 +12,14 @@ const Contact = () => {
   const { contact = {}, forms = {} } = useContent();
   const { isEditMode, isDisabled, disableContent, enableContent } = useEditMode();
   const { confirmState, askConfirm, handleConfirm, handleCancel } = useConfirmState();
-  const initialBenefits = Array.isArray(contact.benefits) ? contact.benefits : [];
+  const initialBenefits = Array.isArray(contact.benefits) ? contact.benefits : [
+    { title: "Global Sourcing Network", text: "Direct access to reputed brands and suppliers worldwide for comprehensive procurement solutions." },
+    { title: "End-to-End Solutions", text: "Complete procurement and logistics management from sourcing to delivery coordination." },
+    { title: "Competitive Pricing", text: "Cost-effective sourcing without compromising on quality or authenticity of products." },
+    { title: "Industry Expertise", text: "Experienced team with deep industry-specific knowledge across multiple sectors." },
+    { title: "Quality Assurance", text: "Rigorous quality control and genuine OEM parts guarantee for all products and services." },
+    { title: "Responsive Service", text: "Quick turnaround times and commitment to deadlines with personalized customer support." }
+  ];
   const [benefits, setBenefits] = useDraftList('contact.benefits', initialBenefits, (b) => ({ title: toText(b.title), text: toText(b.text) }), (b) => ({ title: toText(b.title), text: toText(b.text) }));
   const handleAddBenefit = () => {
     setBenefits(prev => [...prev, { title: "New Benefit", text: "Click here to describe the benefit." }]);
@@ -116,10 +123,10 @@ Submitted on: ${new Date().toLocaleString()}
             transition={{ duration: 0.8 }}
           >
               <h1 className="gradient-text" data-cms-key="contact.heroTitle">
-              {contact?.heroTitle || ''}
+              {contact?.heroTitle || <>Contact <span className="gold-text">Al Safa Global</span></>}
             </h1>
               <p className="hero-subtitle" data-cms-key="contact.heroSubtitle">
-              {contact?.heroSubtitle || ''}
+              {contact?.heroSubtitle || "We would love to hear from you. For all inquiries, business proposals, or partnership opportunities, please reach out to us."}
             </p>
           </motion.div>
         </div>
@@ -136,46 +143,46 @@ Submitted on: ${new Date().toLocaleString()}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
             >
-              <h2 className="contact-heading" data-cms-key="contact.sectionTitles.getInTouch">{contact?.sectionTitles?.getInTouch || ''}</h2>
-              <p data-cms-key="contact.introText">
-                {contact?.introText || ''}
+              <h2 className="contact-heading">Get In Touch</h2>
+              <p>
+                Al Safa Global General Trading FZ LLC is your trusted partner in procurement and supply chain solutions. We're here to help you with all your business needs across multiple industries and sectors.
               </p>
               
               <div className="contact-details">
                 <div className="contact-item">
                   <FiMail className="contact-icon" />
                   <div>
-                    <h4 data-cms-key="contact.labels.emailHeading">{contact?.labels?.emailHeading || ''}</h4>
+                    <h4>Email</h4>
                     <p>
                       <a href={`mailto:${contact?.email || 'info@alsafaglobal.com'}`} className="contact-link" data-cms-key="contact.email">
-                        {contact?.email || ''}
+                        {contact?.email || 'info@alsafaglobal.com'}
                       </a>
                     </p>
-                    <p data-cms-key="contact.labels.emailCaption">{contact?.labels?.emailCaption || ''}</p>
+                    <p>For business inquiries and partnerships</p>
                   </div>
                 </div>
                 
                 <div className="contact-item">
                   <FiPhone className="contact-icon" />
                   <div>
-                    <h4 data-cms-key="contact.labels.phoneHeading">{contact?.labels?.phoneHeading || ''}</h4>
+                    <h4>Phone</h4>
                     <p>
-                      <a href={`tel:${(contact?.phone || '').replace(/\\s/g, '')}`} className="contact-link" data-cms-key="contact.phone">
-                        {contact?.phone || ''}
+                      <a href={`tel:${(contact?.phone || '00971 4 3741 969').replace(/\\s/g, '')}`} className="contact-link" data-cms-key="contact.phone">
+                        {contact?.phone || '00971 4 3741 969'}
                       </a>
                     </p>
-                    <p data-cms-key="contact.labels.phoneCaption">{contact?.labels?.phoneCaption || ''}</p>
+                    <p>Available during business hours</p>
                   </div>
                 </div>
                 
                 <div className="contact-item">
                   <FiMapPin className="contact-icon" />
                   <div>
-                    <h4 data-cms-key="contact.labels.addressHeading">{contact?.labels?.addressHeading || ''}</h4>
+                    <h4>Head Office Address</h4>
                     <p>
                       <span data-cms-key="contact.addressLines" style={{ display: 'none' }} />
                       {(contact?.addressLines || []).map((line, i) => (<React.Fragment key={i}>{toText(line)}<br /></React.Fragment>))}
-                      <a href={`tel:${(contact?.phone || '').replace(/\\s/g, '')}`} style={{ color: 'inherit', textDecoration: 'underline' }}>{contact?.phone || ''}</a>
+                      <a href={`tel:${(contact?.phone || '00971 4 3741 969').replace(/\\s/g, '')}`} style={{ color: 'inherit', textDecoration: 'underline' }}>{contact?.phone || '00971 4 3741 969'}</a>
                     </p>
                   </div>
                 </div>
@@ -183,7 +190,7 @@ Submitted on: ${new Date().toLocaleString()}
                 <div className="contact-item">
                   <FiClock className="contact-icon" />
                   <div>
-                    <h4 data-cms-key="contact.labels.hoursHeading">{contact?.labels?.hoursHeading || ''}</h4>
+                    <h4>Business Hours</h4>
                     <div data-cms-list="contact.businessHours">
                       {(contact?.businessHours || []).map((h, i) => (
                         <p key={i} data-cms-item><span data-cms-field="text" style={{ display: 'none' }}>{toText(h)}</span>{toText(h)}</p>
@@ -195,7 +202,7 @@ Submitted on: ${new Date().toLocaleString()}
                 <div className="contact-item">
                   <FiGlobe className="contact-icon" />
                   <div>
-                    <h4 data-cms-key="contact.labels.serviceAreasHeading">{contact?.labels?.serviceAreasHeading || ''}</h4>
+                    <h4>Service Areas</h4>
                     <div data-cms-list="contact.serviceAreas">
                       {(contact?.serviceAreas || []).map((s, i) => (<p key={i} data-cms-item><span data-cms-field="text" style={{ display: 'none' }}>{toText(s)}</span>{toText(s)}</p>))}
                     </div>
@@ -205,9 +212,9 @@ Submitted on: ${new Date().toLocaleString()}
                 <div className="contact-item">
                   <FiUsers className="contact-icon" />
                   <div>
-                    <h4 data-cms-key="contact.labels.partnershipHeading">{contact?.labels?.partnershipHeading || ''}</h4>
-                    <p data-cms-key="contact.partnershipText">{contact?.partnershipText || ''}</p>
-                    <p data-cms-key="contact.labels.partnershipCaption">{contact?.labels?.partnershipCaption || ''}</p>
+                    <h4>Partnership Opportunities</h4>
+                    <p>{contact?.partnershipText || 'We welcome collaboration with suppliers, manufacturers, and business partners worldwide'}</p>
+                    <p>Contact us to discuss potential partnerships</p>
                   </div>
                 </div>
               </div>
@@ -220,20 +227,20 @@ Submitted on: ${new Date().toLocaleString()}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
             >
-              <h2 data-cms-key="contact.sectionTitles.sendMessage">{contact?.sectionTitles?.sendMessage || ''}</h2>
-              <p data-cms-key="contact.labels.formIntro">{contact?.labels?.formIntro || ''}</p>
+              <h2>Send us a Message</h2>
+              <p>Fill out the form below and click "Send Message" to open your email client with a pre-filled message.</p>
               
               {submitStatus === 'success' && (
                 <div className="alert alert-success">
-                  <h3 data-cms-key="contact.labels.successTitle">{contact?.labels?.successTitle || ''}</h3>
-                  <p data-cms-key="contact.labels.successText">{contact?.labels?.successText || ''}</p>
+                  <h3>Email Client Opened!</h3>
+                  <p>Your default email client should have opened with a pre-filled message. Please review and send the email to info@alsafaglobal.com</p>
                 </div>
               )}
 
               {submitStatus === 'error' && (
                 <div className="alert alert-error">
-                  <h3 data-cms-key="contact.labels.errorTitle">{contact?.labels?.errorTitle || ''}</h3>
-                  <p data-cms-key="contact.labels.errorText">{contact?.labels?.errorText || ''}</p>
+                  <h3>Something went wrong</h3>
+                  <p>Please try again or contact us directly at info@alsafaglobal.com</p>
                 </div>
               )}
               
@@ -356,7 +363,7 @@ Submitted on: ${new Date().toLocaleString()}
                     className="btn btn-primary"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? (contact?.labels?.openingEmail || '') : (contact?.labels?.sendMessage || '')}
+                    {isSubmitting ? 'Opening Email...' : 'Send Message'}
                   </button>
                 </form>
               )}

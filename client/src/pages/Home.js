@@ -136,7 +136,38 @@ const Home = () => {
     'users': <FiUsers />,
     'shield': <FiShield />
   };
-  const initialFeaturesRaw = Array.isArray(content?.home?.features) ? content.home.features : [];
+  const initialFeaturesRaw = Array.isArray(content?.home?.features) ? content.home.features : [
+    {
+      icon: 'globe',
+      title: "Global Sourcing Network",
+      description: "Direct access to reputed brands and suppliers worldwide for comprehensive procurement solutions."
+    },
+    {
+      icon: 'truck',
+      title: "End-to-End Solutions",
+      description: "Complete procurement and logistics management from sourcing to delivery coordination."
+    },
+    {
+      icon: 'trending-up',
+      title: "Competitive Pricing",
+      description: "Cost-effective sourcing without compromising on quality or authenticity of products."
+    },
+    {
+      icon: 'clock',
+      title: "Timely Delivery",
+      description: "Committed to meeting project deadlines and operational schedules with responsive turnaround."
+    },
+    {
+      icon: 'users',
+      title: "Industry Expertise",
+      description: "Experienced team with deep industry-specific knowledge across multiple sectors."
+    },
+    {
+      icon: 'shield',
+      title: "Quality Assurance",
+      description: "Rigorous quality control and genuine OEM parts guarantee for all products and services."
+    }
+  ];
   const mapFeatureIcon = (iconKey) => iconMap[iconKey] || <FiCheckCircle />;
   const initialFeatures = initialFeaturesRaw.map(f => ({
     icon: mapFeatureIcon(f.icon),
@@ -172,7 +203,55 @@ const Home = () => {
     });
   };
 
-  const initialDivisions = Array.isArray(content?.home?.divisions) ? content.home.divisions : [];
+  const fallbackDivisions = [
+    {
+      id: 'office-construction',
+      title: 'Office, Construction & Infrastructure',
+      description: 'End-to-end supply for office fit-outs, construction materials and infrastructure projects.',
+      icon: '🏗️',
+      color: 'var(--primary-blue)',
+      link: '/divisions#office-construction'
+    },
+    {
+      id: 'oil-gas',
+      title: 'Oil & Gas',
+      description: 'Equipment, spares and consumables for upstream and downstream operations.',
+      icon: '🛢️',
+      color: 'var(--primary-gold)',
+      link: '/divisions#oil-gas'
+    },
+    {
+      id: 'industrial-manufacturing',
+      title: 'Industrial & Manufacturing',
+      description: 'MRO, tooling, machinery spares and production consumables.',
+      icon: '🏭',
+      color: 'var(--primary-blue)',
+      link: '/divisions#industrial-manufacturing'
+    },
+    {
+      id: 'aviation-marine',
+      title: 'Aviation & Marine',
+      description: 'Specialized parts and supplies for aviation, marine and shipping.',
+      icon: '✈️',
+      color: 'var(--primary-gold)',
+      link: '/divisions#aviation-marine'
+    },
+    {
+      id: 'defence',
+      title: 'Defence Sector',
+      description: 'Trusted sourcing for mission‑critical and compliant defence supplies.',
+      icon: '🛡️',
+      color: 'var(--primary-blue)',
+      link: '/divisions#defence'
+    }
+  ];
+  const initialDivisions = (
+    (Array.isArray(content?.divisions) && content.divisions.length > 0)
+      ? content.divisions
+      : (Array.isArray(content?.home?.divisions) && content.home.divisions.length > 0
+          ? content.home.divisions
+          : fallbackDivisions)
+  );
   const [divisions, setDivisions] = useDraftList('home.divisions', initialDivisions, (d) => ({ ...d }), (d) => ({ ...d }));
   const dragIndexRef = useRef(null);
 
@@ -212,22 +291,12 @@ const Home = () => {
     dragIndexRef.current = null;
   };
 
-  const stats = Array.isArray(content?.hero?.stats)
-    ? content.hero.stats.map((s) => ({
-        number: toText(s.number),
-        label: toText(s.label),
-        icon: (() => {
-          const m = {
-            users: <FiUsers />,
-            award: <FiAward />,
-            globe: <FiGlobe />,
-            clock: <FiClock />,
-          };
-          const key = String(s.icon || '').toLowerCase();
-          return m[key] || <FiCheckCircle />;
-        })()
-      }))
-    : [];
+  const stats = [
+    { number: "500+", label: "Satisfied Clients", icon: <FiUsers /> },
+    { number: "15+", label: "Years Experience", icon: <FiAward /> },
+    { number: "50+", label: "Global Partners", icon: <FiGlobe /> },
+    { number: "24/7", label: "Support Available", icon: <FiClock /> }
+  ];
 
   return (
     <div className="home-page">
@@ -246,19 +315,25 @@ const Home = () => {
             >
               <h2>
                 <span data-cms-key="home.aboutPreview.title">
-                  {content?.home?.aboutPreview?.title || ''}
+                  {content?.home?.aboutPreview?.title || <>About <span className="gold-text">Al Safa Global</span></>}
                 </span>
               </h2>
               {(content?.home?.aboutPreview?.paragraphs || []).slice(0, 3).map((p, i) => (
                 <p key={i} data-cms-key={`home.aboutPreview.paragraphs.${i}`}>{toText(p)}</p>
               ))}
               <div className="about-features">
-                {(content?.home?.aboutPreview?.featureBullets || []).map((b, i) => (
-                  <div className="feature-item" key={i} data-cms-item>
-                    <FiCheckCircle className="feature-icon" />
-                    <span data-cms-field="text">{toText(b)}</span>
-                  </div>
-                ))}
+                <div className="feature-item">
+                  <FiCheckCircle className="feature-icon" />
+                  <span>End-to-End Procurement Solutions</span>
+                </div>
+                <div className="feature-item">
+                  <FiCheckCircle className="feature-icon" />
+                  <span>Global Sourcing & Supply</span>
+                </div>
+                <div className="feature-item">
+                  <FiCheckCircle className="feature-icon" />
+                  <span>Integrated Logistics Management</span>
+                </div>
               </div>
             </motion.div>
 
@@ -282,23 +357,23 @@ const Home = () => {
               <div className="image-container">
                 <div className={`floating-card card-1 ${cardsScrolled.card1 ? 'scrolled' : ''}`}>
                   <FiTrendingUp />
-                  <span>{toText(content?.home?.aboutPreview?.floatingWords?.[0] || '')}</span>
+                  <span>Growth</span>
                 </div>
                 <div className={`floating-card card-2 ${cardsScrolled.card2 ? 'scrolled' : ''}`}>
                   <FiGlobe />
-                  <span>{toText(content?.home?.aboutPreview?.floatingWords?.[1] || '')}</span>
+                  <span>Global</span>
                 </div>
                 <div className={`floating-card card-3 ${cardsScrolled.card3 ? 'scrolled' : ''}`}>
                   <FiAward />
-                  <span>{toText(content?.home?.aboutPreview?.floatingWords?.[2] || '')}</span>
+                  <span>Quality</span>
                 </div>
                 <div className={`floating-card card-4 ${cardsScrolled.card4 ? 'scrolled' : ''}`}>
                   <FiPackage />
-                  <span>{toText(content?.home?.aboutPreview?.floatingWords?.[3] || '')}</span>
+                  <span>Procurement</span>
                 </div>
                 <div className={`floating-card card-5 ${cardsScrolled.card5 ? 'scrolled' : ''}`}>
                   <FiLink />
-                  <span>{toText(content?.home?.aboutPreview?.floatingWords?.[4] || '')}</span>
+                  <span>Supply Chain</span>
                 </div>
               </div>
             </motion.div>
@@ -311,7 +386,7 @@ const Home = () => {
               transition={{ duration: 0.6, delay: 0.4 }}
             >
               <Link to="/about" className="btn btn-primary">
-                {toText(content?.home?.aboutPreview?.ctaLabel || '')}
+                Learn More About Us
                 <FiArrowRight />
               </Link>
             </motion.div>
@@ -329,9 +404,9 @@ const Home = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 data-cms-key="home.sections.divisions.title">{toText(content?.home?.sections?.divisions?.title || '')}</h2>
+            <h2 data-cms-key="home.sections.divisions.title">{content?.home?.sections?.divisions?.title || 'Our Business Segments'}</h2>
             <p className="section-subtitle" data-cms-key="home.sections.divisions.subtitle">
-              {toText(content?.home?.sections?.divisions?.subtitle || '')}
+              {content?.home?.sections?.divisions?.subtitle || 'Al Safa Global specializes in a wide array of supply and service segments'}
             </p>
           </motion.div>
           
@@ -412,9 +487,9 @@ const Home = () => {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 data-cms-key="home.sections.features.title">{toText(content?.home?.sections?.features?.title || '')}</h2>
+            <h2 data-cms-key="home.sections.features.title">{content?.home?.sections?.features?.title || <>Why Choose <span className="gold-text">Al Safa Global</span>?</>}</h2>
             <p className="section-subtitle" data-cms-key="home.sections.features.subtitle">
-              {toText(content?.home?.sections?.features?.subtitle || '')}
+              {content?.home?.sections?.features?.subtitle || 'We combine industry expertise with innovative solutions to deliver exceptional value to our clients'}
             </p>
           </motion.div>
 
