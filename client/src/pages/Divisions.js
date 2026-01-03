@@ -89,6 +89,8 @@ const Divisions = () => {
   const divisionsCMS = Array.isArray(divisionsFromContent) ? divisionsFromContent.map(normalizeDivision) : [];
   const [divisions, setDivisions] = useDraftList('divisions', divisionsCMS, (d) => ({ id: d.id, title: d.title, description: d.description, icon: d.icon, color: d.color, link: d.link, items: Array.isArray(d.items) ? d.items.map((it) => toText(it)) : [] }), normalizeDivision);
   const divisionsToRender = isEditMode ? divisions : divisionsCMS;
+  // Fallback provided for divisions heroTitle to prevent blank heading if CMS value is missing.
+  const heroTitle = toText(divisionsPage?.heroTitle) || 'Al Safa Global Segments';
 
   const handleAddDivision = () => {
     setDivisions(prev => ([
@@ -140,7 +142,7 @@ const Divisions = () => {
             transition={{ duration: 0.8 }}
           >
             <h1 className="gradient-text" data-cms-key="divisions.heroTitle">
-              {toText(divisionsPage?.heroTitle)}
+              {heroTitle}
             </h1>
 
             <p data-cms-key="divisions.heroIntro">
