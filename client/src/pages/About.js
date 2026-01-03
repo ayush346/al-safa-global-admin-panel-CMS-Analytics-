@@ -179,8 +179,12 @@ const About = () => {
             transition={{ duration: 0.8 }}
           >
             <h1 className="gradient-text" data-cms-key="about.heroTitle">{about?.heroTitle || <>About <span className="gold-text">Al Safa Global</span></>}</h1>
-
-            <p data-cms-key="about.introParagraph">
+            {!!about?.heroSubtitle && (
+              <p className="hero-subtitle" data-cms-key="about.heroSubtitle">
+                {about.heroSubtitle}
+              </p>
+            )}
+            <p className="hero-description" data-cms-key="about.introParagraph">
               {about?.introParagraph || 'Al Safa Global General Trading FZ LLC is a UAE-based company specializing in comprehensive procurement and supply chain solutions.'}
             </p>
           </motion.div>
